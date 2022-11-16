@@ -5,8 +5,6 @@ cimport numpy as np
 cimport tree
 from libc.stdlib cimport malloc, calloc, free
 from tree cimport tree_t
-from scipy.optimize import curve_fit
-import matplotlib.pyplot as plt
 
 ctypedef np.int_t INT_t
 ctypedef np.double_t DOUBLE_t
@@ -14,26 +12,21 @@ ctypedef np.double_t DOUBLE_t
 cdef class boxcounting:
     cdef tree_t tree
     cdef int * occ
-    cdef int max_level
-    cdef int n_data
-    cdef double final_dim
-    cdef double final_var
-    cdef int dim 
+    cdef int max_level, n_data, dim
+    cdef double final_dim, final_var, eps
 
     def __init__(self, int n):
-        self.tree = create_tree(n)
+        self.tree = create_tree(n, 0)
 
     @cython.boundscheck(False)  # Deactivate bounds checking
     @cython.wraparound(False)   # Deactivate negative indexing.
     def occupation(self, DOUBLE_t[:,:] x, int max_level):
         self.max_level = max_level
-        cdef np.ndarray[INT_t, ndim=1, mode='c'] occ 
-        occ = np.zeros(max_level).astype(int)
-        cdef actual_level = 0
         cdef int i, n = x.shape[0], dim = x.shape[1]
         self.dim = dim 
-        cdef double mean, mid, radi, radi_Max = 0.
-        self.n_data = n
+        cdef double mid, radi, radi_Max = 0.
+        if self.n_data == 0: self.n_data = n
+        else: self.n_data += n
 
         # Compute min and max for each dim
         for i in range(dim):
@@ -42,95 +35,38 @@ cdef class boxcounting:
             if radi > radi_Max: radi_Max = radi
             self.tree.centr[i] = mid
         self.tree.radi = radi_Max
-
-        for i in range(n):
-            recursive_occupation(&self.tree, x[i], occ, max_level, actual_level, dim)
+        self.eps = radi_Max
 
         self.occ = <int*>malloc(max_level*sizeof(int))
-        for i in range(len(occ)):
-            self.occ[i] = occ[i]
+        for i in range(max_level): self.occ[i] = 0
+        for i in range(n): recursive_occupation(&self.tree, x[i], max_level, dim)
+        recursive_count(&self.tree, self.occ, max_level, dim)
+
+    @property 
+    def occ(self):
+        cdef np.ndarray[INT_t, ndim=1, mode='c'] occ 
+        occ = np.zeros(self.max_level).astype(int)
+        for i in range(self.max_level):
+            occ[i] = self.occ[i]
         return occ
+    @property
+    def max_level(self):
+        return self.max_level
+    @property
+    def eps(self):
+        return self.eps
+    @property 
+    def n_data(self):
+        return self.n_data
+    @property 
+    def max_level(self):
+        return self.max_level
 
-    def fit_dim(self, int min_index = 1, int max_index = 0):
-        if max_index == 0: max_index = self.max_level
-        cdef np.ndarray[INT_t, ndim=1, mode='c'] occ 
-        cdef int i
-        occ = np.empty(self.max_level).astype(int)
-        for i in range(self.max_level):
-            occ[i] = self.occ[i]
-
-        y = np.log2(occ)[min_index:max_index]
-        den = np.arange(min_index, max_index)
-        dim = y/den
-        def f(x, m, q):
-            return m * x + q
-    
-        init = [1., 0]
-        popt, pcov = curve_fit(f, den, y, p0=init)
-        x_array = np.linspace(np.min(den), np.max(den), 100)
-        D = popt[0]
-        var = np.sqrt(np.diag(pcov))[0]
-        self.final_dim = D
-        self.final_var = var
-        return
-
-    def fit_show(self, int min_index = 1, int max_index = 0):
-        if max_index == 0: max_index = self.max_level
-        cdef np.ndarray[INT_t, ndim=1, mode='c'] occ 
-        cdef int i
-        occ = np.empty(self.max_level).astype(int)
-        for i in range(self.max_level):
-            occ[i] = self.occ[i]
-
-        y = np.log2(occ)[min_index:max_index]
-        den = np.arange(min_index, max_index)
-        dim = y/den
-        def f(x, m, q):
-            return m * x + q
-    
-        init = [1., 0]
-        popt, pcov = curve_fit(f, den, y, p0=init)
-        x_array = np.linspace(np.min(den), np.max(den), 100)
-        D = popt[0]
-        var = np.sqrt(np.diag(pcov))[0]
-        print(f'D = {popt[0]} pm {np.sqrt(np.diag(pcov))[0]}')
-        print(f'Last D evaluated: {dim[-1]}')
-        self.final_dim = D
-        self.final_var = var
-        
-        # Plot dei risultati
-        fig, axs = plt.subplots(1,2,figsize=(15,7))
-        plt.suptitle(r'Fattore di scala: $\epsilon = 2^n$', fontsize = 20)
-        plt.setp(axs[0].get_xticklabels(), fontsize=13)
-        plt.setp(axs[0].get_yticklabels(), fontsize=13)
-        plt.setp(axs[1].get_xticklabels(), fontsize=13)
-        plt.setp(axs[1].get_yticklabels(), fontsize=13)
-        axs[0].plot(x_array, f(x_array, *popt))
-        axs[0].scatter(den, y, c='k')
-        axs[0].set_xlim(np.min(den)-1,np.max(den)+1)
-        axs[0].set_ylim(np.min(y)-1,np.max(y)+1)
-        axs[0].grid()
-        axs[0].set_xlabel(r'$\log(1/\epsilon)$', fontsize = 20)
-        axs[0].set_ylabel(r'$\log(N(\epsilon))$', fontsize = 20)
-        axs[0].set_title(fr'$y = mx$ $\rightarrow$ m = {popt[0]:.3f} $\pm$ {np.sqrt(np.diag(pcov))[0]:.3f}', fontsize = 20)
-        n_rel = self.n_data/occ[min_index:max_index]
-        axs[1].scatter(den, n_rel, c='k')
-        axs[1].plot(x_array, np.ones(len(x_array)), linestyle='--', c='r')
-        axs[1].set_yscale('log')
-        axs[1].grid()
-        axs[1].set_xlabel(r'$\log(1/\epsilon)$', fontsize = 20)
-        axs[1].set_ylabel(r'$\left<n(\epsilon)\right>$', fontsize = 20)
-        axs[1].set_title('# medio dati in un quadrato', fontsize = 20)
-        plt.show()
-        return
     def free(self):
         free_tree(&self.tree, self.dim)
         return 
 
-cdef inline double mid_val(double x, double y):
-    return (x + y) * 0.5
-
-cdef tree_t create_tree(int n):
+cdef tree_t create_tree(int n, int level):
     cdef tree_t tree
     cdef int num_quadrants = 2**n # Quadrants for n-dim problem: 2^n
     tree.child   = <tree_t*>calloc(num_quadrants, sizeof(tree_t))
@@ -138,9 +74,11 @@ cdef tree_t create_tree(int n):
     tree.radi = 0
     tree.filled = 0
     tree.initialized = 1
+    tree.level = level
     return tree
 
 cdef void free_tree(tree_t * tree, int dim):
+    cdef int i
     if tree.initialized != 0:
         for i in range(dim):
             free_tree(&tree.child[i], dim)
@@ -151,17 +89,25 @@ cdef void free_tree(tree_t * tree, int dim):
 
 @cython.boundscheck(False)  # Deactivate bounds checking
 @cython.wraparound(False)   # Deactivate negative indexing.
-cdef void recursive_occupation(tree_t * tree, DOUBLE_t[:] x, INT_t[:] occ, int max_level, int level, int dim):
-    cdef int next_quadrant
+cdef void recursive_occupation(tree_t * tree, DOUBLE_t[:] x, int max_level, int dim):
     cdef tree_t * next_tree
-    cdef int i
-    if level < max_level:
+    if tree.level < max_level:
         if tree.filled == 0:
             tree.filled += 1
-            occ[level] += 1
-        level += 1
         next_tree = next_child(tree, x, dim)
-        recursive_occupation(next_tree, x, occ, max_level, level, dim)
+        recursive_occupation(next_tree, x, max_level, dim)
+    return
+
+@cython.boundscheck(False)  # Deactivate bounds checking
+@cython.wraparound(False)   # Deactivate negative indexing.
+cdef void recursive_count(tree_t * tree, int * occ, int max_level, int dim):
+    cdef int i
+    cdef int num_quadrants = 2**dim
+    if tree.level < max_level:
+        if tree.filled != 0:
+            occ[tree.level] += 1
+            for i in range(num_quadrants):
+                recursive_count(&tree.child[i], occ, max_level, dim)
     return
 
 @cython.boundscheck(False)  # Deactivate bounds checking
@@ -204,7 +150,7 @@ cdef tree_t * next_child(tree_t * tree, DOUBLE_t[:] x, int dim):
         inc += inc
 
     if tree.child[quadrant].initialized == 0:
-        tree.child[quadrant] = create_tree(dim)
+        tree.child[quadrant] = create_tree(dim, tree.level + 1)
         for i in range(dim):
             tree.child[quadrant].centr[i] = next_mid[i]
             tree.child[quadrant].radi = next_radi
