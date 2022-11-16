@@ -18,7 +18,7 @@ create-build:
 compile:
 	python3 setup.py build_ext --build-lib build
 annotate:
-	cython -3 -a *.pyx
+	cython -3 -a src/*.pyx
 	@echo "Annotated HTML of the code"
 test:
 	python3 test.py
@@ -26,7 +26,7 @@ test:
 # Phony targets for cleanup and similar uses
 .PHONY: clean soft-clean
 clean:
-	rm -rf *.so *.c *.o *.html build __pycache__ core data
+	rm -rf *.so *.c *.o build __pycache__ core data
 soft-clean:
 	rm -rf *.c *html __pycache__ 
 

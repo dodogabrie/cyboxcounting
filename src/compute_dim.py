@@ -8,7 +8,9 @@ from build.boxcounting import boxcounting
 
 def compute_dim(bc):
     num = np.log2(bc.occ)
-    den = np.arange(bc.max_level)# - np.log2(bc.eps)
+    den = np.arange(bc.max_level) #- np.log2(bc.eps)
+    den[0] = 1
+    print("Original Radius:", bc.eps)
     print("List of dim:", num/den)
     return num, den
 
@@ -17,9 +19,9 @@ def fit_dim(bc, min_index = 1, max_index = 0):
     y, den = compute_dim(bc)
     y = y[min_index:max_index]
     den = den[min_index:max_index]
-    def f(x, m, q):
-        return m * x + q
-    init = [1., 0]
+    def f(x, m):
+        return m * x
+    init = [1.]
     popt, pcov = curve_fit(f, den, y, p0=init)
     x_array = np.linspace(np.min(den), np.max(den), 100)
     D = popt[0]
@@ -32,7 +34,6 @@ def fit_show(bc, min_index = 1, max_index = 0):
     dim = y/den
     x_array = np.linspace(np.min(den), np.max(den), 100)
     print(f'D = {D} pm {var}')
-    print(f'Last D evaluated: {dim[-1]}')
 
     # Plot dei risultati
     fig, axs = plt.subplots(1,2,figsize=(15,7))
@@ -48,15 +49,17 @@ def fit_show(bc, min_index = 1, max_index = 0):
     axs[0].set_xlabel(r'$\log(1/\epsilon)$', fontsize = 20)
     axs[0].set_ylabel(r'$\log(N(\epsilon))$', fontsize = 20)
     axs[0].set_title(fr'$y = mx$ $\rightarrow$ m = {D:.3f} $\pm$ {var:.3f}', fontsize = 20)
-    n_rel = bc.n_data/bc.occ[min_index:max_index]
-    axs[1].scatter(den, n_rel, c='k')
-    axs[1].plot(x_array, np.ones(len(x_array)), linestyle='--', c='r')
-    axs[1].set_yscale('log')
+#    n_rel = bc.n_data/bc.occ[min_index:max_index]
+    axs[1].scatter(den, dim, c='k')
+#    axs[1].plot(x_array, np.ones(len(x_array)), linestyle='--', c='r')
+#    axs[1].set_yscale('log')
     axs[1].set_xlabel(r'$\log(1/\epsilon)$', fontsize = 20)
-    axs[1].set_ylabel(r'$\left<n(\epsilon)\right>$', fontsize = 20)
-    axs[1].set_title('# medio dati in un quadrato', fontsize = 20)
+    axs[1].set_ylabel('bc-Dim', fontsize = 20)
+    axs[1].set_title('dimensione', fontsize = 20)
     plt.show()
     return dim, var
+def dimension_convergence(bc):
+    return 
 
 if __name__ == "__main__":
     pass

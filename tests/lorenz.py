@@ -26,7 +26,7 @@ def solver(tmax, n):
     # Integrate the Lorenz equations.
     t = np.linspace(0, tmax, n)
     soln = solve_ivp(lorenz, (0, tmax), (u0, v0, w0), args=(sigma, beta, rho), t_eval=t,
-                     dense_output=True)
+                     dense_output=False)
     # Interpolate solution onto the time grid, t.
     x, y, z = soln.y
     return x, y, z
@@ -46,26 +46,19 @@ def plot3d(data_file):
     data = np.loadtxt("data/" + data_file)
     data = data[::10]
     x, y, z = data.T
-#    ax = plt.figure().add_subplot(projection='3d')
-#    
-#    ax.scatter(x, y, z, s = 0.3)
-#    ax.set_xlabel("X Axis")
-#    ax.set_ylabel("Y Axis")
-#    ax.set_zlabel("Z Axis")
-#    ax.set_title("Lorenz Attractor")
-#    plt.show()
     fig = go.Figure(data=[go.Scatter3d(x=x, y=y, z=z,
                                    mode='markers', marker=dict(size = 1))])
-    fig.show()
+    fig.write_html("data/lorenz.html")
+#    fig.show()
     return 
 
 if __name__ == "__main__":
     data_file = "lorenz.txt"
-    plot3d(data_file)
     tmax = 1000
-    n = 1000000
+    n = int(1e7)
     max_level = 10
-    min_level = 3
+    min_level = 1
 #    write_data(tmax, n, data_file)
-#    compute_dimension(data_file, max_level, min_level)
+#    plot3d(data_file)
+    compute_dimension(data_file, max_level, min_level)
     

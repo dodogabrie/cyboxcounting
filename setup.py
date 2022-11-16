@@ -13,6 +13,7 @@ import os
 module_name = 'NN'
 
 e1 = Extension('boxcounting', ['src/boxcounting.pyx'], include_dirs=[numpy.get_include(), '.'])
+e1 = Extension('fastload', ['src/fastload.pyx'], include_dirs=[numpy.get_include(), '.'])
 e2 = Extension('tree', ['src/boxcounting.pyx'], include_dirs=[numpy.get_include(), '.'],)
 
 ext_modules = [e1, e2]

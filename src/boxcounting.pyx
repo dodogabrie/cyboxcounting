@@ -11,22 +11,32 @@ ctypedef np.double_t DOUBLE_t
 
 cdef class boxcounting:
     cdef tree_t tree
+    cdef int initialized
     cdef int * occ
-    cdef int max_level, n_data, dim
+    cdef int max_level, n, dim, tot_data
     cdef double final_dim, final_var, eps
 
     def __init__(self, int n):
         self.tree = create_tree(n, 0)
+        self.initialized = 0 
+        self.tot_data = 0
 
     @cython.boundscheck(False)  # Deactivate bounds checking
     @cython.wraparound(False)   # Deactivate negative indexing.
     def occupation(self, DOUBLE_t[:,:] x, int max_level):
+        self.initialization(x, max_level)
+        for i in range(self.n): recursive_occupation(&self.tree, x[i], max_level, self.dim)
+        recursive_count(&self.tree, self.occ, max_level, self.dim)
+
+    @cython.boundscheck(False)  # Deactivate bounds checking
+    @cython.wraparound(False)   # Deactivate negative indexing.
+    def initialization(self, DOUBLE_t[:,:] x,  int max_level):
         self.max_level = max_level
         cdef int i, n = x.shape[0], dim = x.shape[1]
         self.dim = dim 
         cdef double mid, radi, radi_Max = 0.
-        if self.n_data == 0: self.n_data = n
-        else: self.n_data += n
+        self.n = n
+        self.tot_data += n
 
         # Compute min and max for each dim
         for i in range(dim):
@@ -37,10 +47,11 @@ cdef class boxcounting:
         self.tree.radi = radi_Max
         self.eps = radi_Max
 
-        self.occ = <int*>malloc(max_level*sizeof(int))
-        for i in range(max_level): self.occ[i] = 0
-        for i in range(n): recursive_occupation(&self.tree, x[i], max_level, dim)
-        recursive_count(&self.tree, self.occ, max_level, dim)
+        if self.initialized == 0:
+            self.occ = <int*>malloc(max_level*sizeof(int))
+            self.initialized = 1
+            for i in range(max_level): self.occ[i] = 0
+        return
 
     @property 
     def occ(self):
@@ -56,8 +67,11 @@ cdef class boxcounting:
     def eps(self):
         return self.eps
     @property 
-    def n_data(self):
-        return self.n_data
+    def n(self):
+        return self.n
+    @property 
+    def tot_data(self):
+        return self.tot_data
     @property 
     def max_level(self):
         return self.max_level
@@ -138,7 +152,7 @@ cdef tree_t * next_child(tree_t * tree, DOUBLE_t[:] x, int dim):
     cdef int inc = 1  # inc is incremented by himself after each step of the
     #                 # next loop.
     cdef double * next_mid =  <double*>malloc(dim*sizeof(double))
-    cdef double next_radi = tree.radi/2.
+    cdef double next_radi = tree.radi*0.5
     for i in range(dim):
         if tree.centr[i] < x[i]: 
             inc_bool = 1
@@ -153,6 +167,6 @@ cdef tree_t * next_child(tree_t * tree, DOUBLE_t[:] x, int dim):
         tree.child[quadrant] = create_tree(dim, tree.level + 1)
         for i in range(dim):
             tree.child[quadrant].centr[i] = next_mid[i]
-            tree.child[quadrant].radi = next_radi
+        tree.child[quadrant].radi = next_radi
     free(next_mid)
     return &tree.child[quadrant]
