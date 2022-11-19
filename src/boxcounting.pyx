@@ -3,7 +3,11 @@ import numpy as np
 cimport cython
 cimport numpy as np
 cimport tree
+cimport fastload
+from fastload cimport get_dimension, get_data
+from libc.stdio cimport *
 from libc.stdlib cimport malloc, calloc, free
+from libc.string cimport strtok, strncmp, strlen, strcpy
 from tree cimport tree_t
 
 ctypedef np.int_t INT_t
@@ -15,43 +19,95 @@ cdef class boxcounting:
     cdef int * occ
     cdef int max_level, n, dim, tot_data
     cdef double final_dim, final_var, eps
+    cdef char * cdelimiter 
+    cdef char * ccomments
+    cdef char * fname
+    cdef char * token
+    cdef double * m 
+    cdef double * M 
+    cdef double * cmid 
 
-    def __init__(self, int n):
-        self.tree = create_tree(n, 0)
+
+    cdef FILE * cfile 
+
+    def __init__(self):
         self.initialized = 0 
         self.tot_data = 0
+        self.IO_initialize()
 
-    @cython.boundscheck(False)  # Deactivate bounds checking
-    @cython.wraparound(False)   # Deactivate negative indexing.
-    def occupation(self, DOUBLE_t[:,:] x, int max_level):
-        self.initialization(x, max_level)
-        for i in range(self.n): recursive_occupation(&self.tree, x[i], max_level, self.dim)
+    def occupation(self, filename, int max_level, comments = '#', delimiter = ' ', double size = 1):
+        cdef int i
+        cdef double * x
+        cdef double radi
+        cdef int Ndata, Ncol
+        self.max_level = max_level
+        strcpy(self.cdelimiter, delimiter.encode('utf-8'))
+        strcpy(self.ccomments, comments.encode('utf-8'))
+        strcpy(self.fname, filename.encode('utf-8'))
+    
+        Ndata, Ncol = get_dimension(self.fname, self.cdelimiter, self.ccomments)
+        print(Ndata, Ncol)
+        if self.initialized == 0:
+            self.tree = create_tree(Ncol, 0)
+            self.initialized = 1
+
+        x = <double*>malloc(Ncol * sizeof(double))
+        self.n = Ndata 
+        self.dim = Ncol
+
+        self.cfile = fopen(self.fname, "rb")
+        cdef int eof = 0
+        i = 0
+        self.initialize_size()
+        print(self.eps)
+        self.cfile = fopen(self.fname, "rb")
+        eof = 0
+        while eof != -1:
+            eof = get_data(x, self.cfile, self.token, Ncol, self.cdelimiter, self.ccomments) 
+            recursive_occupation(&self.tree, x, max_level, self.dim)
+
         recursive_count(&self.tree, self.occ, max_level, self.dim)
 
-    @cython.boundscheck(False)  # Deactivate bounds checking
-    @cython.wraparound(False)   # Deactivate negative indexing.
-    def initialization(self, DOUBLE_t[:,:] x,  int max_level):
-        self.max_level = max_level
-        cdef int i, n = x.shape[0], dim = x.shape[1]
-        self.dim = dim 
-        cdef double mid, radi, radi_Max = 0.
-        self.n = n
-        self.tot_data += n
+    def IO_initialize(self):
+        self.cdelimiter = <char*>malloc(10 * sizeof(char))
+        self.ccomments  = <char*>malloc(10 * sizeof(char))
+        self.fname      = <char*>malloc(100 * sizeof(char))
+        self.token = NULL
 
-        # Compute min and max for each dim
-        for i in range(dim):
-            mid = 0.5*(np.max(x[:, i]) + np.min(x[:, i]))
-            radi = 0.5*(np.max(x[:, i]) - np.min(x[:, i]))
-            if radi > radi_Max: radi_Max = radi
-            self.tree.centr[i] = mid
-        self.tree.radi = radi_Max
-        self.eps = radi_Max
+    def initialize_size(self):
+        cdef double radi, size
+        cdef double * x 
+        cdef int i, eof = 0
+        x = <double*>malloc(self.dim*sizeof(double))
+        self.M = <double*>malloc(self.dim*sizeof(double))
+        self.m = <double*>malloc(self.dim*sizeof(double))
+        self.cmid = <double*>malloc(self.dim*sizeof(double))
 
-        if self.initialized == 0:
-            self.occ = <int*>malloc(max_level*sizeof(int))
-            self.initialized = 1
-            for i in range(max_level): self.occ[i] = 0
-        return
+        for i in range(self.dim):
+            self.M[i] = -1e8
+            self.m[i] = 1e8
+
+        while eof != -1:
+            eof = get_data(x, self.cfile, self.token, self.dim, self.cdelimiter, self.ccomments) 
+            for i in range(self.dim):
+               if self.m[i] > x[i]:
+                    self.m[i] = x[i]
+               if self.M[i] < x[i]:
+                        self.M[i] = x[i]
+
+        for i in range(self.dim):
+            self.cmid[i] = 0.5*(self.M[i]+self.m[i])
+        size = 0
+        for i in range(self.dim):
+            self.tree.centr[i] = self.cmid[i]
+            radi =  0.5*(self.M[i]-self.m[i])
+            if size < radi:
+                size = radi
+        self.tree.radi = size 
+        self.eps = size
+        self.occ = <int*>malloc(self.max_level*sizeof(int))
+        for i in range(self.max_level): self.occ[i] = 0
+        self.initialized = 1
 
     @property 
     def occ(self):
@@ -78,7 +134,6 @@ cdef class boxcounting:
 
     def free(self):
         free_tree(&self.tree, self.dim)
-        return 
 
 cdef tree_t create_tree(int n, int level):
     cdef tree_t tree
@@ -103,7 +158,7 @@ cdef void free_tree(tree_t * tree, int dim):
 
 @cython.boundscheck(False)  # Deactivate bounds checking
 @cython.wraparound(False)   # Deactivate negative indexing.
-cdef void recursive_occupation(tree_t * tree, DOUBLE_t[:] x, int max_level, int dim):
+cdef void recursive_occupation(tree_t * tree, double * x, int max_level, int dim):
     cdef tree_t * next_tree
     if tree.level < max_level:
         if tree.filled == 0:
@@ -126,7 +181,7 @@ cdef void recursive_count(tree_t * tree, int * occ, int max_level, int dim):
 
 @cython.boundscheck(False)  # Deactivate bounds checking
 @cython.wraparound(False)   # Deactivate negative indexing.
-cdef tree_t * next_child(tree_t * tree, DOUBLE_t[:] x, int dim):
+cdef tree_t * next_child(tree_t * tree, double * x, int dim):
     """
     Function that select the quadrant for the next step based on the input data.
     It also define the next node max, min, mid

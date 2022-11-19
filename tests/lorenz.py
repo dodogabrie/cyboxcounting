@@ -36,10 +36,8 @@ def write_data(tmax, n, data_file):
     np.savetxt("data/" + data_file, np.column_stack((x, y, z)))
 
 def compute_dimension(data_file, max_level, min_level = 1):
-    data = np.loadtxt("data/" + data_file)
-    print("number of data:", len(data))
-    bc = boxcounting(data.shape[1])
-    bc.occupation(data, max_level)
+    bc = boxcounting()
+    bc.occupation("data/"+data_file, max_level, size = 100)
     fit_show(bc, min_index = min_level)
 def plot3d(data_file):
     # Plot

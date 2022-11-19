@@ -16,6 +16,6 @@ cdef inline int StartsWith(const char *a, const char *b):
     if strncmp(a, b, strlen(b)) == 0: return 1
     return 0;
 
-cdef (int, int) get_dimension(char *, char *, char *)
-cdef void take_data(DTYPE_t[:,:], char *, int, int, 
-        char * , char * , np.int_t[:] )
+
+cdef (int, int) get_dimension(char * , char * , char * )
+cdef int get_data(double * , FILE * , char *, int , char * , char * )
