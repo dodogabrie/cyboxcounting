@@ -8,9 +8,9 @@ from build.boxcounting import boxcounting
 
 def compute_dim(bc):
     num = np.log2(bc.occ)
-    den = np.arange(bc.max_level) #- np.log2(bc.eps)
+    den = np.arange(bc.max_level) #- np.log2(bc.eps0)
     den[0] = 1
-    print("Original Radius:", bc.eps)
+    print("Original Radius:", bc.eps0)
     print("List of dim:", num/den)
     return num, den
 
@@ -19,9 +19,9 @@ def fit_dim(bc, min_index = 1, max_index = 0):
     y, den = compute_dim(bc)
     y = y[min_index:max_index]
     den = den[min_index:max_index]
-    def f(x, m):
-        return m * x
-    init = [1.]
+    def f(x, m, q):
+        return m * x + q
+    init = [1., 0]
     popt, pcov = curve_fit(f, den, y, p0=init)
     x_array = np.linspace(np.min(den), np.max(den), 100)
     D = popt[0]

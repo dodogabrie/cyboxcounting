@@ -37,7 +37,7 @@ def write_data(tmax, n, data_file):
 
 def compute_dimension(data_file, max_level, min_level = 1):
     bc = boxcounting()
-    bc.occupation("data/"+data_file, max_level, size = 100)
+    bc.occupation("data/"+data_file, max_level)
     fit_show(bc, min_index = min_level)
 def plot3d(data_file):
     # Plot
@@ -51,10 +51,10 @@ def plot3d(data_file):
     return 
 
 if __name__ == "__main__":
-    data_file = "lorenz.txt"
+    data_file = "lorenz_short.txt"
     tmax = 1000
-    n = int(1e7)
-    max_level = 10
+    n = int(1e5)
+    max_level = 6
     min_level = 1
 #    write_data(tmax, n, data_file)
 #    plot3d(data_file)

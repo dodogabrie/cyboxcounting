@@ -17,8 +17,9 @@ cdef class boxcounting:
     cdef tree_t tree
     cdef int initialized
     cdef int * occ
-    cdef int max_level, n, dim, tot_data
-    cdef double final_dim, final_var, eps
+    cdef double * eps
+    cdef int max_level, n, dim, tot_data, num_tree
+    cdef double final_dim, final_var, eps0
     cdef char * cdelimiter 
     cdef char * ccomments
     cdef char * fname
@@ -33,40 +34,39 @@ cdef class boxcounting:
     def __init__(self):
         self.initialized = 0 
         self.tot_data = 0
+        self.eps0 = 0
         self.IO_initialize()
 
-    def occupation(self, filename, int max_level, comments = '#', delimiter = ' ', double size = 1):
+    def occupation(self, filename, int max_level, comments = '#', delimiter = ' ', int num_tree = 1):
         cdef int i
         cdef double * x
         cdef double radi
         cdef int Ndata, Ncol
         self.max_level = max_level
+        self.num_tree = num_tree
         strcpy(self.cdelimiter, delimiter.encode('utf-8'))
         strcpy(self.ccomments, comments.encode('utf-8'))
         strcpy(self.fname, filename.encode('utf-8'))
     
         Ndata, Ncol = get_dimension(self.fname, self.cdelimiter, self.ccomments)
-        print(Ndata, Ncol)
-        if self.initialized == 0:
-            self.tree = create_tree(Ncol, 0)
-            self.initialized = 1
+        self.tree = create_tree(Ncol, 0)
+        self.initialized = 1
 
         x = <double*>malloc(Ncol * sizeof(double))
         self.n = Ndata 
         self.dim = Ncol
 
-        self.cfile = fopen(self.fname, "rb")
-        cdef int eof = 0
-        i = 0
         self.initialize_size()
-        print(self.eps)
         self.cfile = fopen(self.fname, "rb")
         eof = 0
         while eof != -1:
             eof = get_data(x, self.cfile, self.token, Ncol, self.cdelimiter, self.ccomments) 
             recursive_occupation(&self.tree, x, max_level, self.dim)
-
+        fclose(self.cfile)
         recursive_count(&self.tree, self.occ, max_level, self.dim)
+        self.free()
+
+        self.tot_data += self.n
 
     def IO_initialize(self):
         self.cdelimiter = <char*>malloc(10 * sizeof(char))
@@ -79,14 +79,17 @@ cdef class boxcounting:
         cdef double * x 
         cdef int i, eof = 0
         x = <double*>malloc(self.dim*sizeof(double))
-        self.M = <double*>malloc(self.dim*sizeof(double))
-        self.m = <double*>malloc(self.dim*sizeof(double))
-        self.cmid = <double*>malloc(self.dim*sizeof(double))
 
-        for i in range(self.dim):
-            self.M[i] = -1e8
-            self.m[i] = 1e8
+        if self.tot_data == 0:
+            self.M = <double*>malloc(self.dim*sizeof(double))
+            self.m = <double*>malloc(self.dim*sizeof(double))
+            self.cmid = <double*>malloc(self.dim*sizeof(double))
 
+            for i in range(self.dim):
+                self.M[i] = -1e8
+                self.m[i] = 1e8
+
+        self.cfile = fopen(self.fname, "rb")
         while eof != -1:
             eof = get_data(x, self.cfile, self.token, self.dim, self.cdelimiter, self.ccomments) 
             for i in range(self.dim):
@@ -94,6 +97,7 @@ cdef class boxcounting:
                     self.m[i] = x[i]
                if self.M[i] < x[i]:
                         self.M[i] = x[i]
+        fclose(self.cfile)
 
         for i in range(self.dim):
             self.cmid[i] = 0.5*(self.M[i]+self.m[i])
@@ -104,9 +108,13 @@ cdef class boxcounting:
             if size < radi:
                 size = radi
         self.tree.radi = size 
-        self.eps = size
-        self.occ = <int*>malloc(self.max_level*sizeof(int))
-        for i in range(self.max_level): self.occ[i] = 0
+        self.eps0 = size
+        self.occ = <int*>malloc(self.max_level*self.num_tree*sizeof(int))
+        self.eps = <double*>malloc(self.max_level*self.num_tree*sizeof(double))
+        self.eps[0] = self.eps0
+        for i in range(self.max_level): 
+            self.occ[i] = 0
+            self.eps[i] = 0
         self.initialized = 1
 
     @property 
@@ -120,8 +128,8 @@ cdef class boxcounting:
     def max_level(self):
         return self.max_level
     @property
-    def eps(self):
-        return self.eps
+    def eps0(self):
+        return self.eps0
     @property 
     def n(self):
         return self.n
