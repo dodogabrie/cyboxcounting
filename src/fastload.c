@@ -752,7 +752,6 @@ static CYTHON_INLINE float __PYX_NAN() {
 
     /* NumPy API declarations from "numpy/__init__.pxd" */
     
-#include "stdio.h"
 #ifdef _OPENMP
 #include <omp.h>
 #endif /* _OPENMP */
@@ -1177,15 +1176,6 @@ typedef npy_double __pyx_t_5numpy_double_t;
  * ctypedef npy_cfloat      cfloat_t
  */
 typedef npy_longdouble __pyx_t_5numpy_longdouble_t;
-
-/* "fastload.pxd":9
- * 
- * # C definitions ###############################################
- * ctypedef np.double_t DTYPE_t             # <<<<<<<<<<<<<<
- * cdef extern from "stdio.h":
- *     FILE *fopen(const char *, const char *)
- */
-typedef __pyx_t_5numpy_double_t __pyx_t_8fastload_DTYPE_t;
 /* Declarations.proto */
 #if CYTHON_CCOMPLEX
   #ifdef __cplusplus
@@ -1251,7 +1241,7 @@ typedef npy_cdouble __pyx_t_5numpy_complex_t;
 struct __pyx_ctuple_int__and_int;
 typedef struct __pyx_ctuple_int__and_int __pyx_ctuple_int__and_int;
 
-/* "fastload.pxd":20
+/* "fastload.pxd":13
  * 
  * 
  * cdef (int, int) get_dimension(char * , char * , char * )             # <<<<<<<<<<<<<<
@@ -3810,9 +3800,9 @@ static CYTHON_INLINE NPY_DATETIMEUNIT __pyx_f_5numpy_get_datetime64_unit(PyObjec
   return __pyx_r;
 }
 
-/* "fastload.pxd":15
- *     ssize_t getline(char **, size_t *, FILE *)
- * ###############################################################
+/* "fastload.pxd":8
+ * cimport cython, numpy as np # Make numpy work with cython
+ * 
  * cdef inline int StartsWith(const char *a, const char *b):             # <<<<<<<<<<<<<<
  *     if strncmp(a, b, strlen(b)) == 0: return 1
  *     return 0;
@@ -3824,8 +3814,8 @@ static CYTHON_INLINE int __pyx_f_8fastload_StartsWith(char const *__pyx_v_a, cha
   int __pyx_t_1;
   __Pyx_RefNannySetupContext("StartsWith", 0);
 
-  /* "fastload.pxd":16
- * ###############################################################
+  /* "fastload.pxd":9
+ * 
  * cdef inline int StartsWith(const char *a, const char *b):
  *     if strncmp(a, b, strlen(b)) == 0: return 1             # <<<<<<<<<<<<<<
  *     return 0;
@@ -3837,7 +3827,7 @@ static CYTHON_INLINE int __pyx_f_8fastload_StartsWith(char const *__pyx_v_a, cha
     goto __pyx_L0;
   }
 
-  /* "fastload.pxd":17
+  /* "fastload.pxd":10
  * cdef inline int StartsWith(const char *a, const char *b):
  *     if strncmp(a, b, strlen(b)) == 0: return 1
  *     return 0;             # <<<<<<<<<<<<<<
@@ -3847,9 +3837,9 @@ static CYTHON_INLINE int __pyx_f_8fastload_StartsWith(char const *__pyx_v_a, cha
   __pyx_r = 0;
   goto __pyx_L0;
 
-  /* "fastload.pxd":15
- *     ssize_t getline(char **, size_t *, FILE *)
- * ###############################################################
+  /* "fastload.pxd":8
+ * cimport cython, numpy as np # Make numpy work with cython
+ * 
  * cdef inline int StartsWith(const char *a, const char *b):             # <<<<<<<<<<<<<<
  *     if strncmp(a, b, strlen(b)) == 0: return 1
  *     return 0;
@@ -4364,9 +4354,9 @@ if (!__Pyx_RefNanny) {
   if (PyDict_SetItem(__pyx_d, __pyx_n_s_test, __pyx_t_1) < 0) __PYX_ERR(0, 1, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-  /* "fastload.pxd":15
- *     ssize_t getline(char **, size_t *, FILE *)
- * ###############################################################
+  /* "fastload.pxd":8
+ * cimport cython, numpy as np # Make numpy work with cython
+ * 
  * cdef inline int StartsWith(const char *a, const char *b):             # <<<<<<<<<<<<<<
  *     if strncmp(a, b, strlen(b)) == 0: return 1
  *     return 0;
