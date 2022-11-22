@@ -752,7 +752,6 @@ static CYTHON_INLINE float __PYX_NAN() {
     /* NumPy API declarations from "numpy/__init__.pxd" */
     
 #include <stdlib.h>
-#include "stdio.h"
 #ifdef _OPENMP
 #include <omp.h>
 #endif /* _OPENMP */
@@ -1215,15 +1214,6 @@ typedef npy_double __pyx_t_5numpy_double_t;
  */
 typedef npy_longdouble __pyx_t_5numpy_longdouble_t;
 
-/* "fastload.pxd":9
- * 
- * # C definitions ###############################################
- * ctypedef np.double_t DTYPE_t             # <<<<<<<<<<<<<<
- * cdef extern from "stdio.h":
- *     FILE *fopen(const char *, const char *)
- */
-typedef __pyx_t_5numpy_double_t __pyx_t_8fastload_DTYPE_t;
-
 /* "boxcounting.pyx":13
  * from tree cimport tree_t
  * 
@@ -1324,7 +1314,7 @@ struct __pyx_t_4tree_tree_t {
 struct __pyx_ctuple_int__and_int;
 typedef struct __pyx_ctuple_int__and_int __pyx_ctuple_int__and_int;
 
-/* "fastload.pxd":20
+/* "fastload.pxd":13
  * 
  * 
  * cdef (int, int) get_dimension(char * , char * , char * )             # <<<<<<<<<<<<<<
@@ -1959,9 +1949,9 @@ static PyObject *__pyx_builtin_ImportError;
 static const char __pyx_k_[] = "#";
 static const char __pyx_k__2[] = " ";
 static const char __pyx_k_np[] = "np";
-static const char __pyx_k_free[] = "free";
 static const char __pyx_k_main[] = "__main__";
 static const char __pyx_k_name[] = "__name__";
+static const char __pyx_k_size[] = "size";
 static const char __pyx_k_test[] = "__test__";
 static const char __pyx_k_numpy[] = "numpy";
 static const char __pyx_k_range[] = "range";
@@ -2002,7 +1992,6 @@ static PyObject *__pyx_n_s_comments;
 static PyObject *__pyx_n_s_delimiter;
 static PyObject *__pyx_n_s_encode;
 static PyObject *__pyx_n_s_filename;
-static PyObject *__pyx_n_s_free;
 static PyObject *__pyx_n_s_getstate;
 static PyObject *__pyx_n_s_import;
 static PyObject *__pyx_n_s_initialize_size;
@@ -2021,21 +2010,25 @@ static PyObject *__pyx_n_s_reduce_ex;
 static PyObject *__pyx_kp_s_self_M_self_cfile_self_cmid_self;
 static PyObject *__pyx_n_s_setstate;
 static PyObject *__pyx_n_s_setstate_cython;
+static PyObject *__pyx_n_s_size;
 static PyObject *__pyx_n_s_test;
 static PyObject *__pyx_kp_u_utf_8;
 static PyObject *__pyx_n_s_zeros;
 static int __pyx_pf_11boxcounting_11boxcounting___init__(struct __pyx_obj_11boxcounting_boxcounting *__pyx_v_self); /* proto */
-static PyObject *__pyx_pf_11boxcounting_11boxcounting_2occupation(struct __pyx_obj_11boxcounting_boxcounting *__pyx_v_self, PyObject *__pyx_v_filename, int __pyx_v_max_level, PyObject *__pyx_v_comments, PyObject *__pyx_v_delimiter, int __pyx_v_num_tree); /* proto */
-static PyObject *__pyx_pf_11boxcounting_11boxcounting_4IO_initialize(struct __pyx_obj_11boxcounting_boxcounting *__pyx_v_self); /* proto */
-static PyObject *__pyx_pf_11boxcounting_11boxcounting_6initialize_size(struct __pyx_obj_11boxcounting_boxcounting *__pyx_v_self); /* proto */
+static PyObject *__pyx_pf_11boxcounting_11boxcounting_2set_data_file(struct __pyx_obj_11boxcounting_boxcounting *__pyx_v_self, PyObject *__pyx_v_filename, PyObject *__pyx_v_comments, PyObject *__pyx_v_delimiter); /* proto */
+static PyObject *__pyx_pf_11boxcounting_11boxcounting_4initialize(struct __pyx_obj_11boxcounting_boxcounting *__pyx_v_self, int __pyx_v_max_level, int __pyx_v_num_tree, double __pyx_v_size); /* proto */
+static PyObject *__pyx_pf_11boxcounting_11boxcounting_6fill_tree(struct __pyx_obj_11boxcounting_boxcounting *__pyx_v_self); /* proto */
+static PyObject *__pyx_pf_11boxcounting_11boxcounting_8count_occupation(struct __pyx_obj_11boxcounting_boxcounting *__pyx_v_self); /* proto */
+static PyObject *__pyx_pf_11boxcounting_11boxcounting_10IO_initialize(struct __pyx_obj_11boxcounting_boxcounting *__pyx_v_self); /* proto */
+static PyObject *__pyx_pf_11boxcounting_11boxcounting_12initialize_size(struct __pyx_obj_11boxcounting_boxcounting *__pyx_v_self, double __pyx_v_size); /* proto */
 static PyObject *__pyx_pf_11boxcounting_11boxcounting_3occ___get__(struct __pyx_obj_11boxcounting_boxcounting *__pyx_v_self); /* proto */
 static PyObject *__pyx_pf_11boxcounting_11boxcounting_9max_level___get__(struct __pyx_obj_11boxcounting_boxcounting *__pyx_v_self); /* proto */
 static PyObject *__pyx_pf_11boxcounting_11boxcounting_4eps0___get__(struct __pyx_obj_11boxcounting_boxcounting *__pyx_v_self); /* proto */
 static PyObject *__pyx_pf_11boxcounting_11boxcounting_1n___get__(struct __pyx_obj_11boxcounting_boxcounting *__pyx_v_self); /* proto */
 static PyObject *__pyx_pf_11boxcounting_11boxcounting_8tot_data___get__(struct __pyx_obj_11boxcounting_boxcounting *__pyx_v_self); /* proto */
-static PyObject *__pyx_pf_11boxcounting_11boxcounting_8free(struct __pyx_obj_11boxcounting_boxcounting *__pyx_v_self); /* proto */
-static PyObject *__pyx_pf_11boxcounting_11boxcounting_10__reduce_cython__(CYTHON_UNUSED struct __pyx_obj_11boxcounting_boxcounting *__pyx_v_self); /* proto */
-static PyObject *__pyx_pf_11boxcounting_11boxcounting_12__setstate_cython__(CYTHON_UNUSED struct __pyx_obj_11boxcounting_boxcounting *__pyx_v_self, CYTHON_UNUSED PyObject *__pyx_v___pyx_state); /* proto */
+static PyObject *__pyx_pf_11boxcounting_11boxcounting_14free(struct __pyx_obj_11boxcounting_boxcounting *__pyx_v_self); /* proto */
+static PyObject *__pyx_pf_11boxcounting_11boxcounting_16__reduce_cython__(CYTHON_UNUSED struct __pyx_obj_11boxcounting_boxcounting *__pyx_v_self); /* proto */
+static PyObject *__pyx_pf_11boxcounting_11boxcounting_18__setstate_cython__(CYTHON_UNUSED struct __pyx_obj_11boxcounting_boxcounting *__pyx_v_self, CYTHON_UNUSED PyObject *__pyx_v___pyx_state); /* proto */
 static PyObject *__pyx_tp_new_11boxcounting_boxcounting(PyTypeObject *t, PyObject *a, PyObject *k); /*proto*/
 static PyObject *__pyx_tuple__3;
 static PyObject *__pyx_tuple__4;
@@ -2110,7 +2103,7 @@ static int __pyx_pf_11boxcounting_11boxcounting___init__(struct __pyx_obj_11boxc
  *         self.eps0 = 0
  *         self.IO_initialize()             # <<<<<<<<<<<<<<
  * 
- *     def occupation(self, filename, int max_level, comments = '#', delimiter = ' ', int num_tree = 1):
+ *     def set_data_file(self, filename, comments = '#', delimiter = ' '):
  */
   __pyx_t_2 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_IO_initialize); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 38, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
@@ -2156,38 +2149,32 @@ static int __pyx_pf_11boxcounting_11boxcounting___init__(struct __pyx_obj_11boxc
 /* "boxcounting.pyx":40
  *         self.IO_initialize()
  * 
- *     def occupation(self, filename, int max_level, comments = '#', delimiter = ' ', int num_tree = 1):             # <<<<<<<<<<<<<<
- *         cdef int i
- *         cdef double * x
+ *     def set_data_file(self, filename, comments = '#', delimiter = ' '):             # <<<<<<<<<<<<<<
+ *         strcpy(self.cdelimiter, delimiter.encode('utf-8'))
+ *         strcpy(self.ccomments, comments.encode('utf-8'))
  */
 
 /* Python wrapper */
-static PyObject *__pyx_pw_11boxcounting_11boxcounting_3occupation(PyObject *__pyx_v_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
-static PyObject *__pyx_pw_11boxcounting_11boxcounting_3occupation(PyObject *__pyx_v_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
+static PyObject *__pyx_pw_11boxcounting_11boxcounting_3set_data_file(PyObject *__pyx_v_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
+static PyObject *__pyx_pw_11boxcounting_11boxcounting_3set_data_file(PyObject *__pyx_v_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
   PyObject *__pyx_v_filename = 0;
-  int __pyx_v_max_level;
   PyObject *__pyx_v_comments = 0;
   PyObject *__pyx_v_delimiter = 0;
-  int __pyx_v_num_tree;
   int __pyx_lineno = 0;
   const char *__pyx_filename = NULL;
   int __pyx_clineno = 0;
   PyObject *__pyx_r = 0;
   __Pyx_RefNannyDeclarations
-  __Pyx_RefNannySetupContext("occupation (wrapper)", 0);
+  __Pyx_RefNannySetupContext("set_data_file (wrapper)", 0);
   {
-    static PyObject **__pyx_pyargnames[] = {&__pyx_n_s_filename,&__pyx_n_s_max_level,&__pyx_n_s_comments,&__pyx_n_s_delimiter,&__pyx_n_s_num_tree,0};
-    PyObject* values[5] = {0,0,0,0,0};
-    values[2] = ((PyObject *)__pyx_kp_u_);
-    values[3] = ((PyObject *)__pyx_kp_u__2);
+    static PyObject **__pyx_pyargnames[] = {&__pyx_n_s_filename,&__pyx_n_s_comments,&__pyx_n_s_delimiter,0};
+    PyObject* values[3] = {0,0,0};
+    values[1] = ((PyObject *)__pyx_kp_u_);
+    values[2] = ((PyObject *)__pyx_kp_u__2);
     if (unlikely(__pyx_kwds)) {
       Py_ssize_t kw_args;
       const Py_ssize_t pos_args = PyTuple_GET_SIZE(__pyx_args);
       switch (pos_args) {
-        case  5: values[4] = PyTuple_GET_ITEM(__pyx_args, 4);
-        CYTHON_FALLTHROUGH;
-        case  4: values[3] = PyTuple_GET_ITEM(__pyx_args, 3);
-        CYTHON_FALLTHROUGH;
         case  3: values[2] = PyTuple_GET_ITEM(__pyx_args, 2);
         CYTHON_FALLTHROUGH;
         case  2: values[1] = PyTuple_GET_ITEM(__pyx_args, 1);
@@ -2204,117 +2191,70 @@ static PyObject *__pyx_pw_11boxcounting_11boxcounting_3occupation(PyObject *__py
         else goto __pyx_L5_argtuple_error;
         CYTHON_FALLTHROUGH;
         case  1:
-        if (likely((values[1] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_max_level)) != 0)) kw_args--;
-        else {
-          __Pyx_RaiseArgtupleInvalid("occupation", 0, 2, 5, 1); __PYX_ERR(0, 40, __pyx_L3_error)
+        if (kw_args > 0) {
+          PyObject* value = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_comments);
+          if (value) { values[1] = value; kw_args--; }
         }
         CYTHON_FALLTHROUGH;
         case  2:
         if (kw_args > 0) {
-          PyObject* value = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_comments);
-          if (value) { values[2] = value; kw_args--; }
-        }
-        CYTHON_FALLTHROUGH;
-        case  3:
-        if (kw_args > 0) {
           PyObject* value = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_delimiter);
-          if (value) { values[3] = value; kw_args--; }
-        }
-        CYTHON_FALLTHROUGH;
-        case  4:
-        if (kw_args > 0) {
-          PyObject* value = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_num_tree);
-          if (value) { values[4] = value; kw_args--; }
+          if (value) { values[2] = value; kw_args--; }
         }
       }
       if (unlikely(kw_args > 0)) {
-        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "occupation") < 0)) __PYX_ERR(0, 40, __pyx_L3_error)
+        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "set_data_file") < 0)) __PYX_ERR(0, 40, __pyx_L3_error)
       }
     } else {
       switch (PyTuple_GET_SIZE(__pyx_args)) {
-        case  5: values[4] = PyTuple_GET_ITEM(__pyx_args, 4);
-        CYTHON_FALLTHROUGH;
-        case  4: values[3] = PyTuple_GET_ITEM(__pyx_args, 3);
-        CYTHON_FALLTHROUGH;
         case  3: values[2] = PyTuple_GET_ITEM(__pyx_args, 2);
         CYTHON_FALLTHROUGH;
         case  2: values[1] = PyTuple_GET_ITEM(__pyx_args, 1);
-        values[0] = PyTuple_GET_ITEM(__pyx_args, 0);
+        CYTHON_FALLTHROUGH;
+        case  1: values[0] = PyTuple_GET_ITEM(__pyx_args, 0);
         break;
         default: goto __pyx_L5_argtuple_error;
       }
     }
     __pyx_v_filename = values[0];
-    __pyx_v_max_level = __Pyx_PyInt_As_int(values[1]); if (unlikely((__pyx_v_max_level == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 40, __pyx_L3_error)
-    __pyx_v_comments = values[2];
-    __pyx_v_delimiter = values[3];
-    if (values[4]) {
-      __pyx_v_num_tree = __Pyx_PyInt_As_int(values[4]); if (unlikely((__pyx_v_num_tree == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 40, __pyx_L3_error)
-    } else {
-      __pyx_v_num_tree = ((int)1);
-    }
+    __pyx_v_comments = values[1];
+    __pyx_v_delimiter = values[2];
   }
   goto __pyx_L4_argument_unpacking_done;
   __pyx_L5_argtuple_error:;
-  __Pyx_RaiseArgtupleInvalid("occupation", 0, 2, 5, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 40, __pyx_L3_error)
+  __Pyx_RaiseArgtupleInvalid("set_data_file", 0, 1, 3, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 40, __pyx_L3_error)
   __pyx_L3_error:;
-  __Pyx_AddTraceback("boxcounting.boxcounting.occupation", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("boxcounting.boxcounting.set_data_file", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __Pyx_RefNannyFinishContext();
   return NULL;
   __pyx_L4_argument_unpacking_done:;
-  __pyx_r = __pyx_pf_11boxcounting_11boxcounting_2occupation(((struct __pyx_obj_11boxcounting_boxcounting *)__pyx_v_self), __pyx_v_filename, __pyx_v_max_level, __pyx_v_comments, __pyx_v_delimiter, __pyx_v_num_tree);
+  __pyx_r = __pyx_pf_11boxcounting_11boxcounting_2set_data_file(((struct __pyx_obj_11boxcounting_boxcounting *)__pyx_v_self), __pyx_v_filename, __pyx_v_comments, __pyx_v_delimiter);
 
   /* function exit code */
   __Pyx_RefNannyFinishContext();
   return __pyx_r;
 }
 
-static PyObject *__pyx_pf_11boxcounting_11boxcounting_2occupation(struct __pyx_obj_11boxcounting_boxcounting *__pyx_v_self, PyObject *__pyx_v_filename, int __pyx_v_max_level, PyObject *__pyx_v_comments, PyObject *__pyx_v_delimiter, int __pyx_v_num_tree) {
-  double *__pyx_v_x;
-  int __pyx_v_Ndata;
-  int __pyx_v_Ncol;
-  long __pyx_v_eof;
+static PyObject *__pyx_pf_11boxcounting_11boxcounting_2set_data_file(struct __pyx_obj_11boxcounting_boxcounting *__pyx_v_self, PyObject *__pyx_v_filename, PyObject *__pyx_v_comments, PyObject *__pyx_v_delimiter) {
   PyObject *__pyx_r = NULL;
   __Pyx_RefNannyDeclarations
   PyObject *__pyx_t_1 = NULL;
   PyObject *__pyx_t_2 = NULL;
   PyObject *__pyx_t_3 = NULL;
   char const *__pyx_t_4;
-  __pyx_ctuple_int__and_int __pyx_t_5;
-  int __pyx_t_6;
-  int __pyx_t_7;
-  int __pyx_t_8;
   int __pyx_lineno = 0;
   const char *__pyx_filename = NULL;
   int __pyx_clineno = 0;
-  __Pyx_RefNannySetupContext("occupation", 0);
+  __Pyx_RefNannySetupContext("set_data_file", 0);
 
-  /* "boxcounting.pyx":45
- *         cdef double radi
- *         cdef int Ndata, Ncol
- *         self.max_level = max_level             # <<<<<<<<<<<<<<
- *         self.num_tree = num_tree
- *         strcpy(self.cdelimiter, delimiter.encode('utf-8'))
- */
-  __pyx_v_self->max_level = __pyx_v_max_level;
-
-  /* "boxcounting.pyx":46
- *         cdef int Ndata, Ncol
- *         self.max_level = max_level
- *         self.num_tree = num_tree             # <<<<<<<<<<<<<<
- *         strcpy(self.cdelimiter, delimiter.encode('utf-8'))
- *         strcpy(self.ccomments, comments.encode('utf-8'))
- */
-  __pyx_v_self->num_tree = __pyx_v_num_tree;
-
-  /* "boxcounting.pyx":47
- *         self.max_level = max_level
- *         self.num_tree = num_tree
+  /* "boxcounting.pyx":41
+ * 
+ *     def set_data_file(self, filename, comments = '#', delimiter = ' '):
  *         strcpy(self.cdelimiter, delimiter.encode('utf-8'))             # <<<<<<<<<<<<<<
  *         strcpy(self.ccomments, comments.encode('utf-8'))
  *         strcpy(self.fname, filename.encode('utf-8'))
  */
-  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_v_delimiter, __pyx_n_s_encode); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 47, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_v_delimiter, __pyx_n_s_encode); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 41, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __pyx_t_3 = NULL;
   if (CYTHON_UNPACK_METHODS && likely(PyMethod_Check(__pyx_t_2))) {
@@ -2328,21 +2268,21 @@ static PyObject *__pyx_pf_11boxcounting_11boxcounting_2occupation(struct __pyx_o
   }
   __pyx_t_1 = (__pyx_t_3) ? __Pyx_PyObject_Call2Args(__pyx_t_2, __pyx_t_3, __pyx_kp_u_utf_8) : __Pyx_PyObject_CallOneArg(__pyx_t_2, __pyx_kp_u_utf_8);
   __Pyx_XDECREF(__pyx_t_3); __pyx_t_3 = 0;
-  if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 47, __pyx_L1_error)
+  if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 41, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-  __pyx_t_4 = __Pyx_PyObject_AsString(__pyx_t_1); if (unlikely((!__pyx_t_4) && PyErr_Occurred())) __PYX_ERR(0, 47, __pyx_L1_error)
+  __pyx_t_4 = __Pyx_PyObject_AsString(__pyx_t_1); if (unlikely((!__pyx_t_4) && PyErr_Occurred())) __PYX_ERR(0, 41, __pyx_L1_error)
   (void)(strcpy(__pyx_v_self->cdelimiter, __pyx_t_4));
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-  /* "boxcounting.pyx":48
- *         self.num_tree = num_tree
+  /* "boxcounting.pyx":42
+ *     def set_data_file(self, filename, comments = '#', delimiter = ' '):
  *         strcpy(self.cdelimiter, delimiter.encode('utf-8'))
  *         strcpy(self.ccomments, comments.encode('utf-8'))             # <<<<<<<<<<<<<<
  *         strcpy(self.fname, filename.encode('utf-8'))
  * 
  */
-  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_v_comments, __pyx_n_s_encode); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 48, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_v_comments, __pyx_n_s_encode); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 42, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __pyx_t_3 = NULL;
   if (CYTHON_UNPACK_METHODS && likely(PyMethod_Check(__pyx_t_2))) {
@@ -2356,21 +2296,21 @@ static PyObject *__pyx_pf_11boxcounting_11boxcounting_2occupation(struct __pyx_o
   }
   __pyx_t_1 = (__pyx_t_3) ? __Pyx_PyObject_Call2Args(__pyx_t_2, __pyx_t_3, __pyx_kp_u_utf_8) : __Pyx_PyObject_CallOneArg(__pyx_t_2, __pyx_kp_u_utf_8);
   __Pyx_XDECREF(__pyx_t_3); __pyx_t_3 = 0;
-  if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 48, __pyx_L1_error)
+  if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 42, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-  __pyx_t_4 = __Pyx_PyObject_AsString(__pyx_t_1); if (unlikely((!__pyx_t_4) && PyErr_Occurred())) __PYX_ERR(0, 48, __pyx_L1_error)
+  __pyx_t_4 = __Pyx_PyObject_AsString(__pyx_t_1); if (unlikely((!__pyx_t_4) && PyErr_Occurred())) __PYX_ERR(0, 42, __pyx_L1_error)
   (void)(strcpy(__pyx_v_self->ccomments, __pyx_t_4));
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-  /* "boxcounting.pyx":49
+  /* "boxcounting.pyx":43
  *         strcpy(self.cdelimiter, delimiter.encode('utf-8'))
  *         strcpy(self.ccomments, comments.encode('utf-8'))
  *         strcpy(self.fname, filename.encode('utf-8'))             # <<<<<<<<<<<<<<
  * 
- *         Ndata, Ncol = get_dimension(self.fname, self.cdelimiter, self.ccomments)
+ *     def initialize(self, int max_level, int num_tree = 1, double size = 0):
  */
-  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_v_filename, __pyx_n_s_encode); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 49, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(__pyx_v_filename, __pyx_n_s_encode); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 43, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __pyx_t_3 = NULL;
   if (CYTHON_UNPACK_METHODS && likely(PyMethod_Check(__pyx_t_2))) {
@@ -2384,204 +2324,19 @@ static PyObject *__pyx_pf_11boxcounting_11boxcounting_2occupation(struct __pyx_o
   }
   __pyx_t_1 = (__pyx_t_3) ? __Pyx_PyObject_Call2Args(__pyx_t_2, __pyx_t_3, __pyx_kp_u_utf_8) : __Pyx_PyObject_CallOneArg(__pyx_t_2, __pyx_kp_u_utf_8);
   __Pyx_XDECREF(__pyx_t_3); __pyx_t_3 = 0;
-  if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 49, __pyx_L1_error)
+  if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 43, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-  __pyx_t_4 = __Pyx_PyObject_AsString(__pyx_t_1); if (unlikely((!__pyx_t_4) && PyErr_Occurred())) __PYX_ERR(0, 49, __pyx_L1_error)
+  __pyx_t_4 = __Pyx_PyObject_AsString(__pyx_t_1); if (unlikely((!__pyx_t_4) && PyErr_Occurred())) __PYX_ERR(0, 43, __pyx_L1_error)
   (void)(strcpy(__pyx_v_self->fname, __pyx_t_4));
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-
-  /* "boxcounting.pyx":51
- *         strcpy(self.fname, filename.encode('utf-8'))
- * 
- *         Ndata, Ncol = get_dimension(self.fname, self.cdelimiter, self.ccomments)             # <<<<<<<<<<<<<<
- *         self.tree = create_tree(Ncol, 0)
- *         self.initialized = 1
- */
-  __pyx_t_5 = __pyx_f_8fastload_get_dimension(__pyx_v_self->fname, __pyx_v_self->cdelimiter, __pyx_v_self->ccomments);
-  __pyx_t_6 = __pyx_t_5.f0;
-  __pyx_t_7 = __pyx_t_5.f1;
-  __pyx_v_Ndata = __pyx_t_6;
-  __pyx_v_Ncol = __pyx_t_7;
-
-  /* "boxcounting.pyx":52
- * 
- *         Ndata, Ncol = get_dimension(self.fname, self.cdelimiter, self.ccomments)
- *         self.tree = create_tree(Ncol, 0)             # <<<<<<<<<<<<<<
- *         self.initialized = 1
- * 
- */
-  __pyx_v_self->tree = __pyx_f_11boxcounting_create_tree(__pyx_v_Ncol, 0);
-
-  /* "boxcounting.pyx":53
- *         Ndata, Ncol = get_dimension(self.fname, self.cdelimiter, self.ccomments)
- *         self.tree = create_tree(Ncol, 0)
- *         self.initialized = 1             # <<<<<<<<<<<<<<
- * 
- *         x = <double*>malloc(Ncol * sizeof(double))
- */
-  __pyx_v_self->initialized = 1;
-
-  /* "boxcounting.pyx":55
- *         self.initialized = 1
- * 
- *         x = <double*>malloc(Ncol * sizeof(double))             # <<<<<<<<<<<<<<
- *         self.n = Ndata
- *         self.dim = Ncol
- */
-  __pyx_v_x = ((double *)malloc((__pyx_v_Ncol * (sizeof(double)))));
-
-  /* "boxcounting.pyx":56
- * 
- *         x = <double*>malloc(Ncol * sizeof(double))
- *         self.n = Ndata             # <<<<<<<<<<<<<<
- *         self.dim = Ncol
- * 
- */
-  __pyx_v_self->n = __pyx_v_Ndata;
-
-  /* "boxcounting.pyx":57
- *         x = <double*>malloc(Ncol * sizeof(double))
- *         self.n = Ndata
- *         self.dim = Ncol             # <<<<<<<<<<<<<<
- * 
- *         self.initialize_size()
- */
-  __pyx_v_self->dim = __pyx_v_Ncol;
-
-  /* "boxcounting.pyx":59
- *         self.dim = Ncol
- * 
- *         self.initialize_size()             # <<<<<<<<<<<<<<
- *         self.cfile = fopen(self.fname, "rb")
- *         eof = 0
- */
-  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_initialize_size); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 59, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_2);
-  __pyx_t_3 = NULL;
-  if (CYTHON_UNPACK_METHODS && likely(PyMethod_Check(__pyx_t_2))) {
-    __pyx_t_3 = PyMethod_GET_SELF(__pyx_t_2);
-    if (likely(__pyx_t_3)) {
-      PyObject* function = PyMethod_GET_FUNCTION(__pyx_t_2);
-      __Pyx_INCREF(__pyx_t_3);
-      __Pyx_INCREF(function);
-      __Pyx_DECREF_SET(__pyx_t_2, function);
-    }
-  }
-  __pyx_t_1 = (__pyx_t_3) ? __Pyx_PyObject_CallOneArg(__pyx_t_2, __pyx_t_3) : __Pyx_PyObject_CallNoArg(__pyx_t_2);
-  __Pyx_XDECREF(__pyx_t_3); __pyx_t_3 = 0;
-  if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 59, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_1);
-  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-
-  /* "boxcounting.pyx":60
- * 
- *         self.initialize_size()
- *         self.cfile = fopen(self.fname, "rb")             # <<<<<<<<<<<<<<
- *         eof = 0
- *         while eof != -1:
- */
-  __pyx_v_self->cfile = fopen(__pyx_v_self->fname, ((char const *)"rb"));
-
-  /* "boxcounting.pyx":61
- *         self.initialize_size()
- *         self.cfile = fopen(self.fname, "rb")
- *         eof = 0             # <<<<<<<<<<<<<<
- *         while eof != -1:
- *             eof = get_data(x, self.cfile, self.token, Ncol, self.cdelimiter, self.ccomments)
- */
-  __pyx_v_eof = 0;
-
-  /* "boxcounting.pyx":62
- *         self.cfile = fopen(self.fname, "rb")
- *         eof = 0
- *         while eof != -1:             # <<<<<<<<<<<<<<
- *             eof = get_data(x, self.cfile, self.token, Ncol, self.cdelimiter, self.ccomments)
- *             recursive_occupation(&self.tree, x, max_level, self.dim)
- */
-  while (1) {
-    __pyx_t_8 = ((__pyx_v_eof != -1L) != 0);
-    if (!__pyx_t_8) break;
-
-    /* "boxcounting.pyx":63
- *         eof = 0
- *         while eof != -1:
- *             eof = get_data(x, self.cfile, self.token, Ncol, self.cdelimiter, self.ccomments)             # <<<<<<<<<<<<<<
- *             recursive_occupation(&self.tree, x, max_level, self.dim)
- *         fclose(self.cfile)
- */
-    __pyx_v_eof = __pyx_f_8fastload_get_data(__pyx_v_x, __pyx_v_self->cfile, __pyx_v_self->token, __pyx_v_Ncol, __pyx_v_self->cdelimiter, __pyx_v_self->ccomments);
-
-    /* "boxcounting.pyx":64
- *         while eof != -1:
- *             eof = get_data(x, self.cfile, self.token, Ncol, self.cdelimiter, self.ccomments)
- *             recursive_occupation(&self.tree, x, max_level, self.dim)             # <<<<<<<<<<<<<<
- *         fclose(self.cfile)
- *         recursive_count(&self.tree, self.occ, max_level, self.dim)
- */
-    __pyx_f_11boxcounting_recursive_occupation((&__pyx_v_self->tree), __pyx_v_x, __pyx_v_max_level, __pyx_v_self->dim);
-  }
-
-  /* "boxcounting.pyx":65
- *             eof = get_data(x, self.cfile, self.token, Ncol, self.cdelimiter, self.ccomments)
- *             recursive_occupation(&self.tree, x, max_level, self.dim)
- *         fclose(self.cfile)             # <<<<<<<<<<<<<<
- *         recursive_count(&self.tree, self.occ, max_level, self.dim)
- *         self.free()
- */
-  (void)(fclose(__pyx_v_self->cfile));
-
-  /* "boxcounting.pyx":66
- *             recursive_occupation(&self.tree, x, max_level, self.dim)
- *         fclose(self.cfile)
- *         recursive_count(&self.tree, self.occ, max_level, self.dim)             # <<<<<<<<<<<<<<
- *         self.free()
- * 
- */
-  __pyx_f_11boxcounting_recursive_count((&__pyx_v_self->tree), __pyx_v_self->occ, __pyx_v_max_level, __pyx_v_self->dim);
-
-  /* "boxcounting.pyx":67
- *         fclose(self.cfile)
- *         recursive_count(&self.tree, self.occ, max_level, self.dim)
- *         self.free()             # <<<<<<<<<<<<<<
- * 
- *         self.tot_data += self.n
- */
-  __pyx_t_2 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_free); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 67, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_2);
-  __pyx_t_3 = NULL;
-  if (CYTHON_UNPACK_METHODS && likely(PyMethod_Check(__pyx_t_2))) {
-    __pyx_t_3 = PyMethod_GET_SELF(__pyx_t_2);
-    if (likely(__pyx_t_3)) {
-      PyObject* function = PyMethod_GET_FUNCTION(__pyx_t_2);
-      __Pyx_INCREF(__pyx_t_3);
-      __Pyx_INCREF(function);
-      __Pyx_DECREF_SET(__pyx_t_2, function);
-    }
-  }
-  __pyx_t_1 = (__pyx_t_3) ? __Pyx_PyObject_CallOneArg(__pyx_t_2, __pyx_t_3) : __Pyx_PyObject_CallNoArg(__pyx_t_2);
-  __Pyx_XDECREF(__pyx_t_3); __pyx_t_3 = 0;
-  if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 67, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_1);
-  __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-  __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-
-  /* "boxcounting.pyx":69
- *         self.free()
- * 
- *         self.tot_data += self.n             # <<<<<<<<<<<<<<
- * 
- *     def IO_initialize(self):
- */
-  __pyx_v_self->tot_data = (__pyx_v_self->tot_data + __pyx_v_self->n);
 
   /* "boxcounting.pyx":40
  *         self.IO_initialize()
  * 
- *     def occupation(self, filename, int max_level, comments = '#', delimiter = ' ', int num_tree = 1):             # <<<<<<<<<<<<<<
- *         cdef int i
- *         cdef double * x
+ *     def set_data_file(self, filename, comments = '#', delimiter = ' '):             # <<<<<<<<<<<<<<
+ *         strcpy(self.cdelimiter, delimiter.encode('utf-8'))
+ *         strcpy(self.ccomments, comments.encode('utf-8'))
  */
 
   /* function exit code */
@@ -2591,7 +2346,7 @@ static PyObject *__pyx_pf_11boxcounting_11boxcounting_2occupation(struct __pyx_o
   __Pyx_XDECREF(__pyx_t_1);
   __Pyx_XDECREF(__pyx_t_2);
   __Pyx_XDECREF(__pyx_t_3);
-  __Pyx_AddTraceback("boxcounting.boxcounting.occupation", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_AddTraceback("boxcounting.boxcounting.set_data_file", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __pyx_r = NULL;
   __pyx_L0:;
   __Pyx_XGIVEREF(__pyx_r);
@@ -2599,8 +2354,431 @@ static PyObject *__pyx_pf_11boxcounting_11boxcounting_2occupation(struct __pyx_o
   return __pyx_r;
 }
 
-/* "boxcounting.pyx":71
- *         self.tot_data += self.n
+/* "boxcounting.pyx":45
+ *         strcpy(self.fname, filename.encode('utf-8'))
+ * 
+ *     def initialize(self, int max_level, int num_tree = 1, double size = 0):             # <<<<<<<<<<<<<<
+ *         cdef int Ncol, Ndata
+ *         self.max_level = max_level
+ */
+
+/* Python wrapper */
+static PyObject *__pyx_pw_11boxcounting_11boxcounting_5initialize(PyObject *__pyx_v_self, PyObject *__pyx_args, PyObject *__pyx_kwds); /*proto*/
+static PyObject *__pyx_pw_11boxcounting_11boxcounting_5initialize(PyObject *__pyx_v_self, PyObject *__pyx_args, PyObject *__pyx_kwds) {
+  int __pyx_v_max_level;
+  int __pyx_v_num_tree;
+  double __pyx_v_size;
+  int __pyx_lineno = 0;
+  const char *__pyx_filename = NULL;
+  int __pyx_clineno = 0;
+  PyObject *__pyx_r = 0;
+  __Pyx_RefNannyDeclarations
+  __Pyx_RefNannySetupContext("initialize (wrapper)", 0);
+  {
+    static PyObject **__pyx_pyargnames[] = {&__pyx_n_s_max_level,&__pyx_n_s_num_tree,&__pyx_n_s_size,0};
+    PyObject* values[3] = {0,0,0};
+    if (unlikely(__pyx_kwds)) {
+      Py_ssize_t kw_args;
+      const Py_ssize_t pos_args = PyTuple_GET_SIZE(__pyx_args);
+      switch (pos_args) {
+        case  3: values[2] = PyTuple_GET_ITEM(__pyx_args, 2);
+        CYTHON_FALLTHROUGH;
+        case  2: values[1] = PyTuple_GET_ITEM(__pyx_args, 1);
+        CYTHON_FALLTHROUGH;
+        case  1: values[0] = PyTuple_GET_ITEM(__pyx_args, 0);
+        CYTHON_FALLTHROUGH;
+        case  0: break;
+        default: goto __pyx_L5_argtuple_error;
+      }
+      kw_args = PyDict_Size(__pyx_kwds);
+      switch (pos_args) {
+        case  0:
+        if (likely((values[0] = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_max_level)) != 0)) kw_args--;
+        else goto __pyx_L5_argtuple_error;
+        CYTHON_FALLTHROUGH;
+        case  1:
+        if (kw_args > 0) {
+          PyObject* value = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_num_tree);
+          if (value) { values[1] = value; kw_args--; }
+        }
+        CYTHON_FALLTHROUGH;
+        case  2:
+        if (kw_args > 0) {
+          PyObject* value = __Pyx_PyDict_GetItemStr(__pyx_kwds, __pyx_n_s_size);
+          if (value) { values[2] = value; kw_args--; }
+        }
+      }
+      if (unlikely(kw_args > 0)) {
+        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "initialize") < 0)) __PYX_ERR(0, 45, __pyx_L3_error)
+      }
+    } else {
+      switch (PyTuple_GET_SIZE(__pyx_args)) {
+        case  3: values[2] = PyTuple_GET_ITEM(__pyx_args, 2);
+        CYTHON_FALLTHROUGH;
+        case  2: values[1] = PyTuple_GET_ITEM(__pyx_args, 1);
+        CYTHON_FALLTHROUGH;
+        case  1: values[0] = PyTuple_GET_ITEM(__pyx_args, 0);
+        break;
+        default: goto __pyx_L5_argtuple_error;
+      }
+    }
+    __pyx_v_max_level = __Pyx_PyInt_As_int(values[0]); if (unlikely((__pyx_v_max_level == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 45, __pyx_L3_error)
+    if (values[1]) {
+      __pyx_v_num_tree = __Pyx_PyInt_As_int(values[1]); if (unlikely((__pyx_v_num_tree == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 45, __pyx_L3_error)
+    } else {
+      __pyx_v_num_tree = ((int)1);
+    }
+    if (values[2]) {
+      __pyx_v_size = __pyx_PyFloat_AsDouble(values[2]); if (unlikely((__pyx_v_size == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 45, __pyx_L3_error)
+    } else {
+      __pyx_v_size = ((double)0.0);
+    }
+  }
+  goto __pyx_L4_argument_unpacking_done;
+  __pyx_L5_argtuple_error:;
+  __Pyx_RaiseArgtupleInvalid("initialize", 0, 1, 3, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 45, __pyx_L3_error)
+  __pyx_L3_error:;
+  __Pyx_AddTraceback("boxcounting.boxcounting.initialize", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_RefNannyFinishContext();
+  return NULL;
+  __pyx_L4_argument_unpacking_done:;
+  __pyx_r = __pyx_pf_11boxcounting_11boxcounting_4initialize(((struct __pyx_obj_11boxcounting_boxcounting *)__pyx_v_self), __pyx_v_max_level, __pyx_v_num_tree, __pyx_v_size);
+
+  /* function exit code */
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+static PyObject *__pyx_pf_11boxcounting_11boxcounting_4initialize(struct __pyx_obj_11boxcounting_boxcounting *__pyx_v_self, int __pyx_v_max_level, int __pyx_v_num_tree, double __pyx_v_size) {
+  int __pyx_v_Ncol;
+  CYTHON_UNUSED int __pyx_v_Ndata;
+  PyObject *__pyx_r = NULL;
+  __Pyx_RefNannyDeclarations
+  __pyx_ctuple_int__and_int __pyx_t_1;
+  int __pyx_t_2;
+  int __pyx_t_3;
+  PyObject *__pyx_t_4 = NULL;
+  PyObject *__pyx_t_5 = NULL;
+  PyObject *__pyx_t_6 = NULL;
+  PyObject *__pyx_t_7 = NULL;
+  int __pyx_lineno = 0;
+  const char *__pyx_filename = NULL;
+  int __pyx_clineno = 0;
+  __Pyx_RefNannySetupContext("initialize", 0);
+
+  /* "boxcounting.pyx":47
+ *     def initialize(self, int max_level, int num_tree = 1, double size = 0):
+ *         cdef int Ncol, Ndata
+ *         self.max_level = max_level             # <<<<<<<<<<<<<<
+ *         self.num_tree = num_tree
+ *         Ndata, Ncol = get_dimension(self.fname, self.cdelimiter, self.ccomments)
+ */
+  __pyx_v_self->max_level = __pyx_v_max_level;
+
+  /* "boxcounting.pyx":48
+ *         cdef int Ncol, Ndata
+ *         self.max_level = max_level
+ *         self.num_tree = num_tree             # <<<<<<<<<<<<<<
+ *         Ndata, Ncol = get_dimension(self.fname, self.cdelimiter, self.ccomments)
+ *         self.tree = create_tree(Ncol, 0)
+ */
+  __pyx_v_self->num_tree = __pyx_v_num_tree;
+
+  /* "boxcounting.pyx":49
+ *         self.max_level = max_level
+ *         self.num_tree = num_tree
+ *         Ndata, Ncol = get_dimension(self.fname, self.cdelimiter, self.ccomments)             # <<<<<<<<<<<<<<
+ *         self.tree = create_tree(Ncol, 0)
+ *         self.initialized = 1
+ */
+  __pyx_t_1 = __pyx_f_8fastload_get_dimension(__pyx_v_self->fname, __pyx_v_self->cdelimiter, __pyx_v_self->ccomments);
+  __pyx_t_2 = __pyx_t_1.f0;
+  __pyx_t_3 = __pyx_t_1.f1;
+  __pyx_v_Ndata = __pyx_t_2;
+  __pyx_v_Ncol = __pyx_t_3;
+
+  /* "boxcounting.pyx":50
+ *         self.num_tree = num_tree
+ *         Ndata, Ncol = get_dimension(self.fname, self.cdelimiter, self.ccomments)
+ *         self.tree = create_tree(Ncol, 0)             # <<<<<<<<<<<<<<
+ *         self.initialized = 1
+ *         self.dim = Ncol
+ */
+  __pyx_v_self->tree = __pyx_f_11boxcounting_create_tree(__pyx_v_Ncol, 0);
+
+  /* "boxcounting.pyx":51
+ *         Ndata, Ncol = get_dimension(self.fname, self.cdelimiter, self.ccomments)
+ *         self.tree = create_tree(Ncol, 0)
+ *         self.initialized = 1             # <<<<<<<<<<<<<<
+ *         self.dim = Ncol
+ *         self.initialize_size(size)
+ */
+  __pyx_v_self->initialized = 1;
+
+  /* "boxcounting.pyx":52
+ *         self.tree = create_tree(Ncol, 0)
+ *         self.initialized = 1
+ *         self.dim = Ncol             # <<<<<<<<<<<<<<
+ *         self.initialize_size(size)
+ * 
+ */
+  __pyx_v_self->dim = __pyx_v_Ncol;
+
+  /* "boxcounting.pyx":53
+ *         self.initialized = 1
+ *         self.dim = Ncol
+ *         self.initialize_size(size)             # <<<<<<<<<<<<<<
+ * 
+ *     def fill_tree(self):
+ */
+  __pyx_t_5 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_initialize_size); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 53, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_5);
+  __pyx_t_6 = PyFloat_FromDouble(__pyx_v_size); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 53, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_6);
+  __pyx_t_7 = NULL;
+  if (CYTHON_UNPACK_METHODS && likely(PyMethod_Check(__pyx_t_5))) {
+    __pyx_t_7 = PyMethod_GET_SELF(__pyx_t_5);
+    if (likely(__pyx_t_7)) {
+      PyObject* function = PyMethod_GET_FUNCTION(__pyx_t_5);
+      __Pyx_INCREF(__pyx_t_7);
+      __Pyx_INCREF(function);
+      __Pyx_DECREF_SET(__pyx_t_5, function);
+    }
+  }
+  __pyx_t_4 = (__pyx_t_7) ? __Pyx_PyObject_Call2Args(__pyx_t_5, __pyx_t_7, __pyx_t_6) : __Pyx_PyObject_CallOneArg(__pyx_t_5, __pyx_t_6);
+  __Pyx_XDECREF(__pyx_t_7); __pyx_t_7 = 0;
+  __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
+  if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 53, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_4);
+  __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
+  __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
+
+  /* "boxcounting.pyx":45
+ *         strcpy(self.fname, filename.encode('utf-8'))
+ * 
+ *     def initialize(self, int max_level, int num_tree = 1, double size = 0):             # <<<<<<<<<<<<<<
+ *         cdef int Ncol, Ndata
+ *         self.max_level = max_level
+ */
+
+  /* function exit code */
+  __pyx_r = Py_None; __Pyx_INCREF(Py_None);
+  goto __pyx_L0;
+  __pyx_L1_error:;
+  __Pyx_XDECREF(__pyx_t_4);
+  __Pyx_XDECREF(__pyx_t_5);
+  __Pyx_XDECREF(__pyx_t_6);
+  __Pyx_XDECREF(__pyx_t_7);
+  __Pyx_AddTraceback("boxcounting.boxcounting.initialize", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __pyx_r = NULL;
+  __pyx_L0:;
+  __Pyx_XGIVEREF(__pyx_r);
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+/* "boxcounting.pyx":55
+ *         self.initialize_size(size)
+ * 
+ *     def fill_tree(self):             # <<<<<<<<<<<<<<
+ *         cdef int eof = 0, n = 0
+ *         cdef double * x
+ */
+
+/* Python wrapper */
+static PyObject *__pyx_pw_11boxcounting_11boxcounting_7fill_tree(PyObject *__pyx_v_self, CYTHON_UNUSED PyObject *unused); /*proto*/
+static PyObject *__pyx_pw_11boxcounting_11boxcounting_7fill_tree(PyObject *__pyx_v_self, CYTHON_UNUSED PyObject *unused) {
+  PyObject *__pyx_r = 0;
+  __Pyx_RefNannyDeclarations
+  __Pyx_RefNannySetupContext("fill_tree (wrapper)", 0);
+  __pyx_r = __pyx_pf_11boxcounting_11boxcounting_6fill_tree(((struct __pyx_obj_11boxcounting_boxcounting *)__pyx_v_self));
+
+  /* function exit code */
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+static PyObject *__pyx_pf_11boxcounting_11boxcounting_6fill_tree(struct __pyx_obj_11boxcounting_boxcounting *__pyx_v_self) {
+  int __pyx_v_eof;
+  int __pyx_v_n;
+  double *__pyx_v_x;
+  PyObject *__pyx_r = NULL;
+  __Pyx_RefNannyDeclarations
+  int __pyx_t_1;
+  __Pyx_RefNannySetupContext("fill_tree", 0);
+
+  /* "boxcounting.pyx":56
+ * 
+ *     def fill_tree(self):
+ *         cdef int eof = 0, n = 0             # <<<<<<<<<<<<<<
+ *         cdef double * x
+ *         x = <double*>malloc(self.dim * sizeof(double))
+ */
+  __pyx_v_eof = 0;
+  __pyx_v_n = 0;
+
+  /* "boxcounting.pyx":58
+ *         cdef int eof = 0, n = 0
+ *         cdef double * x
+ *         x = <double*>malloc(self.dim * sizeof(double))             # <<<<<<<<<<<<<<
+ *         self.cfile = fopen(self.fname, "rb")
+ *         while eof != -1:
+ */
+  __pyx_v_x = ((double *)malloc((__pyx_v_self->dim * (sizeof(double)))));
+
+  /* "boxcounting.pyx":59
+ *         cdef double * x
+ *         x = <double*>malloc(self.dim * sizeof(double))
+ *         self.cfile = fopen(self.fname, "rb")             # <<<<<<<<<<<<<<
+ *         while eof != -1:
+ *             eof = get_data(x, self.cfile, self.token, self.dim, self.cdelimiter, self.ccomments)
+ */
+  __pyx_v_self->cfile = fopen(__pyx_v_self->fname, ((char const *)"rb"));
+
+  /* "boxcounting.pyx":60
+ *         x = <double*>malloc(self.dim * sizeof(double))
+ *         self.cfile = fopen(self.fname, "rb")
+ *         while eof != -1:             # <<<<<<<<<<<<<<
+ *             eof = get_data(x, self.cfile, self.token, self.dim, self.cdelimiter, self.ccomments)
+ *             recursive_occupation(&self.tree, x, self.max_level, self.dim)
+ */
+  while (1) {
+    __pyx_t_1 = ((__pyx_v_eof != -1L) != 0);
+    if (!__pyx_t_1) break;
+
+    /* "boxcounting.pyx":61
+ *         self.cfile = fopen(self.fname, "rb")
+ *         while eof != -1:
+ *             eof = get_data(x, self.cfile, self.token, self.dim, self.cdelimiter, self.ccomments)             # <<<<<<<<<<<<<<
+ *             recursive_occupation(&self.tree, x, self.max_level, self.dim)
+ *             n = n + 1
+ */
+    __pyx_v_eof = __pyx_f_8fastload_get_data(__pyx_v_x, __pyx_v_self->cfile, __pyx_v_self->token, __pyx_v_self->dim, __pyx_v_self->cdelimiter, __pyx_v_self->ccomments);
+
+    /* "boxcounting.pyx":62
+ *         while eof != -1:
+ *             eof = get_data(x, self.cfile, self.token, self.dim, self.cdelimiter, self.ccomments)
+ *             recursive_occupation(&self.tree, x, self.max_level, self.dim)             # <<<<<<<<<<<<<<
+ *             n = n + 1
+ *         fclose(self.cfile)
+ */
+    __pyx_f_11boxcounting_recursive_occupation((&__pyx_v_self->tree), __pyx_v_x, __pyx_v_self->max_level, __pyx_v_self->dim);
+
+    /* "boxcounting.pyx":63
+ *             eof = get_data(x, self.cfile, self.token, self.dim, self.cdelimiter, self.ccomments)
+ *             recursive_occupation(&self.tree, x, self.max_level, self.dim)
+ *             n = n + 1             # <<<<<<<<<<<<<<
+ *         fclose(self.cfile)
+ *         self.n = n
+ */
+    __pyx_v_n = (__pyx_v_n + 1);
+  }
+
+  /* "boxcounting.pyx":64
+ *             recursive_occupation(&self.tree, x, self.max_level, self.dim)
+ *             n = n + 1
+ *         fclose(self.cfile)             # <<<<<<<<<<<<<<
+ *         self.n = n
+ *         self.tot_data += n
+ */
+  (void)(fclose(__pyx_v_self->cfile));
+
+  /* "boxcounting.pyx":65
+ *             n = n + 1
+ *         fclose(self.cfile)
+ *         self.n = n             # <<<<<<<<<<<<<<
+ *         self.tot_data += n
+ * 
+ */
+  __pyx_v_self->n = __pyx_v_n;
+
+  /* "boxcounting.pyx":66
+ *         fclose(self.cfile)
+ *         self.n = n
+ *         self.tot_data += n             # <<<<<<<<<<<<<<
+ * 
+ *     def count_occupation(self):
+ */
+  __pyx_v_self->tot_data = (__pyx_v_self->tot_data + __pyx_v_n);
+
+  /* "boxcounting.pyx":55
+ *         self.initialize_size(size)
+ * 
+ *     def fill_tree(self):             # <<<<<<<<<<<<<<
+ *         cdef int eof = 0, n = 0
+ *         cdef double * x
+ */
+
+  /* function exit code */
+  __pyx_r = Py_None; __Pyx_INCREF(Py_None);
+  __Pyx_XGIVEREF(__pyx_r);
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+/* "boxcounting.pyx":68
+ *         self.tot_data += n
+ * 
+ *     def count_occupation(self):             # <<<<<<<<<<<<<<
+ *         recursive_count(&self.tree, self.occ, self.max_level, self.dim)
+ *         return
+ */
+
+/* Python wrapper */
+static PyObject *__pyx_pw_11boxcounting_11boxcounting_9count_occupation(PyObject *__pyx_v_self, CYTHON_UNUSED PyObject *unused); /*proto*/
+static PyObject *__pyx_pw_11boxcounting_11boxcounting_9count_occupation(PyObject *__pyx_v_self, CYTHON_UNUSED PyObject *unused) {
+  PyObject *__pyx_r = 0;
+  __Pyx_RefNannyDeclarations
+  __Pyx_RefNannySetupContext("count_occupation (wrapper)", 0);
+  __pyx_r = __pyx_pf_11boxcounting_11boxcounting_8count_occupation(((struct __pyx_obj_11boxcounting_boxcounting *)__pyx_v_self));
+
+  /* function exit code */
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+static PyObject *__pyx_pf_11boxcounting_11boxcounting_8count_occupation(struct __pyx_obj_11boxcounting_boxcounting *__pyx_v_self) {
+  PyObject *__pyx_r = NULL;
+  __Pyx_RefNannyDeclarations
+  __Pyx_RefNannySetupContext("count_occupation", 0);
+
+  /* "boxcounting.pyx":69
+ * 
+ *     def count_occupation(self):
+ *         recursive_count(&self.tree, self.occ, self.max_level, self.dim)             # <<<<<<<<<<<<<<
+ *         return
+ * 
+ */
+  __pyx_f_11boxcounting_recursive_count((&__pyx_v_self->tree), __pyx_v_self->occ, __pyx_v_self->max_level, __pyx_v_self->dim);
+
+  /* "boxcounting.pyx":70
+ *     def count_occupation(self):
+ *         recursive_count(&self.tree, self.occ, self.max_level, self.dim)
+ *         return             # <<<<<<<<<<<<<<
+ * 
+ *     def IO_initialize(self):
+ */
+  __Pyx_XDECREF(__pyx_r);
+  __pyx_r = Py_None; __Pyx_INCREF(Py_None);
+  goto __pyx_L0;
+
+  /* "boxcounting.pyx":68
+ *         self.tot_data += n
+ * 
+ *     def count_occupation(self):             # <<<<<<<<<<<<<<
+ *         recursive_count(&self.tree, self.occ, self.max_level, self.dim)
+ *         return
+ */
+
+  /* function exit code */
+  __pyx_L0:;
+  __Pyx_XGIVEREF(__pyx_r);
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+/* "boxcounting.pyx":72
+ *         return
  * 
  *     def IO_initialize(self):             # <<<<<<<<<<<<<<
  *         self.cdelimiter = <char*>malloc(10 * sizeof(char))
@@ -2608,24 +2786,24 @@ static PyObject *__pyx_pf_11boxcounting_11boxcounting_2occupation(struct __pyx_o
  */
 
 /* Python wrapper */
-static PyObject *__pyx_pw_11boxcounting_11boxcounting_5IO_initialize(PyObject *__pyx_v_self, CYTHON_UNUSED PyObject *unused); /*proto*/
-static PyObject *__pyx_pw_11boxcounting_11boxcounting_5IO_initialize(PyObject *__pyx_v_self, CYTHON_UNUSED PyObject *unused) {
+static PyObject *__pyx_pw_11boxcounting_11boxcounting_11IO_initialize(PyObject *__pyx_v_self, CYTHON_UNUSED PyObject *unused); /*proto*/
+static PyObject *__pyx_pw_11boxcounting_11boxcounting_11IO_initialize(PyObject *__pyx_v_self, CYTHON_UNUSED PyObject *unused) {
   PyObject *__pyx_r = 0;
   __Pyx_RefNannyDeclarations
   __Pyx_RefNannySetupContext("IO_initialize (wrapper)", 0);
-  __pyx_r = __pyx_pf_11boxcounting_11boxcounting_4IO_initialize(((struct __pyx_obj_11boxcounting_boxcounting *)__pyx_v_self));
+  __pyx_r = __pyx_pf_11boxcounting_11boxcounting_10IO_initialize(((struct __pyx_obj_11boxcounting_boxcounting *)__pyx_v_self));
 
   /* function exit code */
   __Pyx_RefNannyFinishContext();
   return __pyx_r;
 }
 
-static PyObject *__pyx_pf_11boxcounting_11boxcounting_4IO_initialize(struct __pyx_obj_11boxcounting_boxcounting *__pyx_v_self) {
+static PyObject *__pyx_pf_11boxcounting_11boxcounting_10IO_initialize(struct __pyx_obj_11boxcounting_boxcounting *__pyx_v_self) {
   PyObject *__pyx_r = NULL;
   __Pyx_RefNannyDeclarations
   __Pyx_RefNannySetupContext("IO_initialize", 0);
 
-  /* "boxcounting.pyx":72
+  /* "boxcounting.pyx":73
  * 
  *     def IO_initialize(self):
  *         self.cdelimiter = <char*>malloc(10 * sizeof(char))             # <<<<<<<<<<<<<<
@@ -2634,7 +2812,7 @@ static PyObject *__pyx_pf_11boxcounting_11boxcounting_4IO_initialize(struct __py
  */
   __pyx_v_self->cdelimiter = ((char *)malloc((10 * (sizeof(char)))));
 
-  /* "boxcounting.pyx":73
+  /* "boxcounting.pyx":74
  *     def IO_initialize(self):
  *         self.cdelimiter = <char*>malloc(10 * sizeof(char))
  *         self.ccomments  = <char*>malloc(10 * sizeof(char))             # <<<<<<<<<<<<<<
@@ -2643,7 +2821,7 @@ static PyObject *__pyx_pf_11boxcounting_11boxcounting_4IO_initialize(struct __py
  */
   __pyx_v_self->ccomments = ((char *)malloc((10 * (sizeof(char)))));
 
-  /* "boxcounting.pyx":74
+  /* "boxcounting.pyx":75
  *         self.cdelimiter = <char*>malloc(10 * sizeof(char))
  *         self.ccomments  = <char*>malloc(10 * sizeof(char))
  *         self.fname      = <char*>malloc(100 * sizeof(char))             # <<<<<<<<<<<<<<
@@ -2652,17 +2830,17 @@ static PyObject *__pyx_pf_11boxcounting_11boxcounting_4IO_initialize(struct __py
  */
   __pyx_v_self->fname = ((char *)malloc((0x64 * (sizeof(char)))));
 
-  /* "boxcounting.pyx":75
+  /* "boxcounting.pyx":76
  *         self.ccomments  = <char*>malloc(10 * sizeof(char))
  *         self.fname      = <char*>malloc(100 * sizeof(char))
  *         self.token = NULL             # <<<<<<<<<<<<<<
  * 
- *     def initialize_size(self):
+ *     def initialize_size(self, double size):
  */
   __pyx_v_self->token = NULL;
 
-  /* "boxcounting.pyx":71
- *         self.tot_data += self.n
+  /* "boxcounting.pyx":72
+ *         return
  * 
  *     def IO_initialize(self):             # <<<<<<<<<<<<<<
  *         self.cdelimiter = <char*>malloc(10 * sizeof(char))
@@ -2676,30 +2854,43 @@ static PyObject *__pyx_pf_11boxcounting_11boxcounting_4IO_initialize(struct __py
   return __pyx_r;
 }
 
-/* "boxcounting.pyx":77
+/* "boxcounting.pyx":78
  *         self.token = NULL
  * 
- *     def initialize_size(self):             # <<<<<<<<<<<<<<
- *         cdef double radi, size
+ *     def initialize_size(self, double size):             # <<<<<<<<<<<<<<
+ *         cdef double radi, sizeM = 0
  *         cdef double * x
  */
 
 /* Python wrapper */
-static PyObject *__pyx_pw_11boxcounting_11boxcounting_7initialize_size(PyObject *__pyx_v_self, CYTHON_UNUSED PyObject *unused); /*proto*/
-static PyObject *__pyx_pw_11boxcounting_11boxcounting_7initialize_size(PyObject *__pyx_v_self, CYTHON_UNUSED PyObject *unused) {
+static PyObject *__pyx_pw_11boxcounting_11boxcounting_13initialize_size(PyObject *__pyx_v_self, PyObject *__pyx_arg_size); /*proto*/
+static PyObject *__pyx_pw_11boxcounting_11boxcounting_13initialize_size(PyObject *__pyx_v_self, PyObject *__pyx_arg_size) {
+  double __pyx_v_size;
+  int __pyx_lineno = 0;
+  const char *__pyx_filename = NULL;
+  int __pyx_clineno = 0;
   PyObject *__pyx_r = 0;
   __Pyx_RefNannyDeclarations
   __Pyx_RefNannySetupContext("initialize_size (wrapper)", 0);
-  __pyx_r = __pyx_pf_11boxcounting_11boxcounting_6initialize_size(((struct __pyx_obj_11boxcounting_boxcounting *)__pyx_v_self));
+  assert(__pyx_arg_size); {
+    __pyx_v_size = __pyx_PyFloat_AsDouble(__pyx_arg_size); if (unlikely((__pyx_v_size == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 78, __pyx_L3_error)
+  }
+  goto __pyx_L4_argument_unpacking_done;
+  __pyx_L3_error:;
+  __Pyx_AddTraceback("boxcounting.boxcounting.initialize_size", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __Pyx_RefNannyFinishContext();
+  return NULL;
+  __pyx_L4_argument_unpacking_done:;
+  __pyx_r = __pyx_pf_11boxcounting_11boxcounting_12initialize_size(((struct __pyx_obj_11boxcounting_boxcounting *)__pyx_v_self), ((double)__pyx_v_size));
 
   /* function exit code */
   __Pyx_RefNannyFinishContext();
   return __pyx_r;
 }
 
-static PyObject *__pyx_pf_11boxcounting_11boxcounting_6initialize_size(struct __pyx_obj_11boxcounting_boxcounting *__pyx_v_self) {
+static PyObject *__pyx_pf_11boxcounting_11boxcounting_12initialize_size(struct __pyx_obj_11boxcounting_boxcounting *__pyx_v_self, double __pyx_v_size) {
   double __pyx_v_radi;
-  double __pyx_v_size;
+  double __pyx_v_sizeM;
   double *__pyx_v_x;
   int __pyx_v_i;
   int __pyx_v_eof;
@@ -2712,8 +2903,17 @@ static PyObject *__pyx_pf_11boxcounting_11boxcounting_6initialize_size(struct __
   double __pyx_t_5;
   __Pyx_RefNannySetupContext("initialize_size", 0);
 
-  /* "boxcounting.pyx":80
- *         cdef double radi, size
+  /* "boxcounting.pyx":79
+ * 
+ *     def initialize_size(self, double size):
+ *         cdef double radi, sizeM = 0             # <<<<<<<<<<<<<<
+ *         cdef double * x
+ *         cdef int i, eof = 0
+ */
+  __pyx_v_sizeM = 0.0;
+
+  /* "boxcounting.pyx":81
+ *         cdef double radi, sizeM = 0
  *         cdef double * x
  *         cdef int i, eof = 0             # <<<<<<<<<<<<<<
  *         x = <double*>malloc(self.dim*sizeof(double))
@@ -2721,7 +2921,7 @@ static PyObject *__pyx_pf_11boxcounting_11boxcounting_6initialize_size(struct __
  */
   __pyx_v_eof = 0;
 
-  /* "boxcounting.pyx":81
+  /* "boxcounting.pyx":82
  *         cdef double * x
  *         cdef int i, eof = 0
  *         x = <double*>malloc(self.dim*sizeof(double))             # <<<<<<<<<<<<<<
@@ -2730,7 +2930,7 @@ static PyObject *__pyx_pf_11boxcounting_11boxcounting_6initialize_size(struct __
  */
   __pyx_v_x = ((double *)malloc((__pyx_v_self->dim * (sizeof(double)))));
 
-  /* "boxcounting.pyx":83
+  /* "boxcounting.pyx":84
  *         x = <double*>malloc(self.dim*sizeof(double))
  * 
  *         if self.tot_data == 0:             # <<<<<<<<<<<<<<
@@ -2740,7 +2940,7 @@ static PyObject *__pyx_pf_11boxcounting_11boxcounting_6initialize_size(struct __
   __pyx_t_1 = ((__pyx_v_self->tot_data == 0) != 0);
   if (__pyx_t_1) {
 
-    /* "boxcounting.pyx":84
+    /* "boxcounting.pyx":85
  * 
  *         if self.tot_data == 0:
  *             self.M = <double*>malloc(self.dim*sizeof(double))             # <<<<<<<<<<<<<<
@@ -2749,7 +2949,7 @@ static PyObject *__pyx_pf_11boxcounting_11boxcounting_6initialize_size(struct __
  */
     __pyx_v_self->M = ((double *)malloc((__pyx_v_self->dim * (sizeof(double)))));
 
-    /* "boxcounting.pyx":85
+    /* "boxcounting.pyx":86
  *         if self.tot_data == 0:
  *             self.M = <double*>malloc(self.dim*sizeof(double))
  *             self.m = <double*>malloc(self.dim*sizeof(double))             # <<<<<<<<<<<<<<
@@ -2758,7 +2958,7 @@ static PyObject *__pyx_pf_11boxcounting_11boxcounting_6initialize_size(struct __
  */
     __pyx_v_self->m = ((double *)malloc((__pyx_v_self->dim * (sizeof(double)))));
 
-    /* "boxcounting.pyx":86
+    /* "boxcounting.pyx":87
  *             self.M = <double*>malloc(self.dim*sizeof(double))
  *             self.m = <double*>malloc(self.dim*sizeof(double))
  *             self.cmid = <double*>malloc(self.dim*sizeof(double))             # <<<<<<<<<<<<<<
@@ -2767,7 +2967,7 @@ static PyObject *__pyx_pf_11boxcounting_11boxcounting_6initialize_size(struct __
  */
     __pyx_v_self->cmid = ((double *)malloc((__pyx_v_self->dim * (sizeof(double)))));
 
-    /* "boxcounting.pyx":88
+    /* "boxcounting.pyx":89
  *             self.cmid = <double*>malloc(self.dim*sizeof(double))
  * 
  *             for i in range(self.dim):             # <<<<<<<<<<<<<<
@@ -2779,7 +2979,7 @@ static PyObject *__pyx_pf_11boxcounting_11boxcounting_6initialize_size(struct __
     for (__pyx_t_4 = 0; __pyx_t_4 < __pyx_t_3; __pyx_t_4+=1) {
       __pyx_v_i = __pyx_t_4;
 
-      /* "boxcounting.pyx":89
+      /* "boxcounting.pyx":90
  * 
  *             for i in range(self.dim):
  *                 self.M[i] = -1e8             # <<<<<<<<<<<<<<
@@ -2788,7 +2988,7 @@ static PyObject *__pyx_pf_11boxcounting_11boxcounting_6initialize_size(struct __
  */
       (__pyx_v_self->M[__pyx_v_i]) = -1e8;
 
-      /* "boxcounting.pyx":90
+      /* "boxcounting.pyx":91
  *             for i in range(self.dim):
  *                 self.M[i] = -1e8
  *                 self.m[i] = 1e8             # <<<<<<<<<<<<<<
@@ -2798,7 +2998,7 @@ static PyObject *__pyx_pf_11boxcounting_11boxcounting_6initialize_size(struct __
       (__pyx_v_self->m[__pyx_v_i]) = 1e8;
     }
 
-    /* "boxcounting.pyx":83
+    /* "boxcounting.pyx":84
  *         x = <double*>malloc(self.dim*sizeof(double))
  * 
  *         if self.tot_data == 0:             # <<<<<<<<<<<<<<
@@ -2807,7 +3007,7 @@ static PyObject *__pyx_pf_11boxcounting_11boxcounting_6initialize_size(struct __
  */
   }
 
-  /* "boxcounting.pyx":92
+  /* "boxcounting.pyx":93
  *                 self.m[i] = 1e8
  * 
  *         self.cfile = fopen(self.fname, "rb")             # <<<<<<<<<<<<<<
@@ -2816,7 +3016,7 @@ static PyObject *__pyx_pf_11boxcounting_11boxcounting_6initialize_size(struct __
  */
   __pyx_v_self->cfile = fopen(__pyx_v_self->fname, ((char const *)"rb"));
 
-  /* "boxcounting.pyx":93
+  /* "boxcounting.pyx":94
  * 
  *         self.cfile = fopen(self.fname, "rb")
  *         while eof != -1:             # <<<<<<<<<<<<<<
@@ -2827,7 +3027,7 @@ static PyObject *__pyx_pf_11boxcounting_11boxcounting_6initialize_size(struct __
     __pyx_t_1 = ((__pyx_v_eof != -1L) != 0);
     if (!__pyx_t_1) break;
 
-    /* "boxcounting.pyx":94
+    /* "boxcounting.pyx":95
  *         self.cfile = fopen(self.fname, "rb")
  *         while eof != -1:
  *             eof = get_data(x, self.cfile, self.token, self.dim, self.cdelimiter, self.ccomments)             # <<<<<<<<<<<<<<
@@ -2836,7 +3036,7 @@ static PyObject *__pyx_pf_11boxcounting_11boxcounting_6initialize_size(struct __
  */
     __pyx_v_eof = __pyx_f_8fastload_get_data(__pyx_v_x, __pyx_v_self->cfile, __pyx_v_self->token, __pyx_v_self->dim, __pyx_v_self->cdelimiter, __pyx_v_self->ccomments);
 
-    /* "boxcounting.pyx":95
+    /* "boxcounting.pyx":96
  *         while eof != -1:
  *             eof = get_data(x, self.cfile, self.token, self.dim, self.cdelimiter, self.ccomments)
  *             for i in range(self.dim):             # <<<<<<<<<<<<<<
@@ -2848,7 +3048,7 @@ static PyObject *__pyx_pf_11boxcounting_11boxcounting_6initialize_size(struct __
     for (__pyx_t_4 = 0; __pyx_t_4 < __pyx_t_3; __pyx_t_4+=1) {
       __pyx_v_i = __pyx_t_4;
 
-      /* "boxcounting.pyx":96
+      /* "boxcounting.pyx":97
  *             eof = get_data(x, self.cfile, self.token, self.dim, self.cdelimiter, self.ccomments)
  *             for i in range(self.dim):
  *                if self.m[i] > x[i]:             # <<<<<<<<<<<<<<
@@ -2858,16 +3058,16 @@ static PyObject *__pyx_pf_11boxcounting_11boxcounting_6initialize_size(struct __
       __pyx_t_1 = (((__pyx_v_self->m[__pyx_v_i]) > (__pyx_v_x[__pyx_v_i])) != 0);
       if (__pyx_t_1) {
 
-        /* "boxcounting.pyx":97
+        /* "boxcounting.pyx":98
  *             for i in range(self.dim):
  *                if self.m[i] > x[i]:
  *                     self.m[i] = x[i]             # <<<<<<<<<<<<<<
  *                if self.M[i] < x[i]:
- *                         self.M[i] = x[i]
+ *                     self.M[i] = x[i]
  */
         (__pyx_v_self->m[__pyx_v_i]) = (__pyx_v_x[__pyx_v_i]);
 
-        /* "boxcounting.pyx":96
+        /* "boxcounting.pyx":97
  *             eof = get_data(x, self.cfile, self.token, self.dim, self.cdelimiter, self.ccomments)
  *             for i in range(self.dim):
  *                if self.m[i] > x[i]:             # <<<<<<<<<<<<<<
@@ -2876,79 +3076,70 @@ static PyObject *__pyx_pf_11boxcounting_11boxcounting_6initialize_size(struct __
  */
       }
 
-      /* "boxcounting.pyx":98
+      /* "boxcounting.pyx":99
  *                if self.m[i] > x[i]:
  *                     self.m[i] = x[i]
  *                if self.M[i] < x[i]:             # <<<<<<<<<<<<<<
- *                         self.M[i] = x[i]
+ *                     self.M[i] = x[i]
  *         fclose(self.cfile)
  */
       __pyx_t_1 = (((__pyx_v_self->M[__pyx_v_i]) < (__pyx_v_x[__pyx_v_i])) != 0);
       if (__pyx_t_1) {
 
-        /* "boxcounting.pyx":99
+        /* "boxcounting.pyx":100
  *                     self.m[i] = x[i]
  *                if self.M[i] < x[i]:
- *                         self.M[i] = x[i]             # <<<<<<<<<<<<<<
+ *                     self.M[i] = x[i]             # <<<<<<<<<<<<<<
  *         fclose(self.cfile)
  * 
  */
         (__pyx_v_self->M[__pyx_v_i]) = (__pyx_v_x[__pyx_v_i]);
 
-        /* "boxcounting.pyx":98
+        /* "boxcounting.pyx":99
  *                if self.m[i] > x[i]:
  *                     self.m[i] = x[i]
  *                if self.M[i] < x[i]:             # <<<<<<<<<<<<<<
- *                         self.M[i] = x[i]
+ *                     self.M[i] = x[i]
  *         fclose(self.cfile)
  */
       }
     }
   }
 
-  /* "boxcounting.pyx":100
+  /* "boxcounting.pyx":101
  *                if self.M[i] < x[i]:
- *                         self.M[i] = x[i]
+ *                     self.M[i] = x[i]
  *         fclose(self.cfile)             # <<<<<<<<<<<<<<
  * 
  *         for i in range(self.dim):
  */
   (void)(fclose(__pyx_v_self->cfile));
 
-  /* "boxcounting.pyx":102
+  /* "boxcounting.pyx":103
  *         fclose(self.cfile)
  * 
  *         for i in range(self.dim):             # <<<<<<<<<<<<<<
  *             self.cmid[i] = 0.5*(self.M[i]+self.m[i])
- *         size = 0
+ *         for i in range(self.dim):
  */
   __pyx_t_2 = __pyx_v_self->dim;
   __pyx_t_3 = __pyx_t_2;
   for (__pyx_t_4 = 0; __pyx_t_4 < __pyx_t_3; __pyx_t_4+=1) {
     __pyx_v_i = __pyx_t_4;
 
-    /* "boxcounting.pyx":103
+    /* "boxcounting.pyx":104
  * 
  *         for i in range(self.dim):
  *             self.cmid[i] = 0.5*(self.M[i]+self.m[i])             # <<<<<<<<<<<<<<
- *         size = 0
  *         for i in range(self.dim):
+ *             self.tree.centr[i] = self.cmid[i]
  */
     (__pyx_v_self->cmid[__pyx_v_i]) = (0.5 * ((__pyx_v_self->M[__pyx_v_i]) + (__pyx_v_self->m[__pyx_v_i])));
   }
 
-  /* "boxcounting.pyx":104
- *         for i in range(self.dim):
- *             self.cmid[i] = 0.5*(self.M[i]+self.m[i])
- *         size = 0             # <<<<<<<<<<<<<<
- *         for i in range(self.dim):
- *             self.tree.centr[i] = self.cmid[i]
- */
-  __pyx_v_size = 0.0;
-
   /* "boxcounting.pyx":105
+ *         for i in range(self.dim):
  *             self.cmid[i] = 0.5*(self.M[i]+self.m[i])
- *         size = 0
  *         for i in range(self.dim):             # <<<<<<<<<<<<<<
  *             self.tree.centr[i] = self.cmid[i]
  *             radi =  0.5*(self.M[i]-self.m[i])
@@ -2959,11 +3150,11 @@ static PyObject *__pyx_pf_11boxcounting_11boxcounting_6initialize_size(struct __
     __pyx_v_i = __pyx_t_4;
 
     /* "boxcounting.pyx":106
- *         size = 0
+ *             self.cmid[i] = 0.5*(self.M[i]+self.m[i])
  *         for i in range(self.dim):
  *             self.tree.centr[i] = self.cmid[i]             # <<<<<<<<<<<<<<
  *             radi =  0.5*(self.M[i]-self.m[i])
- *             if size < radi:
+ *             if sizeM < radi:
  */
     (__pyx_v_self->tree.centr[__pyx_v_i]) = (__pyx_v_self->cmid[__pyx_v_i]);
 
@@ -2971,69 +3162,97 @@ static PyObject *__pyx_pf_11boxcounting_11boxcounting_6initialize_size(struct __
  *         for i in range(self.dim):
  *             self.tree.centr[i] = self.cmid[i]
  *             radi =  0.5*(self.M[i]-self.m[i])             # <<<<<<<<<<<<<<
- *             if size < radi:
- *                 size = radi
+ *             if sizeM < radi:
+ *                 sizeM = radi
  */
     __pyx_v_radi = (0.5 * ((__pyx_v_self->M[__pyx_v_i]) - (__pyx_v_self->m[__pyx_v_i])));
 
     /* "boxcounting.pyx":108
  *             self.tree.centr[i] = self.cmid[i]
  *             radi =  0.5*(self.M[i]-self.m[i])
- *             if size < radi:             # <<<<<<<<<<<<<<
- *                 size = radi
- *         self.tree.radi = size
+ *             if sizeM < radi:             # <<<<<<<<<<<<<<
+ *                 sizeM = radi
+ * 
  */
-    __pyx_t_1 = ((__pyx_v_size < __pyx_v_radi) != 0);
+    __pyx_t_1 = ((__pyx_v_sizeM < __pyx_v_radi) != 0);
     if (__pyx_t_1) {
 
       /* "boxcounting.pyx":109
  *             radi =  0.5*(self.M[i]-self.m[i])
- *             if size < radi:
- *                 size = radi             # <<<<<<<<<<<<<<
- *         self.tree.radi = size
- *         self.eps0 = size
+ *             if sizeM < radi:
+ *                 sizeM = radi             # <<<<<<<<<<<<<<
+ * 
+ *         if size != 0:
  */
-      __pyx_v_size = __pyx_v_radi;
+      __pyx_v_sizeM = __pyx_v_radi;
 
       /* "boxcounting.pyx":108
  *             self.tree.centr[i] = self.cmid[i]
  *             radi =  0.5*(self.M[i]-self.m[i])
- *             if size < radi:             # <<<<<<<<<<<<<<
- *                 size = radi
- *         self.tree.radi = size
+ *             if sizeM < radi:             # <<<<<<<<<<<<<<
+ *                 sizeM = radi
+ * 
  */
     }
   }
 
-  /* "boxcounting.pyx":110
- *             if size < radi:
- *                 size = radi
- *         self.tree.radi = size             # <<<<<<<<<<<<<<
- *         self.eps0 = size
- *         self.occ = <int*>malloc(self.max_level*self.num_tree*sizeof(int))
- */
-  __pyx_v_self->tree.radi = __pyx_v_size;
-
   /* "boxcounting.pyx":111
- *                 size = radi
- *         self.tree.radi = size
- *         self.eps0 = size             # <<<<<<<<<<<<<<
- *         self.occ = <int*>malloc(self.max_level*self.num_tree*sizeof(int))
- *         self.eps = <double*>malloc(self.max_level*self.num_tree*sizeof(double))
+ *                 sizeM = radi
+ * 
+ *         if size != 0:             # <<<<<<<<<<<<<<
+ *             sizeM = size
+ *         self.tree.radi = sizeM
  */
-  __pyx_v_self->eps0 = __pyx_v_size;
+  __pyx_t_1 = ((__pyx_v_size != 0.0) != 0);
+  if (__pyx_t_1) {
 
-  /* "boxcounting.pyx":112
- *         self.tree.radi = size
- *         self.eps0 = size
+    /* "boxcounting.pyx":112
+ * 
+ *         if size != 0:
+ *             sizeM = size             # <<<<<<<<<<<<<<
+ *         self.tree.radi = sizeM
+ *         self.eps0 = sizeM
+ */
+    __pyx_v_sizeM = __pyx_v_size;
+
+    /* "boxcounting.pyx":111
+ *                 sizeM = radi
+ * 
+ *         if size != 0:             # <<<<<<<<<<<<<<
+ *             sizeM = size
+ *         self.tree.radi = sizeM
+ */
+  }
+
+  /* "boxcounting.pyx":113
+ *         if size != 0:
+ *             sizeM = size
+ *         self.tree.radi = sizeM             # <<<<<<<<<<<<<<
+ *         self.eps0 = sizeM
+ * 
+ */
+  __pyx_v_self->tree.radi = __pyx_v_sizeM;
+
+  /* "boxcounting.pyx":114
+ *             sizeM = size
+ *         self.tree.radi = sizeM
+ *         self.eps0 = sizeM             # <<<<<<<<<<<<<<
+ * 
+ *         self.occ = <int*>malloc(self.max_level*self.num_tree*sizeof(int))
+ */
+  __pyx_v_self->eps0 = __pyx_v_sizeM;
+
+  /* "boxcounting.pyx":116
+ *         self.eps0 = sizeM
+ * 
  *         self.occ = <int*>malloc(self.max_level*self.num_tree*sizeof(int))             # <<<<<<<<<<<<<<
  *         self.eps = <double*>malloc(self.max_level*self.num_tree*sizeof(double))
  *         self.eps[0] = self.eps0
  */
   __pyx_v_self->occ = ((int *)malloc(((__pyx_v_self->max_level * __pyx_v_self->num_tree) * (sizeof(int)))));
 
-  /* "boxcounting.pyx":113
- *         self.eps0 = size
+  /* "boxcounting.pyx":117
+ * 
  *         self.occ = <int*>malloc(self.max_level*self.num_tree*sizeof(int))
  *         self.eps = <double*>malloc(self.max_level*self.num_tree*sizeof(double))             # <<<<<<<<<<<<<<
  *         self.eps[0] = self.eps0
@@ -3041,7 +3260,7 @@ static PyObject *__pyx_pf_11boxcounting_11boxcounting_6initialize_size(struct __
  */
   __pyx_v_self->eps = ((double *)malloc(((__pyx_v_self->max_level * __pyx_v_self->num_tree) * (sizeof(double)))));
 
-  /* "boxcounting.pyx":114
+  /* "boxcounting.pyx":118
  *         self.occ = <int*>malloc(self.max_level*self.num_tree*sizeof(int))
  *         self.eps = <double*>malloc(self.max_level*self.num_tree*sizeof(double))
  *         self.eps[0] = self.eps0             # <<<<<<<<<<<<<<
@@ -3051,7 +3270,7 @@ static PyObject *__pyx_pf_11boxcounting_11boxcounting_6initialize_size(struct __
   __pyx_t_5 = __pyx_v_self->eps0;
   (__pyx_v_self->eps[0]) = __pyx_t_5;
 
-  /* "boxcounting.pyx":115
+  /* "boxcounting.pyx":119
  *         self.eps = <double*>malloc(self.max_level*self.num_tree*sizeof(double))
  *         self.eps[0] = self.eps0
  *         for i in range(self.max_level):             # <<<<<<<<<<<<<<
@@ -3063,7 +3282,7 @@ static PyObject *__pyx_pf_11boxcounting_11boxcounting_6initialize_size(struct __
   for (__pyx_t_4 = 0; __pyx_t_4 < __pyx_t_3; __pyx_t_4+=1) {
     __pyx_v_i = __pyx_t_4;
 
-    /* "boxcounting.pyx":116
+    /* "boxcounting.pyx":120
  *         self.eps[0] = self.eps0
  *         for i in range(self.max_level):
  *             self.occ[i] = 0             # <<<<<<<<<<<<<<
@@ -3072,7 +3291,7 @@ static PyObject *__pyx_pf_11boxcounting_11boxcounting_6initialize_size(struct __
  */
     (__pyx_v_self->occ[__pyx_v_i]) = 0;
 
-    /* "boxcounting.pyx":117
+    /* "boxcounting.pyx":121
  *         for i in range(self.max_level):
  *             self.occ[i] = 0
  *             self.eps[i] = 0             # <<<<<<<<<<<<<<
@@ -3082,7 +3301,7 @@ static PyObject *__pyx_pf_11boxcounting_11boxcounting_6initialize_size(struct __
     (__pyx_v_self->eps[__pyx_v_i]) = 0.0;
   }
 
-  /* "boxcounting.pyx":118
+  /* "boxcounting.pyx":122
  *             self.occ[i] = 0
  *             self.eps[i] = 0
  *         self.initialized = 1             # <<<<<<<<<<<<<<
@@ -3091,11 +3310,11 @@ static PyObject *__pyx_pf_11boxcounting_11boxcounting_6initialize_size(struct __
  */
   __pyx_v_self->initialized = 1;
 
-  /* "boxcounting.pyx":77
+  /* "boxcounting.pyx":78
  *         self.token = NULL
  * 
- *     def initialize_size(self):             # <<<<<<<<<<<<<<
- *         cdef double radi, size
+ *     def initialize_size(self, double size):             # <<<<<<<<<<<<<<
+ *         cdef double radi, sizeM = 0
  *         cdef double * x
  */
 
@@ -3106,7 +3325,7 @@ static PyObject *__pyx_pf_11boxcounting_11boxcounting_6initialize_size(struct __
   return __pyx_r;
 }
 
-/* "boxcounting.pyx":121
+/* "boxcounting.pyx":125
  * 
  *     @property
  *     def occ(self):             # <<<<<<<<<<<<<<
@@ -3157,19 +3376,19 @@ static PyObject *__pyx_pf_11boxcounting_11boxcounting_3occ___get__(struct __pyx_
   __pyx_pybuffernd_occ.data = NULL;
   __pyx_pybuffernd_occ.rcbuffer = &__pyx_pybuffer_occ;
 
-  /* "boxcounting.pyx":123
+  /* "boxcounting.pyx":127
  *     def occ(self):
  *         cdef np.ndarray[INT_t, ndim=1, mode='c'] occ
  *         occ = np.zeros(self.max_level).astype(int)             # <<<<<<<<<<<<<<
  *         for i in range(self.max_level):
  *             occ[i] = self.occ[i]
  */
-  __Pyx_GetModuleGlobalName(__pyx_t_3, __pyx_n_s_np); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 123, __pyx_L1_error)
+  __Pyx_GetModuleGlobalName(__pyx_t_3, __pyx_n_s_np); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 127, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
-  __pyx_t_4 = __Pyx_PyObject_GetAttrStr(__pyx_t_3, __pyx_n_s_zeros); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 123, __pyx_L1_error)
+  __pyx_t_4 = __Pyx_PyObject_GetAttrStr(__pyx_t_3, __pyx_n_s_zeros); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 127, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-  __pyx_t_3 = __Pyx_PyInt_From_int(__pyx_v_self->max_level); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 123, __pyx_L1_error)
+  __pyx_t_3 = __Pyx_PyInt_From_int(__pyx_v_self->max_level); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 127, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
   __pyx_t_5 = NULL;
   if (CYTHON_UNPACK_METHODS && unlikely(PyMethod_Check(__pyx_t_4))) {
@@ -3184,10 +3403,10 @@ static PyObject *__pyx_pf_11boxcounting_11boxcounting_3occ___get__(struct __pyx_
   __pyx_t_2 = (__pyx_t_5) ? __Pyx_PyObject_Call2Args(__pyx_t_4, __pyx_t_5, __pyx_t_3) : __Pyx_PyObject_CallOneArg(__pyx_t_4, __pyx_t_3);
   __Pyx_XDECREF(__pyx_t_5); __pyx_t_5 = 0;
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-  if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 123, __pyx_L1_error)
+  if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 127, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-  __pyx_t_4 = __Pyx_PyObject_GetAttrStr(__pyx_t_2, __pyx_n_s_astype); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 123, __pyx_L1_error)
+  __pyx_t_4 = __Pyx_PyObject_GetAttrStr(__pyx_t_2, __pyx_n_s_astype); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 127, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   __pyx_t_2 = NULL;
@@ -3202,10 +3421,10 @@ static PyObject *__pyx_pf_11boxcounting_11boxcounting_3occ___get__(struct __pyx_
   }
   __pyx_t_1 = (__pyx_t_2) ? __Pyx_PyObject_Call2Args(__pyx_t_4, __pyx_t_2, ((PyObject *)(&PyInt_Type))) : __Pyx_PyObject_CallOneArg(__pyx_t_4, ((PyObject *)(&PyInt_Type)));
   __Pyx_XDECREF(__pyx_t_2); __pyx_t_2 = 0;
-  if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 123, __pyx_L1_error)
+  if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 127, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-  if (!(likely(((__pyx_t_1) == Py_None) || likely(__Pyx_TypeTest(__pyx_t_1, __pyx_ptype_5numpy_ndarray))))) __PYX_ERR(0, 123, __pyx_L1_error)
+  if (!(likely(((__pyx_t_1) == Py_None) || likely(__Pyx_TypeTest(__pyx_t_1, __pyx_ptype_5numpy_ndarray))))) __PYX_ERR(0, 127, __pyx_L1_error)
   __pyx_t_6 = ((PyArrayObject *)__pyx_t_1);
   {
     __Pyx_BufFmt_StackElem __pyx_stack[1];
@@ -3222,13 +3441,13 @@ static PyObject *__pyx_pf_11boxcounting_11boxcounting_3occ___get__(struct __pyx_
       __pyx_t_8 = __pyx_t_9 = __pyx_t_10 = 0;
     }
     __pyx_pybuffernd_occ.diminfo[0].strides = __pyx_pybuffernd_occ.rcbuffer->pybuffer.strides[0]; __pyx_pybuffernd_occ.diminfo[0].shape = __pyx_pybuffernd_occ.rcbuffer->pybuffer.shape[0];
-    if (unlikely(__pyx_t_7 < 0)) __PYX_ERR(0, 123, __pyx_L1_error)
+    if (unlikely(__pyx_t_7 < 0)) __PYX_ERR(0, 127, __pyx_L1_error)
   }
   __pyx_t_6 = 0;
   __pyx_v_occ = ((PyArrayObject *)__pyx_t_1);
   __pyx_t_1 = 0;
 
-  /* "boxcounting.pyx":124
+  /* "boxcounting.pyx":128
  *         cdef np.ndarray[INT_t, ndim=1, mode='c'] occ
  *         occ = np.zeros(self.max_level).astype(int)
  *         for i in range(self.max_level):             # <<<<<<<<<<<<<<
@@ -3240,7 +3459,7 @@ static PyObject *__pyx_pf_11boxcounting_11boxcounting_3occ___get__(struct __pyx_
   for (__pyx_t_12 = 0; __pyx_t_12 < __pyx_t_11; __pyx_t_12+=1) {
     __pyx_v_i = __pyx_t_12;
 
-    /* "boxcounting.pyx":125
+    /* "boxcounting.pyx":129
  *         occ = np.zeros(self.max_level).astype(int)
  *         for i in range(self.max_level):
  *             occ[i] = self.occ[i]             # <<<<<<<<<<<<<<
@@ -3255,12 +3474,12 @@ static PyObject *__pyx_pf_11boxcounting_11boxcounting_3occ___get__(struct __pyx_
     } else if (unlikely(__pyx_t_13 >= __pyx_pybuffernd_occ.diminfo[0].shape)) __pyx_t_14 = 0;
     if (unlikely(__pyx_t_14 != -1)) {
       __Pyx_RaiseBufferIndexError(__pyx_t_14);
-      __PYX_ERR(0, 125, __pyx_L1_error)
+      __PYX_ERR(0, 129, __pyx_L1_error)
     }
     *__Pyx_BufPtrCContig1d(__pyx_t_11boxcounting_INT_t *, __pyx_pybuffernd_occ.rcbuffer->pybuffer.buf, __pyx_t_13, __pyx_pybuffernd_occ.diminfo[0].strides) = (__pyx_v_self->occ[__pyx_v_i]);
   }
 
-  /* "boxcounting.pyx":126
+  /* "boxcounting.pyx":130
  *         for i in range(self.max_level):
  *             occ[i] = self.occ[i]
  *         return occ             # <<<<<<<<<<<<<<
@@ -3272,7 +3491,7 @@ static PyObject *__pyx_pf_11boxcounting_11boxcounting_3occ___get__(struct __pyx_
   __pyx_r = ((PyObject *)__pyx_v_occ);
   goto __pyx_L0;
 
-  /* "boxcounting.pyx":121
+  /* "boxcounting.pyx":125
  * 
  *     @property
  *     def occ(self):             # <<<<<<<<<<<<<<
@@ -3305,7 +3524,7 @@ static PyObject *__pyx_pf_11boxcounting_11boxcounting_3occ___get__(struct __pyx_
   return __pyx_r;
 }
 
-/* "boxcounting.pyx":140
+/* "boxcounting.pyx":144
  *         return self.tot_data
  *     @property
  *     def max_level(self):             # <<<<<<<<<<<<<<
@@ -3335,7 +3554,7 @@ static PyObject *__pyx_pf_11boxcounting_11boxcounting_9max_level___get__(struct 
   int __pyx_clineno = 0;
   __Pyx_RefNannySetupContext("__get__", 0);
 
-  /* "boxcounting.pyx":141
+  /* "boxcounting.pyx":145
  *     @property
  *     def max_level(self):
  *         return self.max_level             # <<<<<<<<<<<<<<
@@ -3343,13 +3562,13 @@ static PyObject *__pyx_pf_11boxcounting_11boxcounting_9max_level___get__(struct 
  *     def free(self):
  */
   __Pyx_XDECREF(__pyx_r);
-  __pyx_t_1 = __Pyx_PyInt_From_int(__pyx_v_self->max_level); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 141, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyInt_From_int(__pyx_v_self->max_level); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 145, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __pyx_r = __pyx_t_1;
   __pyx_t_1 = 0;
   goto __pyx_L0;
 
-  /* "boxcounting.pyx":140
+  /* "boxcounting.pyx":144
  *         return self.tot_data
  *     @property
  *     def max_level(self):             # <<<<<<<<<<<<<<
@@ -3368,7 +3587,7 @@ static PyObject *__pyx_pf_11boxcounting_11boxcounting_9max_level___get__(struct 
   return __pyx_r;
 }
 
-/* "boxcounting.pyx":131
+/* "boxcounting.pyx":135
  *         return self.max_level
  *     @property
  *     def eps0(self):             # <<<<<<<<<<<<<<
@@ -3398,7 +3617,7 @@ static PyObject *__pyx_pf_11boxcounting_11boxcounting_4eps0___get__(struct __pyx
   int __pyx_clineno = 0;
   __Pyx_RefNannySetupContext("__get__", 0);
 
-  /* "boxcounting.pyx":132
+  /* "boxcounting.pyx":136
  *     @property
  *     def eps0(self):
  *         return self.eps0             # <<<<<<<<<<<<<<
@@ -3406,13 +3625,13 @@ static PyObject *__pyx_pf_11boxcounting_11boxcounting_4eps0___get__(struct __pyx
  *     def n(self):
  */
   __Pyx_XDECREF(__pyx_r);
-  __pyx_t_1 = PyFloat_FromDouble(__pyx_v_self->eps0); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 132, __pyx_L1_error)
+  __pyx_t_1 = PyFloat_FromDouble(__pyx_v_self->eps0); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 136, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __pyx_r = __pyx_t_1;
   __pyx_t_1 = 0;
   goto __pyx_L0;
 
-  /* "boxcounting.pyx":131
+  /* "boxcounting.pyx":135
  *         return self.max_level
  *     @property
  *     def eps0(self):             # <<<<<<<<<<<<<<
@@ -3431,7 +3650,7 @@ static PyObject *__pyx_pf_11boxcounting_11boxcounting_4eps0___get__(struct __pyx
   return __pyx_r;
 }
 
-/* "boxcounting.pyx":134
+/* "boxcounting.pyx":138
  *         return self.eps0
  *     @property
  *     def n(self):             # <<<<<<<<<<<<<<
@@ -3461,7 +3680,7 @@ static PyObject *__pyx_pf_11boxcounting_11boxcounting_1n___get__(struct __pyx_ob
   int __pyx_clineno = 0;
   __Pyx_RefNannySetupContext("__get__", 0);
 
-  /* "boxcounting.pyx":135
+  /* "boxcounting.pyx":139
  *     @property
  *     def n(self):
  *         return self.n             # <<<<<<<<<<<<<<
@@ -3469,13 +3688,13 @@ static PyObject *__pyx_pf_11boxcounting_11boxcounting_1n___get__(struct __pyx_ob
  *     def tot_data(self):
  */
   __Pyx_XDECREF(__pyx_r);
-  __pyx_t_1 = __Pyx_PyInt_From_int(__pyx_v_self->n); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 135, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyInt_From_int(__pyx_v_self->n); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 139, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __pyx_r = __pyx_t_1;
   __pyx_t_1 = 0;
   goto __pyx_L0;
 
-  /* "boxcounting.pyx":134
+  /* "boxcounting.pyx":138
  *         return self.eps0
  *     @property
  *     def n(self):             # <<<<<<<<<<<<<<
@@ -3494,7 +3713,7 @@ static PyObject *__pyx_pf_11boxcounting_11boxcounting_1n___get__(struct __pyx_ob
   return __pyx_r;
 }
 
-/* "boxcounting.pyx":137
+/* "boxcounting.pyx":141
  *         return self.n
  *     @property
  *     def tot_data(self):             # <<<<<<<<<<<<<<
@@ -3524,7 +3743,7 @@ static PyObject *__pyx_pf_11boxcounting_11boxcounting_8tot_data___get__(struct _
   int __pyx_clineno = 0;
   __Pyx_RefNannySetupContext("__get__", 0);
 
-  /* "boxcounting.pyx":138
+  /* "boxcounting.pyx":142
  *     @property
  *     def tot_data(self):
  *         return self.tot_data             # <<<<<<<<<<<<<<
@@ -3532,13 +3751,13 @@ static PyObject *__pyx_pf_11boxcounting_11boxcounting_8tot_data___get__(struct _
  *     def max_level(self):
  */
   __Pyx_XDECREF(__pyx_r);
-  __pyx_t_1 = __Pyx_PyInt_From_int(__pyx_v_self->tot_data); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 138, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyInt_From_int(__pyx_v_self->tot_data); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 142, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __pyx_r = __pyx_t_1;
   __pyx_t_1 = 0;
   goto __pyx_L0;
 
-  /* "boxcounting.pyx":137
+  /* "boxcounting.pyx":141
  *         return self.n
  *     @property
  *     def tot_data(self):             # <<<<<<<<<<<<<<
@@ -3557,7 +3776,7 @@ static PyObject *__pyx_pf_11boxcounting_11boxcounting_8tot_data___get__(struct _
   return __pyx_r;
 }
 
-/* "boxcounting.pyx":143
+/* "boxcounting.pyx":147
  *         return self.max_level
  * 
  *     def free(self):             # <<<<<<<<<<<<<<
@@ -3566,24 +3785,24 @@ static PyObject *__pyx_pf_11boxcounting_11boxcounting_8tot_data___get__(struct _
  */
 
 /* Python wrapper */
-static PyObject *__pyx_pw_11boxcounting_11boxcounting_9free(PyObject *__pyx_v_self, CYTHON_UNUSED PyObject *unused); /*proto*/
-static PyObject *__pyx_pw_11boxcounting_11boxcounting_9free(PyObject *__pyx_v_self, CYTHON_UNUSED PyObject *unused) {
+static PyObject *__pyx_pw_11boxcounting_11boxcounting_15free(PyObject *__pyx_v_self, CYTHON_UNUSED PyObject *unused); /*proto*/
+static PyObject *__pyx_pw_11boxcounting_11boxcounting_15free(PyObject *__pyx_v_self, CYTHON_UNUSED PyObject *unused) {
   PyObject *__pyx_r = 0;
   __Pyx_RefNannyDeclarations
   __Pyx_RefNannySetupContext("free (wrapper)", 0);
-  __pyx_r = __pyx_pf_11boxcounting_11boxcounting_8free(((struct __pyx_obj_11boxcounting_boxcounting *)__pyx_v_self));
+  __pyx_r = __pyx_pf_11boxcounting_11boxcounting_14free(((struct __pyx_obj_11boxcounting_boxcounting *)__pyx_v_self));
 
   /* function exit code */
   __Pyx_RefNannyFinishContext();
   return __pyx_r;
 }
 
-static PyObject *__pyx_pf_11boxcounting_11boxcounting_8free(struct __pyx_obj_11boxcounting_boxcounting *__pyx_v_self) {
+static PyObject *__pyx_pf_11boxcounting_11boxcounting_14free(struct __pyx_obj_11boxcounting_boxcounting *__pyx_v_self) {
   PyObject *__pyx_r = NULL;
   __Pyx_RefNannyDeclarations
   __Pyx_RefNannySetupContext("free", 0);
 
-  /* "boxcounting.pyx":144
+  /* "boxcounting.pyx":148
  * 
  *     def free(self):
  *         free_tree(&self.tree, self.dim)             # <<<<<<<<<<<<<<
@@ -3592,7 +3811,7 @@ static PyObject *__pyx_pf_11boxcounting_11boxcounting_8free(struct __pyx_obj_11b
  */
   __pyx_f_11boxcounting_free_tree((&__pyx_v_self->tree), __pyx_v_self->dim);
 
-  /* "boxcounting.pyx":143
+  /* "boxcounting.pyx":147
  *         return self.max_level
  * 
  *     def free(self):             # <<<<<<<<<<<<<<
@@ -3614,19 +3833,19 @@ static PyObject *__pyx_pf_11boxcounting_11boxcounting_8free(struct __pyx_obj_11b
  */
 
 /* Python wrapper */
-static PyObject *__pyx_pw_11boxcounting_11boxcounting_11__reduce_cython__(PyObject *__pyx_v_self, CYTHON_UNUSED PyObject *unused); /*proto*/
-static PyObject *__pyx_pw_11boxcounting_11boxcounting_11__reduce_cython__(PyObject *__pyx_v_self, CYTHON_UNUSED PyObject *unused) {
+static PyObject *__pyx_pw_11boxcounting_11boxcounting_17__reduce_cython__(PyObject *__pyx_v_self, CYTHON_UNUSED PyObject *unused); /*proto*/
+static PyObject *__pyx_pw_11boxcounting_11boxcounting_17__reduce_cython__(PyObject *__pyx_v_self, CYTHON_UNUSED PyObject *unused) {
   PyObject *__pyx_r = 0;
   __Pyx_RefNannyDeclarations
   __Pyx_RefNannySetupContext("__reduce_cython__ (wrapper)", 0);
-  __pyx_r = __pyx_pf_11boxcounting_11boxcounting_10__reduce_cython__(((struct __pyx_obj_11boxcounting_boxcounting *)__pyx_v_self));
+  __pyx_r = __pyx_pf_11boxcounting_11boxcounting_16__reduce_cython__(((struct __pyx_obj_11boxcounting_boxcounting *)__pyx_v_self));
 
   /* function exit code */
   __Pyx_RefNannyFinishContext();
   return __pyx_r;
 }
 
-static PyObject *__pyx_pf_11boxcounting_11boxcounting_10__reduce_cython__(CYTHON_UNUSED struct __pyx_obj_11boxcounting_boxcounting *__pyx_v_self) {
+static PyObject *__pyx_pf_11boxcounting_11boxcounting_16__reduce_cython__(CYTHON_UNUSED struct __pyx_obj_11boxcounting_boxcounting *__pyx_v_self) {
   PyObject *__pyx_r = NULL;
   __Pyx_RefNannyDeclarations
   PyObject *__pyx_t_1 = NULL;
@@ -3671,19 +3890,19 @@ static PyObject *__pyx_pf_11boxcounting_11boxcounting_10__reduce_cython__(CYTHON
  */
 
 /* Python wrapper */
-static PyObject *__pyx_pw_11boxcounting_11boxcounting_13__setstate_cython__(PyObject *__pyx_v_self, PyObject *__pyx_v___pyx_state); /*proto*/
-static PyObject *__pyx_pw_11boxcounting_11boxcounting_13__setstate_cython__(PyObject *__pyx_v_self, PyObject *__pyx_v___pyx_state) {
+static PyObject *__pyx_pw_11boxcounting_11boxcounting_19__setstate_cython__(PyObject *__pyx_v_self, PyObject *__pyx_v___pyx_state); /*proto*/
+static PyObject *__pyx_pw_11boxcounting_11boxcounting_19__setstate_cython__(PyObject *__pyx_v_self, PyObject *__pyx_v___pyx_state) {
   PyObject *__pyx_r = 0;
   __Pyx_RefNannyDeclarations
   __Pyx_RefNannySetupContext("__setstate_cython__ (wrapper)", 0);
-  __pyx_r = __pyx_pf_11boxcounting_11boxcounting_12__setstate_cython__(((struct __pyx_obj_11boxcounting_boxcounting *)__pyx_v_self), ((PyObject *)__pyx_v___pyx_state));
+  __pyx_r = __pyx_pf_11boxcounting_11boxcounting_18__setstate_cython__(((struct __pyx_obj_11boxcounting_boxcounting *)__pyx_v_self), ((PyObject *)__pyx_v___pyx_state));
 
   /* function exit code */
   __Pyx_RefNannyFinishContext();
   return __pyx_r;
 }
 
-static PyObject *__pyx_pf_11boxcounting_11boxcounting_12__setstate_cython__(CYTHON_UNUSED struct __pyx_obj_11boxcounting_boxcounting *__pyx_v_self, CYTHON_UNUSED PyObject *__pyx_v___pyx_state) {
+static PyObject *__pyx_pf_11boxcounting_11boxcounting_18__setstate_cython__(CYTHON_UNUSED struct __pyx_obj_11boxcounting_boxcounting *__pyx_v_self, CYTHON_UNUSED PyObject *__pyx_v___pyx_state) {
   PyObject *__pyx_r = NULL;
   __Pyx_RefNannyDeclarations
   PyObject *__pyx_t_1 = NULL;
@@ -3720,7 +3939,7 @@ static PyObject *__pyx_pf_11boxcounting_11boxcounting_12__setstate_cython__(CYTH
   return __pyx_r;
 }
 
-/* "boxcounting.pyx":146
+/* "boxcounting.pyx":150
  *         free_tree(&self.tree, self.dim)
  * 
  * cdef tree_t create_tree(int n, int level):             # <<<<<<<<<<<<<<
@@ -3735,7 +3954,7 @@ static struct __pyx_t_4tree_tree_t __pyx_f_11boxcounting_create_tree(int __pyx_v
   __Pyx_RefNannyDeclarations
   __Pyx_RefNannySetupContext("create_tree", 0);
 
-  /* "boxcounting.pyx":148
+  /* "boxcounting.pyx":152
  * cdef tree_t create_tree(int n, int level):
  *     cdef tree_t tree
  *     cdef int num_quadrants = 2**n # Quadrants for n-dim problem: 2^n             # <<<<<<<<<<<<<<
@@ -3744,7 +3963,7 @@ static struct __pyx_t_4tree_tree_t __pyx_f_11boxcounting_create_tree(int __pyx_v
  */
   __pyx_v_num_quadrants = __Pyx_pow_long(2, ((long)__pyx_v_n));
 
-  /* "boxcounting.pyx":149
+  /* "boxcounting.pyx":153
  *     cdef tree_t tree
  *     cdef int num_quadrants = 2**n # Quadrants for n-dim problem: 2^n
  *     tree.child   = <tree_t*>calloc(num_quadrants, sizeof(tree_t))             # <<<<<<<<<<<<<<
@@ -3753,7 +3972,7 @@ static struct __pyx_t_4tree_tree_t __pyx_f_11boxcounting_create_tree(int __pyx_v
  */
   __pyx_v_tree.child = ((struct __pyx_t_4tree_tree_t *)calloc(__pyx_v_num_quadrants, (sizeof(struct __pyx_t_4tree_tree_t))));
 
-  /* "boxcounting.pyx":150
+  /* "boxcounting.pyx":154
  *     cdef int num_quadrants = 2**n # Quadrants for n-dim problem: 2^n
  *     tree.child   = <tree_t*>calloc(num_quadrants, sizeof(tree_t))
  *     tree.centr = <double*>malloc(n*sizeof(double))             # <<<<<<<<<<<<<<
@@ -3762,7 +3981,7 @@ static struct __pyx_t_4tree_tree_t __pyx_f_11boxcounting_create_tree(int __pyx_v
  */
   __pyx_v_tree.centr = ((double *)malloc((__pyx_v_n * (sizeof(double)))));
 
-  /* "boxcounting.pyx":151
+  /* "boxcounting.pyx":155
  *     tree.child   = <tree_t*>calloc(num_quadrants, sizeof(tree_t))
  *     tree.centr = <double*>malloc(n*sizeof(double))
  *     tree.radi = 0             # <<<<<<<<<<<<<<
@@ -3771,7 +3990,7 @@ static struct __pyx_t_4tree_tree_t __pyx_f_11boxcounting_create_tree(int __pyx_v
  */
   __pyx_v_tree.radi = 0.0;
 
-  /* "boxcounting.pyx":152
+  /* "boxcounting.pyx":156
  *     tree.centr = <double*>malloc(n*sizeof(double))
  *     tree.radi = 0
  *     tree.filled = 0             # <<<<<<<<<<<<<<
@@ -3780,7 +3999,7 @@ static struct __pyx_t_4tree_tree_t __pyx_f_11boxcounting_create_tree(int __pyx_v
  */
   __pyx_v_tree.filled = 0;
 
-  /* "boxcounting.pyx":153
+  /* "boxcounting.pyx":157
  *     tree.radi = 0
  *     tree.filled = 0
  *     tree.initialized = 1             # <<<<<<<<<<<<<<
@@ -3789,7 +4008,7 @@ static struct __pyx_t_4tree_tree_t __pyx_f_11boxcounting_create_tree(int __pyx_v
  */
   __pyx_v_tree.initialized = 1;
 
-  /* "boxcounting.pyx":154
+  /* "boxcounting.pyx":158
  *     tree.filled = 0
  *     tree.initialized = 1
  *     tree.level = level             # <<<<<<<<<<<<<<
@@ -3798,7 +4017,7 @@ static struct __pyx_t_4tree_tree_t __pyx_f_11boxcounting_create_tree(int __pyx_v
  */
   __pyx_v_tree.level = __pyx_v_level;
 
-  /* "boxcounting.pyx":155
+  /* "boxcounting.pyx":159
  *     tree.initialized = 1
  *     tree.level = level
  *     return tree             # <<<<<<<<<<<<<<
@@ -3808,7 +4027,7 @@ static struct __pyx_t_4tree_tree_t __pyx_f_11boxcounting_create_tree(int __pyx_v
   __pyx_r = __pyx_v_tree;
   goto __pyx_L0;
 
-  /* "boxcounting.pyx":146
+  /* "boxcounting.pyx":150
  *         free_tree(&self.tree, self.dim)
  * 
  * cdef tree_t create_tree(int n, int level):             # <<<<<<<<<<<<<<
@@ -3822,7 +4041,7 @@ static struct __pyx_t_4tree_tree_t __pyx_f_11boxcounting_create_tree(int __pyx_v
   return __pyx_r;
 }
 
-/* "boxcounting.pyx":157
+/* "boxcounting.pyx":161
  *     return tree
  * 
  * cdef void free_tree(tree_t * tree, int dim):             # <<<<<<<<<<<<<<
@@ -3839,7 +4058,7 @@ static void __pyx_f_11boxcounting_free_tree(struct __pyx_t_4tree_tree_t *__pyx_v
   int __pyx_t_4;
   __Pyx_RefNannySetupContext("free_tree", 0);
 
-  /* "boxcounting.pyx":159
+  /* "boxcounting.pyx":163
  * cdef void free_tree(tree_t * tree, int dim):
  *     cdef int i
  *     if tree.initialized != 0:             # <<<<<<<<<<<<<<
@@ -3849,7 +4068,7 @@ static void __pyx_f_11boxcounting_free_tree(struct __pyx_t_4tree_tree_t *__pyx_v
   __pyx_t_1 = ((__pyx_v_tree->initialized != 0) != 0);
   if (__pyx_t_1) {
 
-    /* "boxcounting.pyx":160
+    /* "boxcounting.pyx":164
  *     cdef int i
  *     if tree.initialized != 0:
  *         for i in range(dim):             # <<<<<<<<<<<<<<
@@ -3861,7 +4080,7 @@ static void __pyx_f_11boxcounting_free_tree(struct __pyx_t_4tree_tree_t *__pyx_v
     for (__pyx_t_4 = 0; __pyx_t_4 < __pyx_t_3; __pyx_t_4+=1) {
       __pyx_v_i = __pyx_t_4;
 
-      /* "boxcounting.pyx":161
+      /* "boxcounting.pyx":165
  *     if tree.initialized != 0:
  *         for i in range(dim):
  *             free_tree(&tree.child[i], dim)             # <<<<<<<<<<<<<<
@@ -3871,7 +4090,7 @@ static void __pyx_f_11boxcounting_free_tree(struct __pyx_t_4tree_tree_t *__pyx_v
       __pyx_f_11boxcounting_free_tree((&(__pyx_v_tree->child[__pyx_v_i])), __pyx_v_dim);
     }
 
-    /* "boxcounting.pyx":159
+    /* "boxcounting.pyx":163
  * cdef void free_tree(tree_t * tree, int dim):
  *     cdef int i
  *     if tree.initialized != 0:             # <<<<<<<<<<<<<<
@@ -3881,7 +4100,7 @@ static void __pyx_f_11boxcounting_free_tree(struct __pyx_t_4tree_tree_t *__pyx_v
     goto __pyx_L3;
   }
 
-  /* "boxcounting.pyx":162
+  /* "boxcounting.pyx":166
  *         for i in range(dim):
  *             free_tree(&tree.child[i], dim)
  *     else: return             # <<<<<<<<<<<<<<
@@ -3893,7 +4112,7 @@ static void __pyx_f_11boxcounting_free_tree(struct __pyx_t_4tree_tree_t *__pyx_v
   }
   __pyx_L3:;
 
-  /* "boxcounting.pyx":163
+  /* "boxcounting.pyx":167
  *             free_tree(&tree.child[i], dim)
  *     else: return
  *     free(tree.centr)             # <<<<<<<<<<<<<<
@@ -3902,7 +4121,7 @@ static void __pyx_f_11boxcounting_free_tree(struct __pyx_t_4tree_tree_t *__pyx_v
  */
   free(__pyx_v_tree->centr);
 
-  /* "boxcounting.pyx":164
+  /* "boxcounting.pyx":168
  *     else: return
  *     free(tree.centr)
  *     free(tree.child)             # <<<<<<<<<<<<<<
@@ -3911,16 +4130,16 @@ static void __pyx_f_11boxcounting_free_tree(struct __pyx_t_4tree_tree_t *__pyx_v
  */
   free(__pyx_v_tree->child);
 
-  /* "boxcounting.pyx":165
+  /* "boxcounting.pyx":169
  *     free(tree.centr)
  *     free(tree.child)
  *     return             # <<<<<<<<<<<<<<
  * 
- * @cython.boundscheck(False)  # Deactivate bounds checking
+ * cdef void recursive_occupation(tree_t * tree, double * x, int max_level, int dim):
  */
   goto __pyx_L0;
 
-  /* "boxcounting.pyx":157
+  /* "boxcounting.pyx":161
  *     return tree
  * 
  * cdef void free_tree(tree_t * tree, int dim):             # <<<<<<<<<<<<<<
@@ -3933,9 +4152,9 @@ static void __pyx_f_11boxcounting_free_tree(struct __pyx_t_4tree_tree_t *__pyx_v
   __Pyx_RefNannyFinishContext();
 }
 
-/* "boxcounting.pyx":169
- * @cython.boundscheck(False)  # Deactivate bounds checking
- * @cython.wraparound(False)   # Deactivate negative indexing.
+/* "boxcounting.pyx":171
+ *     return
+ * 
  * cdef void recursive_occupation(tree_t * tree, double * x, int max_level, int dim):             # <<<<<<<<<<<<<<
  *     cdef tree_t * next_tree
  *     if tree.level < max_level:
@@ -3947,7 +4166,7 @@ static void __pyx_f_11boxcounting_recursive_occupation(struct __pyx_t_4tree_tree
   int __pyx_t_1;
   __Pyx_RefNannySetupContext("recursive_occupation", 0);
 
-  /* "boxcounting.pyx":171
+  /* "boxcounting.pyx":173
  * cdef void recursive_occupation(tree_t * tree, double * x, int max_level, int dim):
  *     cdef tree_t * next_tree
  *     if tree.level < max_level:             # <<<<<<<<<<<<<<
@@ -3957,7 +4176,7 @@ static void __pyx_f_11boxcounting_recursive_occupation(struct __pyx_t_4tree_tree
   __pyx_t_1 = ((__pyx_v_tree->level < __pyx_v_max_level) != 0);
   if (__pyx_t_1) {
 
-    /* "boxcounting.pyx":172
+    /* "boxcounting.pyx":174
  *     cdef tree_t * next_tree
  *     if tree.level < max_level:
  *         if tree.filled == 0:             # <<<<<<<<<<<<<<
@@ -3967,7 +4186,7 @@ static void __pyx_f_11boxcounting_recursive_occupation(struct __pyx_t_4tree_tree
     __pyx_t_1 = ((__pyx_v_tree->filled == 0) != 0);
     if (__pyx_t_1) {
 
-      /* "boxcounting.pyx":173
+      /* "boxcounting.pyx":175
  *     if tree.level < max_level:
  *         if tree.filled == 0:
  *             tree.filled += 1             # <<<<<<<<<<<<<<
@@ -3976,7 +4195,7 @@ static void __pyx_f_11boxcounting_recursive_occupation(struct __pyx_t_4tree_tree
  */
       __pyx_v_tree->filled = (__pyx_v_tree->filled + 1);
 
-      /* "boxcounting.pyx":172
+      /* "boxcounting.pyx":174
  *     cdef tree_t * next_tree
  *     if tree.level < max_level:
  *         if tree.filled == 0:             # <<<<<<<<<<<<<<
@@ -3985,7 +4204,7 @@ static void __pyx_f_11boxcounting_recursive_occupation(struct __pyx_t_4tree_tree
  */
     }
 
-    /* "boxcounting.pyx":174
+    /* "boxcounting.pyx":176
  *         if tree.filled == 0:
  *             tree.filled += 1
  *         next_tree = next_child(tree, x, dim)             # <<<<<<<<<<<<<<
@@ -3994,7 +4213,7 @@ static void __pyx_f_11boxcounting_recursive_occupation(struct __pyx_t_4tree_tree
  */
     __pyx_v_next_tree = __pyx_f_11boxcounting_next_child(__pyx_v_tree, __pyx_v_x, __pyx_v_dim);
 
-    /* "boxcounting.pyx":175
+    /* "boxcounting.pyx":177
  *             tree.filled += 1
  *         next_tree = next_child(tree, x, dim)
  *         recursive_occupation(next_tree, x, max_level, dim)             # <<<<<<<<<<<<<<
@@ -4003,7 +4222,7 @@ static void __pyx_f_11boxcounting_recursive_occupation(struct __pyx_t_4tree_tree
  */
     __pyx_f_11boxcounting_recursive_occupation(__pyx_v_next_tree, __pyx_v_x, __pyx_v_max_level, __pyx_v_dim);
 
-    /* "boxcounting.pyx":171
+    /* "boxcounting.pyx":173
  * cdef void recursive_occupation(tree_t * tree, double * x, int max_level, int dim):
  *     cdef tree_t * next_tree
  *     if tree.level < max_level:             # <<<<<<<<<<<<<<
@@ -4012,18 +4231,18 @@ static void __pyx_f_11boxcounting_recursive_occupation(struct __pyx_t_4tree_tree
  */
   }
 
-  /* "boxcounting.pyx":176
+  /* "boxcounting.pyx":178
  *         next_tree = next_child(tree, x, dim)
  *         recursive_occupation(next_tree, x, max_level, dim)
  *     return             # <<<<<<<<<<<<<<
  * 
- * @cython.boundscheck(False)  # Deactivate bounds checking
+ * cdef void recursive_count(tree_t * tree, int * occ, int max_level, int dim):
  */
   goto __pyx_L0;
 
-  /* "boxcounting.pyx":169
- * @cython.boundscheck(False)  # Deactivate bounds checking
- * @cython.wraparound(False)   # Deactivate negative indexing.
+  /* "boxcounting.pyx":171
+ *     return
+ * 
  * cdef void recursive_occupation(tree_t * tree, double * x, int max_level, int dim):             # <<<<<<<<<<<<<<
  *     cdef tree_t * next_tree
  *     if tree.level < max_level:
@@ -4035,8 +4254,8 @@ static void __pyx_f_11boxcounting_recursive_occupation(struct __pyx_t_4tree_tree
 }
 
 /* "boxcounting.pyx":180
- * @cython.boundscheck(False)  # Deactivate bounds checking
- * @cython.wraparound(False)   # Deactivate negative indexing.
+ *     return
+ * 
  * cdef void recursive_count(tree_t * tree, int * occ, int max_level, int dim):             # <<<<<<<<<<<<<<
  *     cdef int i
  *     cdef int num_quadrants = 2**dim
@@ -4136,13 +4355,13 @@ static void __pyx_f_11boxcounting_recursive_count(struct __pyx_t_4tree_tree_t *_
  *                 recursive_count(&tree.child[i], occ, max_level, dim)
  *     return             # <<<<<<<<<<<<<<
  * 
- * @cython.boundscheck(False)  # Deactivate bounds checking
+ * cdef tree_t * next_child(tree_t * tree, double * x, int dim):
  */
   goto __pyx_L0;
 
   /* "boxcounting.pyx":180
- * @cython.boundscheck(False)  # Deactivate bounds checking
- * @cython.wraparound(False)   # Deactivate negative indexing.
+ *     return
+ * 
  * cdef void recursive_count(tree_t * tree, int * occ, int max_level, int dim):             # <<<<<<<<<<<<<<
  *     cdef int i
  *     cdef int num_quadrants = 2**dim
@@ -4153,9 +4372,9 @@ static void __pyx_f_11boxcounting_recursive_count(struct __pyx_t_4tree_tree_t *_
   __Pyx_RefNannyFinishContext();
 }
 
-/* "boxcounting.pyx":192
- * @cython.boundscheck(False)  # Deactivate bounds checking
- * @cython.wraparound(False)   # Deactivate negative indexing.
+/* "boxcounting.pyx":190
+ *     return
+ * 
  * cdef tree_t * next_child(tree_t * tree, double * x, int dim):             # <<<<<<<<<<<<<<
  *     """
  *     Function that select the quadrant for the next step based on the input data.
@@ -4176,7 +4395,7 @@ static struct __pyx_t_4tree_tree_t *__pyx_f_11boxcounting_next_child(struct __py
   int __pyx_t_4;
   __Pyx_RefNannySetupContext("next_child", 0);
 
-  /* "boxcounting.pyx":212
+  /* "boxcounting.pyx":210
  *         data x.
  *     """
  *     cdef int i, quadrant = 0 # output quadrant (starting from zero)             # <<<<<<<<<<<<<<
@@ -4185,7 +4404,7 @@ static struct __pyx_t_4tree_tree_t *__pyx_f_11boxcounting_next_child(struct __py
  */
   __pyx_v_quadrant = 0;
 
-  /* "boxcounting.pyx":215
+  /* "boxcounting.pyx":213
  *     cdef int inc_bool # for each data dimension inc_bool is 0 if the data
  *     #                 # is under the mid, otherwise is 1
  *     cdef int inc = 1  # inc is incremented by himself after each step of the             # <<<<<<<<<<<<<<
@@ -4194,7 +4413,7 @@ static struct __pyx_t_4tree_tree_t *__pyx_f_11boxcounting_next_child(struct __py
  */
   __pyx_v_inc = 1;
 
-  /* "boxcounting.pyx":217
+  /* "boxcounting.pyx":215
  *     cdef int inc = 1  # inc is incremented by himself after each step of the
  *     #                 # next loop.
  *     cdef double * next_mid =  <double*>malloc(dim*sizeof(double))             # <<<<<<<<<<<<<<
@@ -4203,7 +4422,7 @@ static struct __pyx_t_4tree_tree_t *__pyx_f_11boxcounting_next_child(struct __py
  */
   __pyx_v_next_mid = ((double *)malloc((__pyx_v_dim * (sizeof(double)))));
 
-  /* "boxcounting.pyx":218
+  /* "boxcounting.pyx":216
  *     #                 # next loop.
  *     cdef double * next_mid =  <double*>malloc(dim*sizeof(double))
  *     cdef double next_radi = tree.radi*0.5             # <<<<<<<<<<<<<<
@@ -4212,31 +4431,59 @@ static struct __pyx_t_4tree_tree_t *__pyx_f_11boxcounting_next_child(struct __py
  */
   __pyx_v_next_radi = (__pyx_v_tree->radi * 0.5);
 
-  /* "boxcounting.pyx":219
+  /* "boxcounting.pyx":217
  *     cdef double * next_mid =  <double*>malloc(dim*sizeof(double))
  *     cdef double next_radi = tree.radi*0.5
  *     for i in range(dim):             # <<<<<<<<<<<<<<
  *         if tree.centr[i] < x[i]:
- *             inc_bool = 1
+ *             if tree.centr[i] + tree.radi < x[i]:
  */
   __pyx_t_1 = __pyx_v_dim;
   __pyx_t_2 = __pyx_t_1;
   for (__pyx_t_3 = 0; __pyx_t_3 < __pyx_t_2; __pyx_t_3+=1) {
     __pyx_v_i = __pyx_t_3;
 
-    /* "boxcounting.pyx":220
+    /* "boxcounting.pyx":218
  *     cdef double next_radi = tree.radi*0.5
  *     for i in range(dim):
  *         if tree.centr[i] < x[i]:             # <<<<<<<<<<<<<<
- *             inc_bool = 1
- *             next_mid[i] = tree.centr[i] + next_radi
+ *             if tree.centr[i] + tree.radi < x[i]:
+ *                 printf("out of bound")
  */
     __pyx_t_4 = (((__pyx_v_tree->centr[__pyx_v_i]) < (__pyx_v_x[__pyx_v_i])) != 0);
     if (__pyx_t_4) {
 
-      /* "boxcounting.pyx":221
+      /* "boxcounting.pyx":219
  *     for i in range(dim):
  *         if tree.centr[i] < x[i]:
+ *             if tree.centr[i] + tree.radi < x[i]:             # <<<<<<<<<<<<<<
+ *                 printf("out of bound")
+ *             inc_bool = 1
+ */
+      __pyx_t_4 = ((((__pyx_v_tree->centr[__pyx_v_i]) + __pyx_v_tree->radi) < (__pyx_v_x[__pyx_v_i])) != 0);
+      if (__pyx_t_4) {
+
+        /* "boxcounting.pyx":220
+ *         if tree.centr[i] < x[i]:
+ *             if tree.centr[i] + tree.radi < x[i]:
+ *                 printf("out of bound")             # <<<<<<<<<<<<<<
+ *             inc_bool = 1
+ *             next_mid[i] = tree.centr[i] + next_radi
+ */
+        (void)(printf(((char const *)"out of bound")));
+
+        /* "boxcounting.pyx":219
+ *     for i in range(dim):
+ *         if tree.centr[i] < x[i]:
+ *             if tree.centr[i] + tree.radi < x[i]:             # <<<<<<<<<<<<<<
+ *                 printf("out of bound")
+ *             inc_bool = 1
+ */
+      }
+
+      /* "boxcounting.pyx":221
+ *             if tree.centr[i] + tree.radi < x[i]:
+ *                 printf("out of bound")
  *             inc_bool = 1             # <<<<<<<<<<<<<<
  *             next_mid[i] = tree.centr[i] + next_radi
  *         else:
@@ -4244,7 +4491,7 @@ static struct __pyx_t_4tree_tree_t *__pyx_f_11boxcounting_next_child(struct __py
       __pyx_v_inc_bool = 1;
 
       /* "boxcounting.pyx":222
- *         if tree.centr[i] < x[i]:
+ *                 printf("out of bound")
  *             inc_bool = 1
  *             next_mid[i] = tree.centr[i] + next_radi             # <<<<<<<<<<<<<<
  *         else:
@@ -4252,12 +4499,12 @@ static struct __pyx_t_4tree_tree_t *__pyx_f_11boxcounting_next_child(struct __py
  */
       (__pyx_v_next_mid[__pyx_v_i]) = ((__pyx_v_tree->centr[__pyx_v_i]) + __pyx_v_next_radi);
 
-      /* "boxcounting.pyx":220
+      /* "boxcounting.pyx":218
  *     cdef double next_radi = tree.radi*0.5
  *     for i in range(dim):
  *         if tree.centr[i] < x[i]:             # <<<<<<<<<<<<<<
- *             inc_bool = 1
- *             next_mid[i] = tree.centr[i] + next_radi
+ *             if tree.centr[i] + tree.radi < x[i]:
+ *                 printf("out of bound")
  */
       goto __pyx_L5;
     }
@@ -4377,9 +4624,9 @@ static struct __pyx_t_4tree_tree_t *__pyx_f_11boxcounting_next_child(struct __py
   __pyx_r = (&(__pyx_v_tree->child[__pyx_v_quadrant]));
   goto __pyx_L0;
 
-  /* "boxcounting.pyx":192
- * @cython.boundscheck(False)  # Deactivate bounds checking
- * @cython.wraparound(False)   # Deactivate negative indexing.
+  /* "boxcounting.pyx":190
+ *     return
+ * 
  * cdef tree_t * next_child(tree_t * tree, double * x, int dim):             # <<<<<<<<<<<<<<
  *     """
  *     Function that select the quadrant for the next step based on the input data.
@@ -5408,9 +5655,9 @@ static CYTHON_INLINE NPY_DATETIMEUNIT __pyx_f_5numpy_get_datetime64_unit(PyObjec
   return __pyx_r;
 }
 
-/* "fastload.pxd":15
- *     ssize_t getline(char **, size_t *, FILE *)
- * ###############################################################
+/* "fastload.pxd":8
+ * cimport cython, numpy as np # Make numpy work with cython
+ * 
  * cdef inline int StartsWith(const char *a, const char *b):             # <<<<<<<<<<<<<<
  *     if strncmp(a, b, strlen(b)) == 0: return 1
  *     return 0;
@@ -5422,8 +5669,8 @@ static CYTHON_INLINE int __pyx_f_8fastload_StartsWith(char const *__pyx_v_a, cha
   int __pyx_t_1;
   __Pyx_RefNannySetupContext("StartsWith", 0);
 
-  /* "fastload.pxd":16
- * ###############################################################
+  /* "fastload.pxd":9
+ * 
  * cdef inline int StartsWith(const char *a, const char *b):
  *     if strncmp(a, b, strlen(b)) == 0: return 1             # <<<<<<<<<<<<<<
  *     return 0;
@@ -5435,7 +5682,7 @@ static CYTHON_INLINE int __pyx_f_8fastload_StartsWith(char const *__pyx_v_a, cha
     goto __pyx_L0;
   }
 
-  /* "fastload.pxd":17
+  /* "fastload.pxd":10
  * cdef inline int StartsWith(const char *a, const char *b):
  *     if strncmp(a, b, strlen(b)) == 0: return 1
  *     return 0;             # <<<<<<<<<<<<<<
@@ -5445,9 +5692,9 @@ static CYTHON_INLINE int __pyx_f_8fastload_StartsWith(char const *__pyx_v_a, cha
   __pyx_r = 0;
   goto __pyx_L0;
 
-  /* "fastload.pxd":15
- *     ssize_t getline(char **, size_t *, FILE *)
- * ###############################################################
+  /* "fastload.pxd":8
+ * cimport cython, numpy as np # Make numpy work with cython
+ * 
  * cdef inline int StartsWith(const char *a, const char *b):             # <<<<<<<<<<<<<<
  *     if strncmp(a, b, strlen(b)) == 0: return 1
  *     return 0;
@@ -5500,12 +5747,15 @@ static PyObject *__pyx_getprop_11boxcounting_11boxcounting_tot_data(PyObject *o,
 }
 
 static PyMethodDef __pyx_methods_11boxcounting_boxcounting[] = {
-  {"occupation", (PyCFunction)(void*)(PyCFunctionWithKeywords)__pyx_pw_11boxcounting_11boxcounting_3occupation, METH_VARARGS|METH_KEYWORDS, 0},
-  {"IO_initialize", (PyCFunction)__pyx_pw_11boxcounting_11boxcounting_5IO_initialize, METH_NOARGS, 0},
-  {"initialize_size", (PyCFunction)__pyx_pw_11boxcounting_11boxcounting_7initialize_size, METH_NOARGS, 0},
-  {"free", (PyCFunction)__pyx_pw_11boxcounting_11boxcounting_9free, METH_NOARGS, 0},
-  {"__reduce_cython__", (PyCFunction)__pyx_pw_11boxcounting_11boxcounting_11__reduce_cython__, METH_NOARGS, 0},
-  {"__setstate_cython__", (PyCFunction)__pyx_pw_11boxcounting_11boxcounting_13__setstate_cython__, METH_O, 0},
+  {"set_data_file", (PyCFunction)(void*)(PyCFunctionWithKeywords)__pyx_pw_11boxcounting_11boxcounting_3set_data_file, METH_VARARGS|METH_KEYWORDS, 0},
+  {"initialize", (PyCFunction)(void*)(PyCFunctionWithKeywords)__pyx_pw_11boxcounting_11boxcounting_5initialize, METH_VARARGS|METH_KEYWORDS, 0},
+  {"fill_tree", (PyCFunction)__pyx_pw_11boxcounting_11boxcounting_7fill_tree, METH_NOARGS, 0},
+  {"count_occupation", (PyCFunction)__pyx_pw_11boxcounting_11boxcounting_9count_occupation, METH_NOARGS, 0},
+  {"IO_initialize", (PyCFunction)__pyx_pw_11boxcounting_11boxcounting_11IO_initialize, METH_NOARGS, 0},
+  {"initialize_size", (PyCFunction)__pyx_pw_11boxcounting_11boxcounting_13initialize_size, METH_O, 0},
+  {"free", (PyCFunction)__pyx_pw_11boxcounting_11boxcounting_15free, METH_NOARGS, 0},
+  {"__reduce_cython__", (PyCFunction)__pyx_pw_11boxcounting_11boxcounting_17__reduce_cython__, METH_NOARGS, 0},
+  {"__setstate_cython__", (PyCFunction)__pyx_pw_11boxcounting_11boxcounting_19__setstate_cython__, METH_O, 0},
   {0, 0, 0, 0}
 };
 
@@ -5648,7 +5898,6 @@ static __Pyx_StringTabEntry __pyx_string_tab[] = {
   {&__pyx_n_s_delimiter, __pyx_k_delimiter, sizeof(__pyx_k_delimiter), 0, 0, 1, 1},
   {&__pyx_n_s_encode, __pyx_k_encode, sizeof(__pyx_k_encode), 0, 0, 1, 1},
   {&__pyx_n_s_filename, __pyx_k_filename, sizeof(__pyx_k_filename), 0, 0, 1, 1},
-  {&__pyx_n_s_free, __pyx_k_free, sizeof(__pyx_k_free), 0, 0, 1, 1},
   {&__pyx_n_s_getstate, __pyx_k_getstate, sizeof(__pyx_k_getstate), 0, 0, 1, 1},
   {&__pyx_n_s_import, __pyx_k_import, sizeof(__pyx_k_import), 0, 0, 1, 1},
   {&__pyx_n_s_initialize_size, __pyx_k_initialize_size, sizeof(__pyx_k_initialize_size), 0, 0, 1, 1},
@@ -5667,13 +5916,14 @@ static __Pyx_StringTabEntry __pyx_string_tab[] = {
   {&__pyx_kp_s_self_M_self_cfile_self_cmid_self, __pyx_k_self_M_self_cfile_self_cmid_self, sizeof(__pyx_k_self_M_self_cfile_self_cmid_self), 0, 0, 1, 0},
   {&__pyx_n_s_setstate, __pyx_k_setstate, sizeof(__pyx_k_setstate), 0, 0, 1, 1},
   {&__pyx_n_s_setstate_cython, __pyx_k_setstate_cython, sizeof(__pyx_k_setstate_cython), 0, 0, 1, 1},
+  {&__pyx_n_s_size, __pyx_k_size, sizeof(__pyx_k_size), 0, 0, 1, 1},
   {&__pyx_n_s_test, __pyx_k_test, sizeof(__pyx_k_test), 0, 0, 1, 1},
   {&__pyx_kp_u_utf_8, __pyx_k_utf_8, sizeof(__pyx_k_utf_8), 0, 1, 0, 0},
   {&__pyx_n_s_zeros, __pyx_k_zeros, sizeof(__pyx_k_zeros), 0, 0, 1, 1},
   {0, 0, 0, 0, 0, 0, 0}
 };
 static CYTHON_SMALL_CODE int __Pyx_InitCachedBuiltins(void) {
-  __pyx_builtin_range = __Pyx_GetBuiltinName(__pyx_n_s_range); if (!__pyx_builtin_range) __PYX_ERR(0, 88, __pyx_L1_error)
+  __pyx_builtin_range = __Pyx_GetBuiltinName(__pyx_n_s_range); if (!__pyx_builtin_range) __PYX_ERR(0, 89, __pyx_L1_error)
   __pyx_builtin_TypeError = __Pyx_GetBuiltinName(__pyx_n_s_TypeError); if (!__pyx_builtin_TypeError) __PYX_ERR(1, 2, __pyx_L1_error)
   __pyx_builtin_ImportError = __Pyx_GetBuiltinName(__pyx_n_s_ImportError); if (!__pyx_builtin_ImportError) __PYX_ERR(2, 944, __pyx_L1_error)
   return 0;
@@ -6112,9 +6362,9 @@ if (!__Pyx_RefNanny) {
   if (PyDict_SetItem(__pyx_d, __pyx_n_s_test, __pyx_t_1) < 0) __PYX_ERR(0, 1, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-  /* "fastload.pxd":15
- *     ssize_t getline(char **, size_t *, FILE *)
- * ###############################################################
+  /* "fastload.pxd":8
+ * cimport cython, numpy as np # Make numpy work with cython
+ * 
  * cdef inline int StartsWith(const char *a, const char *b):             # <<<<<<<<<<<<<<
  *     if strncmp(a, b, strlen(b)) == 0: return 1
  *     return 0;

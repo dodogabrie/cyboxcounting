@@ -1,4 +1,5 @@
 import sys
+import os
 sys.path.append('../src/')
 sys.path.append('../build/')
 import numpy as np
@@ -22,41 +23,73 @@ def lorenz(t, X, sigma, beta, rho):
     wp = - beta*w + u * v
     return up, vp, wp
 
-def solver(tmax, n):
+def solver(T, n, x0):
     # Integrate the Lorenz equations.
-    t = np.linspace(0, tmax, n)
-    soln = solve_ivp(lorenz, (0, tmax), (u0, v0, w0), args=(sigma, beta, rho), t_eval=t,
+    t = np.linspace(0, T, n)
+    soln = solve_ivp(lorenz, (0, T), x0, args=(sigma, beta, rho), t_eval=t,
                      dense_output=False)
     # Interpolate solution onto the time grid, t.
     x, y, z = soln.y
     return x, y, z
 
-def write_data(tmax, n, data_file):
-    x, y, z = solver(tmax, n)
-    np.savetxt("data/" + data_file, np.column_stack((x, y, z)))
+def write_data(T, n, data_folder, data_file, n_files, hot_start = 0):
+    x0 = (u0, v0, w0)
+    if not os.path.exists(data_folder):
+        os.mkdir(data_folder)
 
-def compute_dimension(data_file, max_level, min_level = 1):
+    n_prev_files = 0
+    files = os.listdir(data_folder)
+    if hot_start and files:
+        n_prev_files = len(files)
+        for f in files:
+            if f.endswith(f"{n_prev_files-1}.txt"): 
+                x0 = np.loadtxt(data_folder + f)[-1]
+    for i in range(n_files):
+        print(i + n_prev_files, end = "\r")
+        x, y, z = solver(T, n, x0)
+        np.savetxt(data_folder + data_file + f'_{i + n_prev_files}.txt',
+                   np.column_stack((x, y, z)))
+
+def compute_dimension(data_file, max_level, min_level = 1, multi = False):
     bc = boxcounting()
-    bc.occupation("data/"+data_file, max_level)
+    if multi:
+        folderfiles = os.listdir(data_file)
+        bc.set_data_file(data_file + folderfiles[0])
+        bc.initialize(max_level, size = 28)
+        bc.fill_tree()
+        for i, file in enumerate(folderfiles[1:], 1):
+            print(i, end = '\r')
+            bc.set_data_file(data_file + file)
+            bc.fill_tree()
+        bc.count_occupation()
+        print(bc.tot_data)
+    else:
+        bc.set_data_file("data/"+data_file+".txt")
+        bc.initialize(max_level, size = 28)
+        bc.fill_tree()
+        bc.count_occupation()
     fit_show(bc, min_index = min_level)
+
 def plot3d(data_file):
     # Plot
-    data = np.loadtxt("data/" + data_file)
+    data = np.loadtxt("data/" + data_file + ".txt")
     data = data[::10]
     x, y, z = data.T
     fig = go.Figure(data=[go.Scatter3d(x=x, y=y, z=z,
                                    mode='markers', marker=dict(size = 1))])
-    fig.write_html("data/lorenz.html")
-#    fig.show()
+#    fig.write_html("data/lorenz.html")
+    fig.show()
     return 
 
 if __name__ == "__main__":
-    data_file = "lorenz_short.txt"
-    tmax = 1000
+    data_folder = "data/lorenz_multi_short/"
+    data_file = "lorenz_short"
+    T = 1000
     n = int(1e5)
-    max_level = 6
+    max_level = 8
     min_level = 1
-#    write_data(tmax, n, data_file)
+    num_files = 5
+    write_data(T, n, data_folder, data_file, num_files, hot_start = 1)
 #    plot3d(data_file)
-    compute_dimension(data_file, max_level, min_level)
+    compute_dimension(data_folder, max_level, min_level, multi = True)
     
