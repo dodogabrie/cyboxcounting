@@ -14,11 +14,11 @@ ctypedef np.int_t INT_t
 ctypedef np.double_t DOUBLE_t
 
 cdef class boxcounting:
-    cdef tree_t tree
+    cdef tree_t * tree
     cdef int initialized
-    cdef int * occ
-    cdef double * eps
-    cdef int max_level, n, dim, tot_data, num_tree
+    cdef int * _occ
+    cdef double * _eps
+    cdef int max_level, n, dim, tot_data, num_tree, actual_tree
     cdef double final_dim, final_var, eps0
     cdef char * cdelimiter 
     cdef char * ccomments
@@ -43,11 +43,13 @@ cdef class boxcounting:
         strcpy(self.fname, filename.encode('utf-8'))
 
     def initialize(self, int max_level, int num_tree = 1, double size = 0):
-        cdef int Ncol, Ndata
+        cdef int Ncol, Ndata, i
         self.max_level = max_level
         self.num_tree = num_tree
+        self.tree = <tree_t*>malloc(num_tree*sizeof(tree_t))
         Ndata, Ncol = get_dimension(self.fname, self.cdelimiter, self.ccomments)
-        self.tree = create_tree(Ncol, 0)
+        for i in range(num_tree):
+            self.tree[i] = create_tree(Ncol, 0)
         self.initialized = 1
         self.dim = Ncol
         self.initialize_size(size)
@@ -57,17 +59,21 @@ cdef class boxcounting:
         cdef double * x
         x = <double*>malloc(self.dim * sizeof(double))
         self.cfile = fopen(self.fname, "rb")
+        eof = get_data(x, self.cfile, self.token, self.dim, self.cdelimiter, self.ccomments) 
         while eof != -1:
+            for i in range(self.num_tree):
+                recursive_occupation(&self.tree[i], x, self.max_level, self.dim)
             eof = get_data(x, self.cfile, self.token, self.dim, self.cdelimiter, self.ccomments) 
-            recursive_occupation(&self.tree, x, self.max_level, self.dim)
             n = n + 1
         fclose(self.cfile)
         self.n = n
         self.tot_data += n
+        free(x)
 
     def count_occupation(self):
-        recursive_count(&self.tree, self.occ, self.max_level, self.dim)
-        return
+        cdef int i
+        for i in range(self.num_tree):
+            recursive_count(&self.tree[i], &self._occ[i*self.max_level], self.max_level, self.dim)
 
     def IO_initialize(self):
         self.cdelimiter = <char*>malloc(10 * sizeof(char))
@@ -103,31 +109,46 @@ cdef class boxcounting:
         for i in range(self.dim):
             self.cmid[i] = 0.5*(self.M[i]+self.m[i])
         for i in range(self.dim):
-            self.tree.centr[i] = self.cmid[i]
+            for j in range(self.num_tree):
+                self.tree[j].centr[i] = self.cmid[i]
             radi =  0.5*(self.M[i]-self.m[i])
             if sizeM < radi:
                 sizeM = radi
 
         if size != 0:
             sizeM = size
-        self.tree.radi = sizeM
+        self.tree[0].radi = sizeM
+        for j in range(1, self.num_tree):
+            self.tree[j].radi = sizeM + sizeM / (j + 1)
         self.eps0 = sizeM
 
-        self.occ = <int*>malloc(self.max_level*self.num_tree*sizeof(int))
-        self.eps = <double*>malloc(self.max_level*self.num_tree*sizeof(double))
-        self.eps[0] = self.eps0
-        for i in range(self.max_level): 
-            self.occ[i] = 0
-            self.eps[i] = 0
+        self._occ = <int*>malloc(self.max_level*self.num_tree*sizeof(int))
+        self._eps = <double*>malloc(self.max_level*self.num_tree*sizeof(double))
+        self._eps[0] = self.eps0
+        if self.num_tree > 1:
+            for j in range(1, self.num_tree):
+                self._eps[j*self.max_level] = self.eps0 + self.eps0 / (j + 1)
+        for i in range(self.num_tree*self.max_level):
+            self._occ[i] = 0
+        for i in range(1, self.max_level): 
+            for j in range(self.num_tree):
+                self._eps[i + j*self.max_level] = self._eps[i-1 + j*self.max_level]/2
         self.initialized = 1
 
     @property 
     def occ(self):
-        cdef np.ndarray[INT_t, ndim=1, mode='c'] occ 
-        occ = np.zeros(self.max_level).astype(int)
-        for i in range(self.max_level):
-            occ[i] = self.occ[i]
-        return occ
+        occc = np.ones(self.max_level*self.num_tree).astype(int)
+        for i in range(self.max_level*self.num_tree):
+            occc[i] = self._occ[i]
+        return occc
+
+    @property 
+    def eps(self):
+        epss = np.zeros(self.max_level*self.num_tree).astype(np.double)
+        for i in range(self.max_level*self.num_tree):
+            epss[i] = self._eps[i]/self.eps0
+        return epss
+
     @property
     def max_level(self):
         return self.max_level
@@ -143,9 +164,13 @@ cdef class boxcounting:
     @property 
     def max_level(self):
         return self.max_level
-
+    @property 
+    def num_tree(self):
+        return self.num_tree
     def free(self):
-        free_tree(&self.tree, self.dim)
+        cdef int i 
+        for i in range(self.num_tree):
+            free_tree(&self.tree[i], self.dim)
 
 cdef tree_t create_tree(int n, int level):
     cdef tree_t tree
