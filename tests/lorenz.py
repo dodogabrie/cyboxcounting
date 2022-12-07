@@ -85,15 +85,15 @@ def plot3d(data_file):
     return 
 
 if __name__ == "__main__":
-    data_folder = "data/lorenz_multi_short/"
-    output = "data/output/lorenz.txt"
-    data_file = "lorenz_short"
-    T = 1000
+    data_folder = "data/lorenz_multi_long/"
+    output = "data/output/lorenz_long.txt"
+    data_file = "lorenz_long"
+    T = 10000
     n = int(1e7)
-    max_level = 11
-    min_level = 3
-    num_files = 6
-#    write_data(T, n, data_folder, data_file, num_files, hot_start = 1)
+    max_level = 10
+    min_level = 2
+    num_files = 10
+#    write_data(T, n, data_folder, data_file, num_files, hot_start = 0)
 #    plot3d(data_folder)
-    compute_dimension(data_folder, max_level, min_level = min_level, multi = True, num_tree=2, output=output)
-    dim_df(file = output, block_dim=3)    
+#    compute_dimension(data_folder, max_level, min_level = min_level, multi = True, num_tree=4, output=output)
+    dim_df(file = output, block_dim=5)    

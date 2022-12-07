@@ -14,25 +14,21 @@ def save_output(bc, filename, data_dir):
     return
 
 def compute_dim(bc = None, file = None):
-    if file == None:
-        num = np.log2(bc.occ)
-        den = np.log2(1/bc.eps)#np.arange(bc.max_level) #- np.log2(bc.eps0)
-        sorter = np.argsort(den) 
-        den = den[sorter]
-        num = num[sorter]
-        for i in range(bc.num_tree):
-            den[i] = 1
-    else:
+    if bc != None:
+        occ = bc.occ 
+        eps = bc.eps
+    elif file != None:
         occ, eps = np.loadtxt(file, unpack=True)
-        num = np.log2(occ)
-        den = np.log2(1/eps)#np.arange(bc.max_level) #- np.log2(bc.eps0)
-        sorter = np.argsort(den) 
-        den = den[sorter]
-        num = num[sorter]
-        den[den == 0] = 1
-
+    else: raise Exception("Please pass a tree or a data file with occ and eps")
+    num = np.log2(occ)
+    den = np.log2(1/eps)#np.arange(bc.max_level) #- np.log2(bc.eps0)
+    sorter = np.argsort(den) 
+    den = den[sorter]
+    num = num[sorter]
+    den[den == 0] = 1
 #    print("Original Radius:", bc.eps0)
 #    print("List of dim:", num/den)
+    print(num, den)
     return num, den
 
 def dim_df(bc = None, file = None, block_dim = 4):
@@ -41,7 +37,6 @@ def dim_df(bc = None, file = None, block_dim = 4):
         return m * x + q
     init = [1., 0]
     num, den = compute_dim(bc = bc, file = file)
-    print(num, den)
     num_data = len(num)
     list_dim = []
     list_eps = []
@@ -51,7 +46,7 @@ def dim_df(bc = None, file = None, block_dim = 4):
         list_eps.append(np.mean(x))
         popt, pcov = curve_fit(f, x, y, p0=init)
         list_dim.append(popt[0])
-    plt.plot(list_eps, list_dim)
+    plt.scatter(list_eps, list_dim)
     plt.show()
 
 def fit_dim(bc, min_index = 1, max_index = 0):
@@ -75,8 +70,6 @@ def fit_show(bc, min_index = 1, max_index = 0):
     dim = y/den
     x_array = np.linspace(np.min(den), np.max(den), 100)
     print(f'D = {D} pm {var}')
-    print(den)
-    print(y)
     # Plot dei risultati
     fig, axs = plt.subplots(1,2,figsize=(15,7))
     plt.suptitle(r'Fattore di scala: $\epsilon = 2^n$', fontsize = 20)

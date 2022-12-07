@@ -122,14 +122,12 @@ cdef class boxcounting:
             self.tree[j].radi = sizeM + sizeM / (j + 1)
         self.eps0 = sizeM
 
-        self._occ = <int*>malloc(self.max_level*self.num_tree*sizeof(int))
+        self._occ = <int*>calloc(self.max_level*self.num_tree, sizeof(int))
         self._eps = <double*>malloc(self.max_level*self.num_tree*sizeof(double))
         self._eps[0] = self.eps0
         if self.num_tree > 1:
             for j in range(1, self.num_tree):
                 self._eps[j*self.max_level] = self.eps0 + self.eps0 / (j + 1)
-        for i in range(self.num_tree*self.max_level):
-            self._occ[i] = 0
         for i in range(1, self.max_level): 
             for j in range(self.num_tree):
                 self._eps[i + j*self.max_level] = self._eps[i-1 + j*self.max_level]/2
@@ -173,19 +171,17 @@ cdef class boxcounting:
             free_tree(&self.tree[i], self.dim)
 
 cdef tree_t create_tree(int n, int level):
+    cdef int i
     cdef tree_t tree
     cdef int num_quadrants = 2**n # Quadrants for n-dim problem: 2^n
     tree.child   = <tree_t*>calloc(num_quadrants, sizeof(tree_t))
     tree.centr = <double*>malloc(n*sizeof(double))
-    tree.radi = 0
-    tree.filled = 0
-    tree.initialized = 1
     tree.level = level
     return tree
 
 cdef void free_tree(tree_t * tree, int dim):
     cdef int i
-    if tree.initialized != 0:
+    if tree.level != 0:
         for i in range(dim):
             free_tree(&tree.child[i], dim)
     else: return 
@@ -196,8 +192,8 @@ cdef void free_tree(tree_t * tree, int dim):
 cdef void recursive_occupation(tree_t * tree, double * x, int max_level, int dim):
     cdef tree_t * next_tree
     if tree.level < max_level:
-        if tree.filled == 0:
-            tree.filled += 1
+#        if tree.filled == 0:
+#            tree.filled += 1
         next_tree = next_child(tree, x, dim)
         recursive_occupation(next_tree, x, max_level, dim)
     return
@@ -206,7 +202,7 @@ cdef void recursive_count(tree_t * tree, int * occ, int max_level, int dim):
     cdef int i
     cdef int num_quadrants = 2**dim
     if tree.level < max_level:
-        if tree.filled != 0:
+        if tree.radi != 0:
             occ[tree.level] += 1
             for i in range(num_quadrants):
                 recursive_count(&tree.child[i], occ, max_level, dim)
@@ -251,7 +247,7 @@ cdef tree_t * next_child(tree_t * tree, double * x, int dim):
         quadrant += inc * inc_bool
         inc += inc
 
-    if tree.child[quadrant].initialized == 0:
+    if tree.child[quadrant].radi == 0:
         tree.child[quadrant] = create_tree(dim, tree.level + 1)
         for i in range(dim):
             tree.child[quadrant].centr[i] = next_mid[i]
