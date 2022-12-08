@@ -169,6 +169,14 @@ cdef class boxcounting:
         cdef int i 
         for i in range(self.num_tree):
             free_tree(&self.tree[i], self.dim)
+    @property
+    def nodes(self):
+        cdef int n 
+        for i in range(self.num_tree):
+            n = get_num_nodes(self.tree, 0, self.dim)
+        nodes = np.zeros((n, self.dim + 1)).astype(np.double)
+        get_nodes(self.tree, nodes, self.dim, 0)
+        return nodes, n
 
 cdef tree_t create_tree(int n, int level):
     cdef int i
@@ -254,3 +262,28 @@ cdef tree_t * next_child(tree_t * tree, double * x, int dim):
         tree.child[quadrant].radi = next_radi
     free(next_mid)
     return &tree.child[quadrant]
+
+cdef int get_num_nodes(tree_t * tree, int n_nodes, int dim):
+    cdef int i, num_quadrants = 2**dim
+    if tree.radi != 0:
+        n_nodes += 1
+        for i in range(num_quadrants):
+            n_nodes = get_num_nodes(&tree.child[i], n_nodes, dim)
+    return n_nodes
+
+cdef int get_nodes(tree_t * tree, np.double_t[:,:] x, int dim, int line):
+    cdef int i, num_quadrants = 2**dim
+    if tree.radi != 0:
+        for i in range(dim):
+            x[line,i] = tree.centr[i]
+        x[line, dim] = tree.radi
+        line += 1
+        for i in range(num_quadrants):
+            line = get_nodes(&tree.child[i], x, dim, line)
+    return line
+
+
+# Creare array con  
+# Centro (x, y) 
+# raggio (eps)
+# plottarlo con plt.gcf().gca().add_patch(patches.Rectangle((n.x0, n.y0), n.width, n.height, fill=False))

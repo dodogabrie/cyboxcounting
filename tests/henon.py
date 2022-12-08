@@ -5,6 +5,7 @@ sys.path.append('../build/')
 import numpy as np
 import time
 import matplotlib.pyplot as plt
+import matplotlib.patches as patches
 from numba import njit
 import plotly.graph_objects as go
 from boxcounting import boxcounting
@@ -53,12 +54,12 @@ def write_data(n, data_folder, data_file, n_files, hot_start = 0):
         x = solver(n, data0)
         np.savetxt(data_folder + data_file + f'_{i + n_prev_files}.txt', x)
 
-def compute_dimension(data_file, max_level, min_level = 1, multi = False):
+def compute_dimension(data_file, max_level, min_level = 1, multi = False, num_tree = 1, size = 1.3):
     bc = boxcounting()
     if multi:
         folderfiles = os.listdir(data_file)
         bc.set_data_file(data_file + folderfiles[0])
-        bc.initialize(max_level, size = 1.3, num_tree = 3)
+        bc.initialize(max_level, size = size, num_tree = num_tree)
         bc.fill_tree()
         for i, file in enumerate(folderfiles[1:], 1):
             print(i, end = '\r')
@@ -71,13 +72,35 @@ def compute_dimension(data_file, max_level, min_level = 1, multi = False):
         bc.initialize(max_level)
         bc.fill_tree()
         bc.count_occupation()
-    fit_show(bc, min_index = min_level)
+#    fit_show(bc, min_index = min_level)
+    return bc
 
 def plot_map(data_folder, data_file):
-    data = np.loadtxt(data_folder + data_file)
-    print(data.shape)
-    print(data[:, 0].shape)
-    plt.scatter(data[:, 0], data[:, 1])
+#    fig = plt.figure()
+    for datai in os.listdir(data_folder):
+        datai = np.loadtxt(data_folder + datai)
+#        plt.scatter(data[:, 0], data[:, 1])
+#    plt.show()
+    return 
+
+def get_nodes(data_file, max_level, min_level = 1, multi = False):
+    bc = compute_dimension(data_file, max_level, min_level, multi)
+    output = bc.nodes 
+    nodes = output[0]
+    n = output[1]
+    print(f"Found array of {n} nodes")
+    print(nodes)
+    fig = plt.figure(figsize=(10, 10))
+    for datai in os.listdir(data_file):
+        datai = np.loadtxt(data_file + datai)
+        plt.scatter(datai[:, 0], datai[:, 1], s = 4)
+    for data in nodes:
+        r = data[2]
+        x = data[0] 
+        y = data[1] 
+        print(r)
+        plt.gcf().gca().add_patch(patches.Rectangle((x-r, y-r), 2*r, 2*r, fill=False))
+        plt.scatter(x, y, alpha=0)
     plt.show()
     return 
 
@@ -85,11 +108,12 @@ def plot_map(data_folder, data_file):
 if __name__ == "__main__":
     data_folder = "data/henon_debug/"
     data_file = "henon"
-    n = int(1e5)
-    max_level = 12
+    n = int(1e2)
+    max_level = 6
     min_level = 1
     num_files = 2
-    write_data(n, data_folder, data_file, num_files, hot_start = 0)
-#    plot_map(data_folder, "henon_1.txt")
-    compute_dimension(data_folder, max_level, min_level = min_level, multi = True)
+#    write_data(n, data_folder, data_file, num_files, hot_start = 0)
+    plot_map(data_folder, "henon_1.txt")
+#    compute_dimension(data_folder, max_level, min_level = min_level, multi = True)
+    get_nodes(data_folder, max_level, min_level = min_level, multi = True)
  
