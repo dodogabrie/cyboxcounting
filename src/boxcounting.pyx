@@ -57,7 +57,7 @@ cdef class boxcounting:
     def fill_tree(self):
         cdef int eof = 0, n = 0
         cdef double * x
-        x = <double*>malloc(self.dim * sizeof(double))
+        x = <double*>calloc(self.dim, sizeof(double))
         self.cfile = fopen(self.fname, "rb")
         eof = get_data(x, self.cfile, self.token, self.dim, self.cdelimiter, self.ccomments) 
         while eof != -1:
@@ -69,6 +69,9 @@ cdef class boxcounting:
         self.n = n
         self.tot_data += n
         free(x)
+#        free(self.token)
+#        free(self.cdelimiter)
+#        free(self.ccomments)
 
     def count_occupation(self):
         cdef int i
@@ -245,8 +248,8 @@ cdef tree_t * next_child(tree_t * tree, double * x, int dim):
     cdef double next_radi = tree.radi*0.5
     for i in range(dim):
         if tree.centr[i] < x[i]: 
-            if tree.centr[i] + tree.radi < x[i]:
-                printf("out of bound")
+#            if tree.centr[i] + tree.radi < x[i]:
+#                printf("out of bound")
             inc_bool = 1
             next_mid[i] = tree.centr[i] + next_radi 
         else: 

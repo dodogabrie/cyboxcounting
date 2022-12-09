@@ -2158,7 +2158,7 @@ static __pyx_ctuple_int__and_int __pyx_f_8fastload_get_dimension(char *__pyx_v_f
  * # Core function (do the hard word) ############################
  * cdef int get_data(double * data, FILE * cfile, char * token, int Ncol, char * delimiter, char * comments):             # <<<<<<<<<<<<<<
  *     cdef int j = 0
- *     cdef char * line = NULL
+ *     cdef char * line
  */
 
 static int __pyx_f_8fastload_get_data(double *__pyx_v_data, FILE *__pyx_v_cfile, char *__pyx_v_token, int __pyx_v_Ncol, char *__pyx_v_delimiter, char *__pyx_v_comments) {
@@ -2179,31 +2179,31 @@ static int __pyx_f_8fastload_get_data(double *__pyx_v_data, FILE *__pyx_v_cfile,
  * # Core function (do the hard word) ############################
  * cdef int get_data(double * data, FILE * cfile, char * token, int Ncol, char * delimiter, char * comments):
  *     cdef int j = 0             # <<<<<<<<<<<<<<
- *     cdef char * line = NULL
- *     cdef size_t l = 0
+ *     cdef char * line
+ *     line = NULL
  */
   __pyx_v_j = 0;
 
-  /* "fastload.pyx":28
- * cdef int get_data(double * data, FILE * cfile, char * token, int Ncol, char * delimiter, char * comments):
+  /* "fastload.pyx":29
  *     cdef int j = 0
- *     cdef char * line = NULL             # <<<<<<<<<<<<<<
+ *     cdef char * line
+ *     line = NULL             # <<<<<<<<<<<<<<
  *     cdef size_t l = 0
  *     cdef ssize_t read = 0
  */
   __pyx_v_line = NULL;
 
-  /* "fastload.pyx":29
- *     cdef int j = 0
- *     cdef char * line = NULL
+  /* "fastload.pyx":30
+ *     cdef char * line
+ *     line = NULL
  *     cdef size_t l = 0             # <<<<<<<<<<<<<<
  *     cdef ssize_t read = 0
  *     cdef int skip_comments = 0
  */
   __pyx_v_l = 0;
 
-  /* "fastload.pyx":30
- *     cdef char * line = NULL
+  /* "fastload.pyx":31
+ *     line = NULL
  *     cdef size_t l = 0
  *     cdef ssize_t read = 0             # <<<<<<<<<<<<<<
  *     cdef int skip_comments = 0
@@ -2211,7 +2211,7 @@ static int __pyx_f_8fastload_get_data(double *__pyx_v_data, FILE *__pyx_v_cfile,
  */
   __pyx_v_read = 0;
 
-  /* "fastload.pyx":31
+  /* "fastload.pyx":32
  *     cdef size_t l = 0
  *     cdef ssize_t read = 0
  *     cdef int skip_comments = 0             # <<<<<<<<<<<<<<
@@ -2220,7 +2220,7 @@ static int __pyx_f_8fastload_get_data(double *__pyx_v_data, FILE *__pyx_v_cfile,
  */
   __pyx_v_skip_comments = 0;
 
-  /* "fastload.pyx":32
+  /* "fastload.pyx":33
  *     cdef ssize_t read = 0
  *     cdef int skip_comments = 0
  *     while skip_comments == 0:             # <<<<<<<<<<<<<<
@@ -2231,7 +2231,7 @@ static int __pyx_f_8fastload_get_data(double *__pyx_v_data, FILE *__pyx_v_cfile,
     __pyx_t_1 = ((__pyx_v_skip_comments == 0) != 0);
     if (!__pyx_t_1) break;
 
-    /* "fastload.pyx":33
+    /* "fastload.pyx":34
  *     cdef int skip_comments = 0
  *     while skip_comments == 0:
  *         read = getline(&line, &l, cfile)             # <<<<<<<<<<<<<<
@@ -2240,7 +2240,7 @@ static int __pyx_f_8fastload_get_data(double *__pyx_v_data, FILE *__pyx_v_cfile,
  */
     __pyx_v_read = getline((&__pyx_v_line), (&__pyx_v_l), __pyx_v_cfile);
 
-    /* "fastload.pyx":34
+    /* "fastload.pyx":35
  *     while skip_comments == 0:
  *         read = getline(&line, &l, cfile)
  *         if read == -1: break             # <<<<<<<<<<<<<<
@@ -2252,7 +2252,7 @@ static int __pyx_f_8fastload_get_data(double *__pyx_v_data, FILE *__pyx_v_cfile,
       goto __pyx_L4_break;
     }
 
-    /* "fastload.pyx":35
+    /* "fastload.pyx":36
  *         read = getline(&line, &l, cfile)
  *         if read == -1: break
  *         token = strtok(line, delimiter)             # <<<<<<<<<<<<<<
@@ -2261,7 +2261,7 @@ static int __pyx_f_8fastload_get_data(double *__pyx_v_data, FILE *__pyx_v_cfile,
  */
     __pyx_v_token = strtok(__pyx_v_line, __pyx_v_delimiter);
 
-    /* "fastload.pyx":36
+    /* "fastload.pyx":37
  *         if read == -1: break
  *         token = strtok(line, delimiter)
  *         if StartsWith(line, comments): continue             # <<<<<<<<<<<<<<
@@ -2273,7 +2273,7 @@ static int __pyx_f_8fastload_get_data(double *__pyx_v_data, FILE *__pyx_v_cfile,
       goto __pyx_L3_continue;
     }
 
-    /* "fastload.pyx":37
+    /* "fastload.pyx":38
  *         token = strtok(line, delimiter)
  *         if StartsWith(line, comments): continue
  *         for j in range(Ncol):             # <<<<<<<<<<<<<<
@@ -2285,7 +2285,7 @@ static int __pyx_f_8fastload_get_data(double *__pyx_v_data, FILE *__pyx_v_cfile,
     for (__pyx_t_4 = 0; __pyx_t_4 < __pyx_t_3; __pyx_t_4+=1) {
       __pyx_v_j = __pyx_t_4;
 
-      /* "fastload.pyx":38
+      /* "fastload.pyx":39
  *         if StartsWith(line, comments): continue
  *         for j in range(Ncol):
  *             data[j] = atof(token)             # <<<<<<<<<<<<<<
@@ -2294,7 +2294,7 @@ static int __pyx_f_8fastload_get_data(double *__pyx_v_data, FILE *__pyx_v_cfile,
  */
       (__pyx_v_data[__pyx_v_j]) = atof(__pyx_v_token);
 
-      /* "fastload.pyx":39
+      /* "fastload.pyx":40
  *         for j in range(Ncol):
  *             data[j] = atof(token)
  *             token = strtok(NULL, delimiter)             # <<<<<<<<<<<<<<
@@ -2304,39 +2304,30 @@ static int __pyx_f_8fastload_get_data(double *__pyx_v_data, FILE *__pyx_v_cfile,
       __pyx_v_token = strtok(NULL, __pyx_v_delimiter);
     }
 
-    /* "fastload.pyx":40
+    /* "fastload.pyx":41
  *             data[j] = atof(token)
  *             token = strtok(NULL, delimiter)
  *         skip_comments = 1             # <<<<<<<<<<<<<<
  *     free(line)
- *     free(token)
+ * #    free(token)
  */
     __pyx_v_skip_comments = 1;
     __pyx_L3_continue:;
   }
   __pyx_L4_break:;
 
-  /* "fastload.pyx":41
+  /* "fastload.pyx":42
  *             token = strtok(NULL, delimiter)
  *         skip_comments = 1
  *     free(line)             # <<<<<<<<<<<<<<
- *     free(token)
+ * #    free(token)
  *     return read
  */
   free(__pyx_v_line);
 
-  /* "fastload.pyx":42
- *         skip_comments = 1
+  /* "fastload.pyx":44
  *     free(line)
- *     free(token)             # <<<<<<<<<<<<<<
- *     return read
- * ###############################################################
- */
-  free(__pyx_v_token);
-
-  /* "fastload.pyx":43
- *     free(line)
- *     free(token)
+ * #    free(token)
  *     return read             # <<<<<<<<<<<<<<
  * ###############################################################
  * 
@@ -2349,7 +2340,7 @@ static int __pyx_f_8fastload_get_data(double *__pyx_v_data, FILE *__pyx_v_cfile,
  * # Core function (do the hard word) ############################
  * cdef int get_data(double * data, FILE * cfile, char * token, int Ncol, char * delimiter, char * comments):             # <<<<<<<<<<<<<<
  *     cdef int j = 0
- *     cdef char * line = NULL
+ *     cdef char * line
  */
 
   /* function exit code */
@@ -2358,7 +2349,7 @@ static int __pyx_f_8fastload_get_data(double *__pyx_v_data, FILE *__pyx_v_cfile,
   return __pyx_r;
 }
 
-/* "fastload.pyx":46
+/* "fastload.pyx":47
  * ###############################################################
  * 
  * def get_data_shape(filename, comments = '#', delimiter = ' '):             # <<<<<<<<<<<<<<
@@ -2417,7 +2408,7 @@ static PyObject *__pyx_pw_8fastload_1get_data_shape(PyObject *__pyx_self, PyObje
         }
       }
       if (unlikely(kw_args > 0)) {
-        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "get_data_shape") < 0)) __PYX_ERR(0, 46, __pyx_L3_error)
+        if (unlikely(__Pyx_ParseOptionalKeywords(__pyx_kwds, __pyx_pyargnames, 0, values, pos_args, "get_data_shape") < 0)) __PYX_ERR(0, 47, __pyx_L3_error)
       }
     } else {
       switch (PyTuple_GET_SIZE(__pyx_args)) {
@@ -2436,7 +2427,7 @@ static PyObject *__pyx_pw_8fastload_1get_data_shape(PyObject *__pyx_self, PyObje
   }
   goto __pyx_L4_argument_unpacking_done;
   __pyx_L5_argtuple_error:;
-  __Pyx_RaiseArgtupleInvalid("get_data_shape", 0, 1, 3, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 46, __pyx_L3_error)
+  __Pyx_RaiseArgtupleInvalid("get_data_shape", 0, 1, 3, PyTuple_GET_SIZE(__pyx_args)); __PYX_ERR(0, 47, __pyx_L3_error)
   __pyx_L3_error:;
   __Pyx_AddTraceback("fastload.get_data_shape", __pyx_clineno, __pyx_lineno, __pyx_filename);
   __Pyx_RefNannyFinishContext();
@@ -2449,7 +2440,7 @@ static PyObject *__pyx_pw_8fastload_1get_data_shape(PyObject *__pyx_self, PyObje
   return __pyx_r;
 }
 
-/* "fastload.pyx":59
+/* "fastload.pyx":60
  *         Array of x/y containing the data in the txt columns.
  *     """
  *     def turn_utf8(data):             # <<<<<<<<<<<<<<
@@ -2487,7 +2478,7 @@ static PyObject *__pyx_pf_8fastload_14get_data_shape_turn_utf8(CYTHON_UNUSED PyO
   int __pyx_clineno = 0;
   __Pyx_RefNannySetupContext("turn_utf8", 0);
 
-  /* "fastload.pyx":61
+  /* "fastload.pyx":62
  *     def turn_utf8(data):
  *         "Returns an utf-8 object on success, or None on failure"
  *         try: # Try to encode the data as utf-8             # <<<<<<<<<<<<<<
@@ -2503,7 +2494,7 @@ static PyObject *__pyx_pf_8fastload_14get_data_shape_turn_utf8(CYTHON_UNUSED PyO
     __Pyx_XGOTREF(__pyx_t_3);
     /*try:*/ {
 
-      /* "fastload.pyx":62
+      /* "fastload.pyx":63
  *         "Returns an utf-8 object on success, or None on failure"
  *         try: # Try to encode the data as utf-8
  *             return data.encode('utf-8')             # <<<<<<<<<<<<<<
@@ -2511,7 +2502,7 @@ static PyObject *__pyx_pf_8fastload_14get_data_shape_turn_utf8(CYTHON_UNUSED PyO
  *             return data
  */
       __Pyx_XDECREF(__pyx_r);
-      __pyx_t_5 = __Pyx_PyObject_GetAttrStr(__pyx_v_data, __pyx_n_s_encode); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 62, __pyx_L3_error)
+      __pyx_t_5 = __Pyx_PyObject_GetAttrStr(__pyx_v_data, __pyx_n_s_encode); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 63, __pyx_L3_error)
       __Pyx_GOTREF(__pyx_t_5);
       __pyx_t_6 = NULL;
       if (CYTHON_UNPACK_METHODS && likely(PyMethod_Check(__pyx_t_5))) {
@@ -2525,14 +2516,14 @@ static PyObject *__pyx_pf_8fastload_14get_data_shape_turn_utf8(CYTHON_UNUSED PyO
       }
       __pyx_t_4 = (__pyx_t_6) ? __Pyx_PyObject_Call2Args(__pyx_t_5, __pyx_t_6, __pyx_kp_u_utf_8) : __Pyx_PyObject_CallOneArg(__pyx_t_5, __pyx_kp_u_utf_8);
       __Pyx_XDECREF(__pyx_t_6); __pyx_t_6 = 0;
-      if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 62, __pyx_L3_error)
+      if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 63, __pyx_L3_error)
       __Pyx_GOTREF(__pyx_t_4);
       __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
       __pyx_r = __pyx_t_4;
       __pyx_t_4 = 0;
       goto __pyx_L7_try_return;
 
-      /* "fastload.pyx":61
+      /* "fastload.pyx":62
  *     def turn_utf8(data):
  *         "Returns an utf-8 object on success, or None on failure"
  *         try: # Try to encode the data as utf-8             # <<<<<<<<<<<<<<
@@ -2545,7 +2536,7 @@ static PyObject *__pyx_pf_8fastload_14get_data_shape_turn_utf8(CYTHON_UNUSED PyO
     __Pyx_XDECREF(__pyx_t_5); __pyx_t_5 = 0;
     __Pyx_XDECREF(__pyx_t_6); __pyx_t_6 = 0;
 
-    /* "fastload.pyx":63
+    /* "fastload.pyx":64
  *         try: # Try to encode the data as utf-8
  *             return data.encode('utf-8')
  *         except AttributeError: # if already utf-8             # <<<<<<<<<<<<<<
@@ -2555,12 +2546,12 @@ static PyObject *__pyx_pf_8fastload_14get_data_shape_turn_utf8(CYTHON_UNUSED PyO
     __pyx_t_7 = __Pyx_PyErr_ExceptionMatches(__pyx_builtin_AttributeError);
     if (__pyx_t_7) {
       __Pyx_AddTraceback("fastload.get_data_shape.turn_utf8", __pyx_clineno, __pyx_lineno, __pyx_filename);
-      if (__Pyx_GetException(&__pyx_t_4, &__pyx_t_5, &__pyx_t_6) < 0) __PYX_ERR(0, 63, __pyx_L5_except_error)
+      if (__Pyx_GetException(&__pyx_t_4, &__pyx_t_5, &__pyx_t_6) < 0) __PYX_ERR(0, 64, __pyx_L5_except_error)
       __Pyx_GOTREF(__pyx_t_4);
       __Pyx_GOTREF(__pyx_t_5);
       __Pyx_GOTREF(__pyx_t_6);
 
-      /* "fastload.pyx":64
+      /* "fastload.pyx":65
  *             return data.encode('utf-8')
  *         except AttributeError: # if already utf-8
  *             return data             # <<<<<<<<<<<<<<
@@ -2578,7 +2569,7 @@ static PyObject *__pyx_pf_8fastload_14get_data_shape_turn_utf8(CYTHON_UNUSED PyO
     goto __pyx_L5_except_error;
     __pyx_L5_except_error:;
 
-    /* "fastload.pyx":61
+    /* "fastload.pyx":62
  *     def turn_utf8(data):
  *         "Returns an utf-8 object on success, or None on failure"
  *         try: # Try to encode the data as utf-8             # <<<<<<<<<<<<<<
@@ -2604,7 +2595,7 @@ static PyObject *__pyx_pf_8fastload_14get_data_shape_turn_utf8(CYTHON_UNUSED PyO
     goto __pyx_L0;
   }
 
-  /* "fastload.pyx":59
+  /* "fastload.pyx":60
  *         Array of x/y containing the data in the txt columns.
  *     """
  *     def turn_utf8(data):             # <<<<<<<<<<<<<<
@@ -2625,7 +2616,7 @@ static PyObject *__pyx_pf_8fastload_14get_data_shape_turn_utf8(CYTHON_UNUSED PyO
   return __pyx_r;
 }
 
-/* "fastload.pyx":46
+/* "fastload.pyx":47
  * ###############################################################
  * 
  * def get_data_shape(filename, comments = '#', delimiter = ' '):             # <<<<<<<<<<<<<<
@@ -2656,58 +2647,58 @@ static PyObject *__pyx_pf_8fastload_get_data_shape(CYTHON_UNUSED PyObject *__pyx
   int __pyx_clineno = 0;
   __Pyx_RefNannySetupContext("get_data_shape", 0);
 
-  /* "fastload.pyx":59
+  /* "fastload.pyx":60
  *         Array of x/y containing the data in the txt columns.
  *     """
  *     def turn_utf8(data):             # <<<<<<<<<<<<<<
  *         "Returns an utf-8 object on success, or None on failure"
  *         try: # Try to encode the data as utf-8
  */
-  __pyx_t_1 = __Pyx_CyFunction_New(&__pyx_mdef_8fastload_14get_data_shape_1turn_utf8, 0, __pyx_n_s_get_data_shape_locals_turn_utf8, NULL, __pyx_n_s_fastload, __pyx_d, ((PyObject *)__pyx_codeobj__4)); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 59, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_CyFunction_New(&__pyx_mdef_8fastload_14get_data_shape_1turn_utf8, 0, __pyx_n_s_get_data_shape_locals_turn_utf8, NULL, __pyx_n_s_fastload, __pyx_d, ((PyObject *)__pyx_codeobj__4)); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 60, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __pyx_v_turn_utf8 = __pyx_t_1;
   __pyx_t_1 = 0;
 
-  /* "fastload.pyx":66
+  /* "fastload.pyx":67
  *             return data
  * 
  *     cdef bytes cdelimiter = turn_utf8(delimiter)             # <<<<<<<<<<<<<<
  *     cdef bytes ccomments = turn_utf8(comments)
  *     cdef bytes fname = turn_utf8(filename)
  */
-  __pyx_t_1 = __pyx_pf_8fastload_14get_data_shape_turn_utf8(__pyx_v_turn_utf8, __pyx_v_delimiter); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 66, __pyx_L1_error)
+  __pyx_t_1 = __pyx_pf_8fastload_14get_data_shape_turn_utf8(__pyx_v_turn_utf8, __pyx_v_delimiter); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 67, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
-  if (!(likely(PyBytes_CheckExact(__pyx_t_1))||((__pyx_t_1) == Py_None)||(PyErr_Format(PyExc_TypeError, "Expected %.16s, got %.200s", "bytes", Py_TYPE(__pyx_t_1)->tp_name), 0))) __PYX_ERR(0, 66, __pyx_L1_error)
+  if (!(likely(PyBytes_CheckExact(__pyx_t_1))||((__pyx_t_1) == Py_None)||(PyErr_Format(PyExc_TypeError, "Expected %.16s, got %.200s", "bytes", Py_TYPE(__pyx_t_1)->tp_name), 0))) __PYX_ERR(0, 67, __pyx_L1_error)
   __pyx_v_cdelimiter = ((PyObject*)__pyx_t_1);
   __pyx_t_1 = 0;
 
-  /* "fastload.pyx":67
+  /* "fastload.pyx":68
  * 
  *     cdef bytes cdelimiter = turn_utf8(delimiter)
  *     cdef bytes ccomments = turn_utf8(comments)             # <<<<<<<<<<<<<<
  *     cdef bytes fname = turn_utf8(filename)
  * 
  */
-  __pyx_t_1 = __pyx_pf_8fastload_14get_data_shape_turn_utf8(__pyx_v_turn_utf8, __pyx_v_comments); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 67, __pyx_L1_error)
+  __pyx_t_1 = __pyx_pf_8fastload_14get_data_shape_turn_utf8(__pyx_v_turn_utf8, __pyx_v_comments); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 68, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
-  if (!(likely(PyBytes_CheckExact(__pyx_t_1))||((__pyx_t_1) == Py_None)||(PyErr_Format(PyExc_TypeError, "Expected %.16s, got %.200s", "bytes", Py_TYPE(__pyx_t_1)->tp_name), 0))) __PYX_ERR(0, 67, __pyx_L1_error)
+  if (!(likely(PyBytes_CheckExact(__pyx_t_1))||((__pyx_t_1) == Py_None)||(PyErr_Format(PyExc_TypeError, "Expected %.16s, got %.200s", "bytes", Py_TYPE(__pyx_t_1)->tp_name), 0))) __PYX_ERR(0, 68, __pyx_L1_error)
   __pyx_v_ccomments = ((PyObject*)__pyx_t_1);
   __pyx_t_1 = 0;
 
-  /* "fastload.pyx":68
+  /* "fastload.pyx":69
  *     cdef bytes cdelimiter = turn_utf8(delimiter)
  *     cdef bytes ccomments = turn_utf8(comments)
  *     cdef bytes fname = turn_utf8(filename)             # <<<<<<<<<<<<<<
  * 
  *     Ndata, Ncol = get_dimension(fname, cdelimiter, ccomments)
  */
-  __pyx_t_1 = __pyx_pf_8fastload_14get_data_shape_turn_utf8(__pyx_v_turn_utf8, __pyx_v_filename); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 68, __pyx_L1_error)
+  __pyx_t_1 = __pyx_pf_8fastload_14get_data_shape_turn_utf8(__pyx_v_turn_utf8, __pyx_v_filename); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 69, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
-  if (!(likely(PyBytes_CheckExact(__pyx_t_1))||((__pyx_t_1) == Py_None)||(PyErr_Format(PyExc_TypeError, "Expected %.16s, got %.200s", "bytes", Py_TYPE(__pyx_t_1)->tp_name), 0))) __PYX_ERR(0, 68, __pyx_L1_error)
+  if (!(likely(PyBytes_CheckExact(__pyx_t_1))||((__pyx_t_1) == Py_None)||(PyErr_Format(PyExc_TypeError, "Expected %.16s, got %.200s", "bytes", Py_TYPE(__pyx_t_1)->tp_name), 0))) __PYX_ERR(0, 69, __pyx_L1_error)
   __pyx_v_fname = ((PyObject*)__pyx_t_1);
   __pyx_t_1 = 0;
 
-  /* "fastload.pyx":70
+  /* "fastload.pyx":71
  *     cdef bytes fname = turn_utf8(filename)
  * 
  *     Ndata, Ncol = get_dimension(fname, cdelimiter, ccomments)             # <<<<<<<<<<<<<<
@@ -2716,37 +2707,37 @@ static PyObject *__pyx_pf_8fastload_get_data_shape(CYTHON_UNUSED PyObject *__pyx
  */
   if (unlikely(__pyx_v_fname == Py_None)) {
     PyErr_SetString(PyExc_TypeError, "expected bytes, NoneType found");
-    __PYX_ERR(0, 70, __pyx_L1_error)
+    __PYX_ERR(0, 71, __pyx_L1_error)
   }
-  __pyx_t_2 = __Pyx_PyBytes_AsWritableString(__pyx_v_fname); if (unlikely((!__pyx_t_2) && PyErr_Occurred())) __PYX_ERR(0, 70, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_PyBytes_AsWritableString(__pyx_v_fname); if (unlikely((!__pyx_t_2) && PyErr_Occurred())) __PYX_ERR(0, 71, __pyx_L1_error)
   if (unlikely(__pyx_v_cdelimiter == Py_None)) {
     PyErr_SetString(PyExc_TypeError, "expected bytes, NoneType found");
-    __PYX_ERR(0, 70, __pyx_L1_error)
+    __PYX_ERR(0, 71, __pyx_L1_error)
   }
-  __pyx_t_3 = __Pyx_PyBytes_AsWritableString(__pyx_v_cdelimiter); if (unlikely((!__pyx_t_3) && PyErr_Occurred())) __PYX_ERR(0, 70, __pyx_L1_error)
+  __pyx_t_3 = __Pyx_PyBytes_AsWritableString(__pyx_v_cdelimiter); if (unlikely((!__pyx_t_3) && PyErr_Occurred())) __PYX_ERR(0, 71, __pyx_L1_error)
   if (unlikely(__pyx_v_ccomments == Py_None)) {
     PyErr_SetString(PyExc_TypeError, "expected bytes, NoneType found");
-    __PYX_ERR(0, 70, __pyx_L1_error)
+    __PYX_ERR(0, 71, __pyx_L1_error)
   }
-  __pyx_t_4 = __Pyx_PyBytes_AsWritableString(__pyx_v_ccomments); if (unlikely((!__pyx_t_4) && PyErr_Occurred())) __PYX_ERR(0, 70, __pyx_L1_error)
+  __pyx_t_4 = __Pyx_PyBytes_AsWritableString(__pyx_v_ccomments); if (unlikely((!__pyx_t_4) && PyErr_Occurred())) __PYX_ERR(0, 71, __pyx_L1_error)
   __pyx_t_5 = __pyx_f_8fastload_get_dimension(__pyx_t_2, __pyx_t_3, __pyx_t_4);
   __pyx_t_6 = __pyx_t_5.f0;
   __pyx_t_7 = __pyx_t_5.f1;
   __pyx_v_Ndata = __pyx_t_6;
   __pyx_v_Ncol = __pyx_t_7;
 
-  /* "fastload.pyx":71
+  /* "fastload.pyx":72
  * 
  *     Ndata, Ncol = get_dimension(fname, cdelimiter, ccomments)
  *     return Ndata, Ncol             # <<<<<<<<<<<<<<
  * #
  */
   __Pyx_XDECREF(__pyx_r);
-  __pyx_t_1 = __Pyx_PyInt_From_int(__pyx_v_Ndata); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 71, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyInt_From_int(__pyx_v_Ndata); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 72, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
-  __pyx_t_8 = __Pyx_PyInt_From_int(__pyx_v_Ncol); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 71, __pyx_L1_error)
+  __pyx_t_8 = __Pyx_PyInt_From_int(__pyx_v_Ncol); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 72, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_8);
-  __pyx_t_9 = PyTuple_New(2); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 71, __pyx_L1_error)
+  __pyx_t_9 = PyTuple_New(2); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 72, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_9);
   __Pyx_GIVEREF(__pyx_t_1);
   PyTuple_SET_ITEM(__pyx_t_9, 0, __pyx_t_1);
@@ -2758,7 +2749,7 @@ static PyObject *__pyx_pf_8fastload_get_data_shape(CYTHON_UNUSED PyObject *__pyx
   __pyx_t_9 = 0;
   goto __pyx_L0;
 
-  /* "fastload.pyx":46
+  /* "fastload.pyx":47
  * ###############################################################
  * 
  * def get_data_shape(filename, comments = '#', delimiter = ' '):             # <<<<<<<<<<<<<<
@@ -3929,8 +3920,8 @@ static __Pyx_StringTabEntry __pyx_string_tab[] = {
   {0, 0, 0, 0, 0, 0, 0}
 };
 static CYTHON_SMALL_CODE int __Pyx_InitCachedBuiltins(void) {
-  __pyx_builtin_range = __Pyx_GetBuiltinName(__pyx_n_s_range); if (!__pyx_builtin_range) __PYX_ERR(0, 37, __pyx_L1_error)
-  __pyx_builtin_AttributeError = __Pyx_GetBuiltinName(__pyx_n_s_AttributeError); if (!__pyx_builtin_AttributeError) __PYX_ERR(0, 63, __pyx_L1_error)
+  __pyx_builtin_range = __Pyx_GetBuiltinName(__pyx_n_s_range); if (!__pyx_builtin_range) __PYX_ERR(0, 38, __pyx_L1_error)
+  __pyx_builtin_AttributeError = __Pyx_GetBuiltinName(__pyx_n_s_AttributeError); if (!__pyx_builtin_AttributeError) __PYX_ERR(0, 64, __pyx_L1_error)
   __pyx_builtin_ImportError = __Pyx_GetBuiltinName(__pyx_n_s_ImportError); if (!__pyx_builtin_ImportError) __PYX_ERR(1, 944, __pyx_L1_error)
   return 0;
   __pyx_L1_error:;
@@ -3941,17 +3932,17 @@ static CYTHON_SMALL_CODE int __Pyx_InitCachedConstants(void) {
   __Pyx_RefNannyDeclarations
   __Pyx_RefNannySetupContext("__Pyx_InitCachedConstants", 0);
 
-  /* "fastload.pyx":59
+  /* "fastload.pyx":60
  *         Array of x/y containing the data in the txt columns.
  *     """
  *     def turn_utf8(data):             # <<<<<<<<<<<<<<
  *         "Returns an utf-8 object on success, or None on failure"
  *         try: # Try to encode the data as utf-8
  */
-  __pyx_tuple__3 = PyTuple_Pack(1, __pyx_n_s_data); if (unlikely(!__pyx_tuple__3)) __PYX_ERR(0, 59, __pyx_L1_error)
+  __pyx_tuple__3 = PyTuple_Pack(1, __pyx_n_s_data); if (unlikely(!__pyx_tuple__3)) __PYX_ERR(0, 60, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_tuple__3);
   __Pyx_GIVEREF(__pyx_tuple__3);
-  __pyx_codeobj__4 = (PyObject*)__Pyx_PyCode_New(1, 0, 1, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__3, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_src_fastload_pyx, __pyx_n_s_turn_utf8, 59, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__4)) __PYX_ERR(0, 59, __pyx_L1_error)
+  __pyx_codeobj__4 = (PyObject*)__Pyx_PyCode_New(1, 0, 1, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__3, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_src_fastload_pyx, __pyx_n_s_turn_utf8, 60, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__4)) __PYX_ERR(0, 60, __pyx_L1_error)
 
   /* "../../.local/lib/python3.10/site-packages/numpy/__init__.pxd":944
  *         __pyx_import_array()
@@ -3975,17 +3966,17 @@ static CYTHON_SMALL_CODE int __Pyx_InitCachedConstants(void) {
   __Pyx_GOTREF(__pyx_tuple__6);
   __Pyx_GIVEREF(__pyx_tuple__6);
 
-  /* "fastload.pyx":46
+  /* "fastload.pyx":47
  * ###############################################################
  * 
  * def get_data_shape(filename, comments = '#', delimiter = ' '):             # <<<<<<<<<<<<<<
  *     """
  *     Function for fast extraction of data from txt file.
  */
-  __pyx_tuple__7 = PyTuple_Pack(10, __pyx_n_s_filename, __pyx_n_s_comments, __pyx_n_s_delimiter, __pyx_n_s_turn_utf8, __pyx_n_s_turn_utf8, __pyx_n_s_cdelimiter, __pyx_n_s_ccomments, __pyx_n_s_fname, __pyx_n_s_Ndata, __pyx_n_s_Ncol); if (unlikely(!__pyx_tuple__7)) __PYX_ERR(0, 46, __pyx_L1_error)
+  __pyx_tuple__7 = PyTuple_Pack(10, __pyx_n_s_filename, __pyx_n_s_comments, __pyx_n_s_delimiter, __pyx_n_s_turn_utf8, __pyx_n_s_turn_utf8, __pyx_n_s_cdelimiter, __pyx_n_s_ccomments, __pyx_n_s_fname, __pyx_n_s_Ndata, __pyx_n_s_Ncol); if (unlikely(!__pyx_tuple__7)) __PYX_ERR(0, 47, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_tuple__7);
   __Pyx_GIVEREF(__pyx_tuple__7);
-  __pyx_codeobj__8 = (PyObject*)__Pyx_PyCode_New(3, 0, 10, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__7, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_src_fastload_pyx, __pyx_n_s_get_data_shape, 46, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__8)) __PYX_ERR(0, 46, __pyx_L1_error)
+  __pyx_codeobj__8 = (PyObject*)__Pyx_PyCode_New(3, 0, 10, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__7, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_src_fastload_pyx, __pyx_n_s_get_data_shape, 47, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__8)) __PYX_ERR(0, 47, __pyx_L1_error)
   __Pyx_RefNannyFinishContext();
   return 0;
   __pyx_L1_error:;
@@ -4332,16 +4323,16 @@ if (!__Pyx_RefNanny) {
   if (__Pyx_patch_abc() < 0) __PYX_ERR(0, 1, __pyx_L1_error)
   #endif
 
-  /* "fastload.pyx":46
+  /* "fastload.pyx":47
  * ###############################################################
  * 
  * def get_data_shape(filename, comments = '#', delimiter = ' '):             # <<<<<<<<<<<<<<
  *     """
  *     Function for fast extraction of data from txt file.
  */
-  __pyx_t_1 = PyCFunction_NewEx(&__pyx_mdef_8fastload_1get_data_shape, NULL, __pyx_n_s_fastload); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 46, __pyx_L1_error)
+  __pyx_t_1 = PyCFunction_NewEx(&__pyx_mdef_8fastload_1get_data_shape, NULL, __pyx_n_s_fastload); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 47, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
-  if (PyDict_SetItem(__pyx_d, __pyx_n_s_get_data_shape, __pyx_t_1) < 0) __PYX_ERR(0, 46, __pyx_L1_error)
+  if (PyDict_SetItem(__pyx_d, __pyx_n_s_get_data_shape, __pyx_t_1) < 0) __PYX_ERR(0, 47, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
   /* "fastload.pyx":1

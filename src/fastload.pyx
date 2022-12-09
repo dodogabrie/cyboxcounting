@@ -25,7 +25,8 @@ cdef (int, int) get_dimension(char * fname, char * delimiter, char * comments):
 # Core function (do the hard word) ############################
 cdef int get_data(double * data, FILE * cfile, char * token, int Ncol, char * delimiter, char * comments):
     cdef int j = 0
-    cdef char * line = NULL
+    cdef char * line 
+    line = NULL
     cdef size_t l = 0
     cdef ssize_t read = 0
     cdef int skip_comments = 0
@@ -39,7 +40,7 @@ cdef int get_data(double * data, FILE * cfile, char * token, int Ncol, char * de
             token = strtok(NULL, delimiter)
         skip_comments = 1
     free(line)
-    free(token)
+#    free(token)
     return read
 ###############################################################
 
