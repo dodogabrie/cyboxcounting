@@ -7,7 +7,7 @@ import time
 from numba import njit
 import plotly.graph_objects as go
 from boxcounting import boxcounting
-from compute_dim import fit_show
+from compute_dim import fit_show, create_tree
 from scipy.optimize import curve_fit
 from scipy.integrate import solve_ivp
 
@@ -54,34 +54,6 @@ def write_data(n, data_folder, data_file, n_files, hot_start = 0):
         np.savetxt(data_folder + data_file + f'_{i + n_prev_files}.txt', x)
         data0 = next_x
 
-def compute_dimension(data_file, max_level, min_level = 1, multi = False, num_tree = 1, size = 1.3):
-    bc = boxcounting()
-    if multi:
-        folderfiles = os.listdir(data_file)
-        bc.set_data_file(data_file + folderfiles[0])
-        bc.initialize(max_level, size = size, num_tree = num_tree)
-        bc.fill_tree()
-        for i, file in enumerate(folderfiles[1:], 1):
-            print(i, end = '\r')
-            bc.set_data_file(data_file + file)
-            bc.fill_tree()
-        bc.count_occupation()
-    else:
-        bc.set_data_file("data/"+data_file+".txt")
-        bc.initialize(max_level)
-        bc.fill_tree()
-        bc.count_occupation()
-#    fit_show(bc, min_index = min_level)
-    return bc
-
-def plot_map(data_folder, data_file):
-#    fig = plt.figure()
-    for datai in os.listdir(data_folder):
-        datai = np.loadtxt(data_folder + datai)
-#        plt.scatter(data[:, 0], data[:, 1])
-#    plt.show()
-    return 
-
 def get_nodes(data_file, max_level, min_level = 1, multi = False):
     list_x = []
     list_y = []
@@ -89,17 +61,13 @@ def get_nodes(data_file, max_level, min_level = 1, multi = False):
     list_big_x = []
     list_big_y = []
     list_big_r = []
-    for max_level in range(1, 8):
+    max_level_list = [1, 2, 4, 6]
+    for max_level in max_level_list:
         xx = []
         yy = []
         rr = []
-        bc = compute_dimension(data_file, max_level, min_level, multi)
-        output = bc.nodes 
-        nodes = output[0]
-        n = output[1]
-
-        print(f"Found array of {n} nodes")
-#        print(nodes)
+        bc = create_tree(data_file, max_level, min_level, size = 1.3)
+        nodes, levels, n = bc.nodes 
         big_r = 0
         x_r   = 0
         y_r   = 0
@@ -123,23 +91,24 @@ def get_nodes(data_file, max_level, min_level = 1, multi = False):
     import matplotlib.pyplot as plt
     import matplotlib.patches as patches
     i = 1
-    for xx, yy, rr, x_r, y_r, big_r in zip(list_x, list_y, list_r, list_big_x, list_big_x, list_big_r):
-        fig = plt.figure(figsize=(6, 6))
+    plt.rc('font', **{'size':15})
+    fig, axs = plt.subplots(nrows = 1, ncols = len(max_level_list), figsize=(12, 3), sharey=True )
+    for ax, xx, yy, rr, x_r, y_r, big_r in zip(axs, list_x, list_y, list_r, list_big_x, list_big_x, list_big_r):
         for datai in os.listdir(data_file):
             datai = np.loadtxt(data_file + datai)
-            plt.scatter(datai[:, 0], datai[:, 1], s = 1, alpha = 0.1, c = 'tab:blue')
+            ax.scatter(datai[:, 0], datai[:, 1], s = 1, alpha = 0.1, c = 'tab:blue')
 
         for x, y, r in zip(xx, yy, rr):
-            plt.gcf().gca().add_patch(patches.Rectangle((x-r, y-r), 2*r, 2*r, fill=False, lw = 0.4))
-            plt.scatter(x, y, alpha=0)
+            ax.add_patch(patches.Rectangle((x-r, y-r), 2*r, 2*r, fill=False, lw = 1))
+            ax.scatter(x, y, alpha=0)
 
 
-        plt.xlim(x_r - big_r, x_r + big_r)
-        plt.ylim(y_r - big_r, y_r + big_r)
+        ax.set_xlim(x_r - big_r, x_r + big_r)
+        ax.set_ylim(y_r - big_r, y_r + big_r)
         print(f"writing {i}")
-        plt.savefig(f"figures/henon_map_with_tree/Tree_{i}.png", dpi = 200)
         i+=1
-#        plt.show()
+    plt.savefig(f"figures/henon_map_with_tree/Tree1.png", dpi = 200)
+    plt.show()
     return 
 
 

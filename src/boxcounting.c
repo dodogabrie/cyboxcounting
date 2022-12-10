@@ -1412,6 +1412,7 @@ struct __pyx_obj_11boxcounting_boxcounting {
   double *_eps;
   int max_level;
   int n;
+  int num_quadrants;
   int dim;
   int tot_data;
   int num_tree;
@@ -1798,6 +1799,35 @@ static CYTHON_INLINE int __pyx_sub_acquisition_count_locked(
 static CYTHON_INLINE void __Pyx_INC_MEMVIEW(__Pyx_memviewslice *, int, int);
 static CYTHON_INLINE void __Pyx_XDEC_MEMVIEW(__Pyx_memviewslice *, int, int);
 
+/* GetItemInt.proto */
+#define __Pyx_GetItemInt(o, i, type, is_signed, to_py_func, is_list, wraparound, boundscheck)\
+    (__Pyx_fits_Py_ssize_t(i, type, is_signed) ?\
+    __Pyx_GetItemInt_Fast(o, (Py_ssize_t)i, is_list, wraparound, boundscheck) :\
+    (is_list ? (PyErr_SetString(PyExc_IndexError, "list index out of range"), (PyObject*)NULL) :\
+               __Pyx_GetItemInt_Generic(o, to_py_func(i))))
+#define __Pyx_GetItemInt_List(o, i, type, is_signed, to_py_func, is_list, wraparound, boundscheck)\
+    (__Pyx_fits_Py_ssize_t(i, type, is_signed) ?\
+    __Pyx_GetItemInt_List_Fast(o, (Py_ssize_t)i, wraparound, boundscheck) :\
+    (PyErr_SetString(PyExc_IndexError, "list index out of range"), (PyObject*)NULL))
+static CYTHON_INLINE PyObject *__Pyx_GetItemInt_List_Fast(PyObject *o, Py_ssize_t i,
+                                                              int wraparound, int boundscheck);
+#define __Pyx_GetItemInt_Tuple(o, i, type, is_signed, to_py_func, is_list, wraparound, boundscheck)\
+    (__Pyx_fits_Py_ssize_t(i, type, is_signed) ?\
+    __Pyx_GetItemInt_Tuple_Fast(o, (Py_ssize_t)i, wraparound, boundscheck) :\
+    (PyErr_SetString(PyExc_IndexError, "tuple index out of range"), (PyObject*)NULL))
+static CYTHON_INLINE PyObject *__Pyx_GetItemInt_Tuple_Fast(PyObject *o, Py_ssize_t i,
+                                                              int wraparound, int boundscheck);
+static PyObject *__Pyx_GetItemInt_Generic(PyObject *o, PyObject* j);
+static CYTHON_INLINE PyObject *__Pyx_GetItemInt_Fast(PyObject *o, Py_ssize_t i,
+                                                     int is_list, int wraparound, int boundscheck);
+
+/* ObjectGetItem.proto */
+#if CYTHON_USE_TYPE_SLOTS
+static CYTHON_INLINE PyObject *__Pyx_PyObject_GetItem(PyObject *obj, PyObject* key);
+#else
+#define __Pyx_PyObject_GetItem(obj, key)  PyObject_GetItem(obj, key)
+#endif
+
 /* PyThreadStateGet.proto */
 #if CYTHON_FAST_THREAD_STATE
 #define __Pyx_PyThreadState_declare  PyThreadState *__pyx_tstate;
@@ -1910,35 +1940,6 @@ static CYTHON_UNUSED int __pyx_array_getbuffer(PyObject *__pyx_v_self, Py_buffer
 static PyObject *__pyx_array_get_memview(struct __pyx_array_obj *); /*proto*/
 /* GetAttr.proto */
 static CYTHON_INLINE PyObject *__Pyx_GetAttr(PyObject *, PyObject *);
-
-/* GetItemInt.proto */
-#define __Pyx_GetItemInt(o, i, type, is_signed, to_py_func, is_list, wraparound, boundscheck)\
-    (__Pyx_fits_Py_ssize_t(i, type, is_signed) ?\
-    __Pyx_GetItemInt_Fast(o, (Py_ssize_t)i, is_list, wraparound, boundscheck) :\
-    (is_list ? (PyErr_SetString(PyExc_IndexError, "list index out of range"), (PyObject*)NULL) :\
-               __Pyx_GetItemInt_Generic(o, to_py_func(i))))
-#define __Pyx_GetItemInt_List(o, i, type, is_signed, to_py_func, is_list, wraparound, boundscheck)\
-    (__Pyx_fits_Py_ssize_t(i, type, is_signed) ?\
-    __Pyx_GetItemInt_List_Fast(o, (Py_ssize_t)i, wraparound, boundscheck) :\
-    (PyErr_SetString(PyExc_IndexError, "list index out of range"), (PyObject*)NULL))
-static CYTHON_INLINE PyObject *__Pyx_GetItemInt_List_Fast(PyObject *o, Py_ssize_t i,
-                                                              int wraparound, int boundscheck);
-#define __Pyx_GetItemInt_Tuple(o, i, type, is_signed, to_py_func, is_list, wraparound, boundscheck)\
-    (__Pyx_fits_Py_ssize_t(i, type, is_signed) ?\
-    __Pyx_GetItemInt_Tuple_Fast(o, (Py_ssize_t)i, wraparound, boundscheck) :\
-    (PyErr_SetString(PyExc_IndexError, "tuple index out of range"), (PyObject*)NULL))
-static CYTHON_INLINE PyObject *__Pyx_GetItemInt_Tuple_Fast(PyObject *o, Py_ssize_t i,
-                                                              int wraparound, int boundscheck);
-static PyObject *__Pyx_GetItemInt_Generic(PyObject *o, PyObject* j);
-static CYTHON_INLINE PyObject *__Pyx_GetItemInt_Fast(PyObject *o, Py_ssize_t i,
-                                                     int is_list, int wraparound, int boundscheck);
-
-/* ObjectGetItem.proto */
-#if CYTHON_USE_TYPE_SLOTS
-static CYTHON_INLINE PyObject *__Pyx_PyObject_GetItem(PyObject *obj, PyObject* key);
-#else
-#define __Pyx_PyObject_GetItem(obj, key)  PyObject_GetItem(obj, key)
-#endif
 
 /* decode_c_string_utf16.proto */
 static CYTHON_INLINE PyObject *__Pyx_PyUnicode_DecodeUTF16(const char *s, Py_ssize_t size, const char *errors) {
@@ -2164,6 +2165,9 @@ static CYTHON_INLINE PyObject *__pyx_capsule_create(void *p, const char *sig);
 #define __Pyx_HAS_GCC_DIAGNOSTIC
 #endif
 
+/* IntPow.proto */
+static CYTHON_INLINE long __Pyx_pow_long(long, long);
+
 /* IsLittleEndian.proto */
 static CYTHON_INLINE int __Pyx_Is_Little_Endian(void);
 
@@ -2189,9 +2193,6 @@ static int __Pyx_ValidateAndInit_memviewslice(
 
 /* ObjectToMemviewSlice.proto */
 static CYTHON_INLINE __Pyx_memviewslice __Pyx_PyObject_to_MemoryviewSlice_dsds_nn___pyx_t_5numpy_double_t(PyObject *, int writable_flag);
-
-/* IntPow.proto */
-static CYTHON_INLINE long __Pyx_pow_long(long, long);
 
 /* RealImag.proto */
 #if CYTHON_CCOMPLEX
@@ -2396,11 +2397,11 @@ static PyObject *contiguous = 0;
 static PyObject *indirect_contiguous = 0;
 static int __pyx_memoryview_thread_locks_used;
 static PyThread_type_lock __pyx_memoryview_thread_locks[8];
-static struct __pyx_t_4tree_tree_t __pyx_f_11boxcounting_create_tree(int, int); /*proto*/
+static struct __pyx_t_4tree_tree_t __pyx_f_11boxcounting_create_tree(int, int, int); /*proto*/
 static void __pyx_f_11boxcounting_free_tree(struct __pyx_t_4tree_tree_t *, int); /*proto*/
-static void __pyx_f_11boxcounting_recursive_occupation(struct __pyx_t_4tree_tree_t *, double *, int, int); /*proto*/
+static void __pyx_f_11boxcounting_recursive_occupation(struct __pyx_t_4tree_tree_t *, double *, int, int, int); /*proto*/
 static void __pyx_f_11boxcounting_recursive_count(struct __pyx_t_4tree_tree_t *, int *, int, int); /*proto*/
-static struct __pyx_t_4tree_tree_t *__pyx_f_11boxcounting_next_child(struct __pyx_t_4tree_tree_t *, double *, int); /*proto*/
+static struct __pyx_t_4tree_tree_t *__pyx_f_11boxcounting_next_child(struct __pyx_t_4tree_tree_t *, double *, int, int); /*proto*/
 static int __pyx_f_11boxcounting_get_num_nodes(struct __pyx_t_4tree_tree_t *, int, int); /*proto*/
 static int __pyx_f_11boxcounting_get_nodes(struct __pyx_t_4tree_tree_t *, __Pyx_memviewslice, int, int); /*proto*/
 static struct __pyx_array_obj *__pyx_array_new(PyObject *, Py_ssize_t, char *, char *, char *); /*proto*/
@@ -2675,6 +2676,7 @@ static PyObject *__pyx_pf_11boxcounting_11boxcounting_3eps___get__(struct __pyx_
 static PyObject *__pyx_pf_11boxcounting_11boxcounting_9max_level___get__(struct __pyx_obj_11boxcounting_boxcounting *__pyx_v_self); /* proto */
 static PyObject *__pyx_pf_11boxcounting_11boxcounting_4eps0___get__(struct __pyx_obj_11boxcounting_boxcounting *__pyx_v_self); /* proto */
 static PyObject *__pyx_pf_11boxcounting_11boxcounting_1n___get__(struct __pyx_obj_11boxcounting_boxcounting *__pyx_v_self); /* proto */
+static PyObject *__pyx_pf_11boxcounting_11boxcounting_3dim___get__(struct __pyx_obj_11boxcounting_boxcounting *__pyx_v_self); /* proto */
 static PyObject *__pyx_pf_11boxcounting_11boxcounting_8tot_data___get__(struct __pyx_obj_11boxcounting_boxcounting *__pyx_v_self); /* proto */
 static PyObject *__pyx_pf_11boxcounting_11boxcounting_8num_tree___get__(struct __pyx_obj_11boxcounting_boxcounting *__pyx_v_self); /* proto */
 static PyObject *__pyx_pf_11boxcounting_11boxcounting_14free(struct __pyx_obj_11boxcounting_boxcounting *__pyx_v_self); /* proto */
@@ -2734,14 +2736,13 @@ static PyObject *__pyx_int_112105877;
 static PyObject *__pyx_int_136983863;
 static PyObject *__pyx_int_184977713;
 static PyObject *__pyx_int_neg_1;
-static PyObject *__pyx_tuple__3;
+static PyObject *__pyx_slice__3;
 static PyObject *__pyx_tuple__4;
 static PyObject *__pyx_tuple__5;
 static PyObject *__pyx_tuple__6;
 static PyObject *__pyx_tuple__7;
 static PyObject *__pyx_tuple__8;
 static PyObject *__pyx_tuple__9;
-static PyObject *__pyx_slice__21;
 static PyObject *__pyx_tuple__10;
 static PyObject *__pyx_tuple__11;
 static PyObject *__pyx_tuple__12;
@@ -2753,6 +2754,7 @@ static PyObject *__pyx_tuple__17;
 static PyObject *__pyx_tuple__18;
 static PyObject *__pyx_tuple__19;
 static PyObject *__pyx_tuple__20;
+static PyObject *__pyx_tuple__21;
 static PyObject *__pyx_tuple__22;
 static PyObject *__pyx_tuple__23;
 static PyObject *__pyx_tuple__24;
@@ -2763,7 +2765,8 @@ static PyObject *__pyx_tuple__28;
 static PyObject *__pyx_tuple__29;
 static PyObject *__pyx_tuple__30;
 static PyObject *__pyx_tuple__31;
-static PyObject *__pyx_codeobj__32;
+static PyObject *__pyx_tuple__32;
+static PyObject *__pyx_codeobj__33;
 /* Late includes */
 
 /* "boxcounting.pyx":34
@@ -3221,7 +3224,7 @@ static PyObject *__pyx_pf_11boxcounting_11boxcounting_4initialize(struct __pyx_o
  *         self.num_tree = num_tree
  *         self.tree = <tree_t*>malloc(num_tree*sizeof(tree_t))             # <<<<<<<<<<<<<<
  *         Ndata, Ncol = get_dimension(self.fname, self.cdelimiter, self.ccomments)
- *         for i in range(num_tree):
+ *         self.dim = Ncol
  */
   __pyx_v_self->tree = ((struct __pyx_t_4tree_tree_t *)malloc((__pyx_v_num_tree * (sizeof(struct __pyx_t_4tree_tree_t)))));
 
@@ -3229,8 +3232,8 @@ static PyObject *__pyx_pf_11boxcounting_11boxcounting_4initialize(struct __pyx_o
  *         self.num_tree = num_tree
  *         self.tree = <tree_t*>malloc(num_tree*sizeof(tree_t))
  *         Ndata, Ncol = get_dimension(self.fname, self.cdelimiter, self.ccomments)             # <<<<<<<<<<<<<<
- *         for i in range(num_tree):
- *             self.tree[i] = create_tree(Ncol, 0)
+ *         self.dim = Ncol
+ *         self.num_quadrants = 2**Ncol
  */
   __pyx_t_1 = __pyx_f_8fastload_get_dimension(__pyx_v_self->fname, __pyx_v_self->cdelimiter, __pyx_v_self->ccomments);
   __pyx_t_2 = __pyx_t_1.f0;
@@ -3241,8 +3244,26 @@ static PyObject *__pyx_pf_11boxcounting_11boxcounting_4initialize(struct __pyx_o
   /* "boxcounting.pyx":51
  *         self.tree = <tree_t*>malloc(num_tree*sizeof(tree_t))
  *         Ndata, Ncol = get_dimension(self.fname, self.cdelimiter, self.ccomments)
+ *         self.dim = Ncol             # <<<<<<<<<<<<<<
+ *         self.num_quadrants = 2**Ncol
+ *         for i in range(num_tree):
+ */
+  __pyx_v_self->dim = __pyx_v_Ncol;
+
+  /* "boxcounting.pyx":52
+ *         Ndata, Ncol = get_dimension(self.fname, self.cdelimiter, self.ccomments)
+ *         self.dim = Ncol
+ *         self.num_quadrants = 2**Ncol             # <<<<<<<<<<<<<<
+ *         for i in range(num_tree):
+ *             self.tree[i] = create_tree(Ncol, self.num_quadrants, 0)
+ */
+  __pyx_v_self->num_quadrants = __Pyx_pow_long(2, ((long)__pyx_v_Ncol));
+
+  /* "boxcounting.pyx":53
+ *         self.dim = Ncol
+ *         self.num_quadrants = 2**Ncol
  *         for i in range(num_tree):             # <<<<<<<<<<<<<<
- *             self.tree[i] = create_tree(Ncol, 0)
+ *             self.tree[i] = create_tree(Ncol, self.num_quadrants, 0)
  *         self.initialized = 1
  */
   __pyx_t_3 = __pyx_v_num_tree;
@@ -3250,44 +3271,35 @@ static PyObject *__pyx_pf_11boxcounting_11boxcounting_4initialize(struct __pyx_o
   for (__pyx_t_4 = 0; __pyx_t_4 < __pyx_t_2; __pyx_t_4+=1) {
     __pyx_v_i = __pyx_t_4;
 
-    /* "boxcounting.pyx":52
- *         Ndata, Ncol = get_dimension(self.fname, self.cdelimiter, self.ccomments)
+    /* "boxcounting.pyx":54
+ *         self.num_quadrants = 2**Ncol
  *         for i in range(num_tree):
- *             self.tree[i] = create_tree(Ncol, 0)             # <<<<<<<<<<<<<<
+ *             self.tree[i] = create_tree(Ncol, self.num_quadrants, 0)             # <<<<<<<<<<<<<<
  *         self.initialized = 1
- *         self.dim = Ncol
- */
-    (__pyx_v_self->tree[__pyx_v_i]) = __pyx_f_11boxcounting_create_tree(__pyx_v_Ncol, 0);
-  }
-
-  /* "boxcounting.pyx":53
- *         for i in range(num_tree):
- *             self.tree[i] = create_tree(Ncol, 0)
- *         self.initialized = 1             # <<<<<<<<<<<<<<
- *         self.dim = Ncol
  *         self.initialize_size(size)
  */
-  __pyx_v_self->initialized = 1;
+    (__pyx_v_self->tree[__pyx_v_i]) = __pyx_f_11boxcounting_create_tree(__pyx_v_Ncol, __pyx_v_self->num_quadrants, 0);
+  }
 
-  /* "boxcounting.pyx":54
- *             self.tree[i] = create_tree(Ncol, 0)
- *         self.initialized = 1
- *         self.dim = Ncol             # <<<<<<<<<<<<<<
+  /* "boxcounting.pyx":55
+ *         for i in range(num_tree):
+ *             self.tree[i] = create_tree(Ncol, self.num_quadrants, 0)
+ *         self.initialized = 1             # <<<<<<<<<<<<<<
  *         self.initialize_size(size)
  * 
  */
-  __pyx_v_self->dim = __pyx_v_Ncol;
+  __pyx_v_self->initialized = 1;
 
-  /* "boxcounting.pyx":55
+  /* "boxcounting.pyx":56
+ *             self.tree[i] = create_tree(Ncol, self.num_quadrants, 0)
  *         self.initialized = 1
- *         self.dim = Ncol
  *         self.initialize_size(size)             # <<<<<<<<<<<<<<
  * 
  *     def fill_tree(self):
  */
-  __pyx_t_6 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_initialize_size); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 55, __pyx_L1_error)
+  __pyx_t_6 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_n_s_initialize_size); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 56, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_6);
-  __pyx_t_7 = PyFloat_FromDouble(__pyx_v_size); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 55, __pyx_L1_error)
+  __pyx_t_7 = PyFloat_FromDouble(__pyx_v_size); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 56, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_7);
   __pyx_t_8 = NULL;
   if (CYTHON_UNPACK_METHODS && likely(PyMethod_Check(__pyx_t_6))) {
@@ -3302,7 +3314,7 @@ static PyObject *__pyx_pf_11boxcounting_11boxcounting_4initialize(struct __pyx_o
   __pyx_t_5 = (__pyx_t_8) ? __Pyx_PyObject_Call2Args(__pyx_t_6, __pyx_t_8, __pyx_t_7) : __Pyx_PyObject_CallOneArg(__pyx_t_6, __pyx_t_7);
   __Pyx_XDECREF(__pyx_t_8); __pyx_t_8 = 0;
   __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
-  if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 55, __pyx_L1_error)
+  if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 56, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_5);
   __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
   __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
@@ -3331,7 +3343,7 @@ static PyObject *__pyx_pf_11boxcounting_11boxcounting_4initialize(struct __pyx_o
   return __pyx_r;
 }
 
-/* "boxcounting.pyx":57
+/* "boxcounting.pyx":58
  *         self.initialize_size(size)
  * 
  *     def fill_tree(self):             # <<<<<<<<<<<<<<
@@ -3365,7 +3377,7 @@ static PyObject *__pyx_pf_11boxcounting_11boxcounting_6fill_tree(struct __pyx_ob
   int __pyx_t_4;
   __Pyx_RefNannySetupContext("fill_tree", 0);
 
-  /* "boxcounting.pyx":58
+  /* "boxcounting.pyx":59
  * 
  *     def fill_tree(self):
  *         cdef int eof = 0, n = 0             # <<<<<<<<<<<<<<
@@ -3375,7 +3387,7 @@ static PyObject *__pyx_pf_11boxcounting_11boxcounting_6fill_tree(struct __pyx_ob
   __pyx_v_eof = 0;
   __pyx_v_n = 0;
 
-  /* "boxcounting.pyx":60
+  /* "boxcounting.pyx":61
  *         cdef int eof = 0, n = 0
  *         cdef double * x
  *         x = <double*>calloc(self.dim, sizeof(double))             # <<<<<<<<<<<<<<
@@ -3384,7 +3396,7 @@ static PyObject *__pyx_pf_11boxcounting_11boxcounting_6fill_tree(struct __pyx_ob
  */
   __pyx_v_x = ((double *)calloc(__pyx_v_self->dim, (sizeof(double))));
 
-  /* "boxcounting.pyx":61
+  /* "boxcounting.pyx":62
  *         cdef double * x
  *         x = <double*>calloc(self.dim, sizeof(double))
  *         self.cfile = fopen(self.fname, "rb")             # <<<<<<<<<<<<<<
@@ -3393,7 +3405,7 @@ static PyObject *__pyx_pf_11boxcounting_11boxcounting_6fill_tree(struct __pyx_ob
  */
   __pyx_v_self->cfile = fopen(__pyx_v_self->fname, ((char const *)"rb"));
 
-  /* "boxcounting.pyx":62
+  /* "boxcounting.pyx":63
  *         x = <double*>calloc(self.dim, sizeof(double))
  *         self.cfile = fopen(self.fname, "rb")
  *         eof = get_data(x, self.cfile, self.token, self.dim, self.cdelimiter, self.ccomments)             # <<<<<<<<<<<<<<
@@ -3402,22 +3414,22 @@ static PyObject *__pyx_pf_11boxcounting_11boxcounting_6fill_tree(struct __pyx_ob
  */
   __pyx_v_eof = __pyx_f_8fastload_get_data(__pyx_v_x, __pyx_v_self->cfile, __pyx_v_self->token, __pyx_v_self->dim, __pyx_v_self->cdelimiter, __pyx_v_self->ccomments);
 
-  /* "boxcounting.pyx":63
+  /* "boxcounting.pyx":64
  *         self.cfile = fopen(self.fname, "rb")
  *         eof = get_data(x, self.cfile, self.token, self.dim, self.cdelimiter, self.ccomments)
  *         while eof != -1:             # <<<<<<<<<<<<<<
  *             for i in range(self.num_tree):
- *                 recursive_occupation(&self.tree[i], x, self.max_level, self.dim)
+ *                 recursive_occupation(&self.tree[i], x, self.max_level, self.dim, self.num_quadrants)
  */
   while (1) {
     __pyx_t_1 = ((__pyx_v_eof != -1L) != 0);
     if (!__pyx_t_1) break;
 
-    /* "boxcounting.pyx":64
+    /* "boxcounting.pyx":65
  *         eof = get_data(x, self.cfile, self.token, self.dim, self.cdelimiter, self.ccomments)
  *         while eof != -1:
  *             for i in range(self.num_tree):             # <<<<<<<<<<<<<<
- *                 recursive_occupation(&self.tree[i], x, self.max_level, self.dim)
+ *                 recursive_occupation(&self.tree[i], x, self.max_level, self.dim, self.num_quadrants)
  *             eof = get_data(x, self.cfile, self.token, self.dim, self.cdelimiter, self.ccomments)
  */
     __pyx_t_2 = __pyx_v_self->num_tree;
@@ -3425,27 +3437,27 @@ static PyObject *__pyx_pf_11boxcounting_11boxcounting_6fill_tree(struct __pyx_ob
     for (__pyx_t_4 = 0; __pyx_t_4 < __pyx_t_3; __pyx_t_4+=1) {
       __pyx_v_i = __pyx_t_4;
 
-      /* "boxcounting.pyx":65
+      /* "boxcounting.pyx":66
  *         while eof != -1:
  *             for i in range(self.num_tree):
- *                 recursive_occupation(&self.tree[i], x, self.max_level, self.dim)             # <<<<<<<<<<<<<<
+ *                 recursive_occupation(&self.tree[i], x, self.max_level, self.dim, self.num_quadrants)             # <<<<<<<<<<<<<<
  *             eof = get_data(x, self.cfile, self.token, self.dim, self.cdelimiter, self.ccomments)
  *             n = n + 1
  */
-      __pyx_f_11boxcounting_recursive_occupation((&(__pyx_v_self->tree[__pyx_v_i])), __pyx_v_x, __pyx_v_self->max_level, __pyx_v_self->dim);
+      __pyx_f_11boxcounting_recursive_occupation((&(__pyx_v_self->tree[__pyx_v_i])), __pyx_v_x, __pyx_v_self->max_level, __pyx_v_self->dim, __pyx_v_self->num_quadrants);
     }
 
-    /* "boxcounting.pyx":66
+    /* "boxcounting.pyx":67
  *             for i in range(self.num_tree):
- *                 recursive_occupation(&self.tree[i], x, self.max_level, self.dim)
+ *                 recursive_occupation(&self.tree[i], x, self.max_level, self.dim, self.num_quadrants)
  *             eof = get_data(x, self.cfile, self.token, self.dim, self.cdelimiter, self.ccomments)             # <<<<<<<<<<<<<<
  *             n = n + 1
  *         fclose(self.cfile)
  */
     __pyx_v_eof = __pyx_f_8fastload_get_data(__pyx_v_x, __pyx_v_self->cfile, __pyx_v_self->token, __pyx_v_self->dim, __pyx_v_self->cdelimiter, __pyx_v_self->ccomments);
 
-    /* "boxcounting.pyx":67
- *                 recursive_occupation(&self.tree[i], x, self.max_level, self.dim)
+    /* "boxcounting.pyx":68
+ *                 recursive_occupation(&self.tree[i], x, self.max_level, self.dim, self.num_quadrants)
  *             eof = get_data(x, self.cfile, self.token, self.dim, self.cdelimiter, self.ccomments)
  *             n = n + 1             # <<<<<<<<<<<<<<
  *         fclose(self.cfile)
@@ -3454,7 +3466,7 @@ static PyObject *__pyx_pf_11boxcounting_11boxcounting_6fill_tree(struct __pyx_ob
     __pyx_v_n = (__pyx_v_n + 1);
   }
 
-  /* "boxcounting.pyx":68
+  /* "boxcounting.pyx":69
  *             eof = get_data(x, self.cfile, self.token, self.dim, self.cdelimiter, self.ccomments)
  *             n = n + 1
  *         fclose(self.cfile)             # <<<<<<<<<<<<<<
@@ -3463,7 +3475,7 @@ static PyObject *__pyx_pf_11boxcounting_11boxcounting_6fill_tree(struct __pyx_ob
  */
   (void)(fclose(__pyx_v_self->cfile));
 
-  /* "boxcounting.pyx":69
+  /* "boxcounting.pyx":70
  *             n = n + 1
  *         fclose(self.cfile)
  *         self.n = n             # <<<<<<<<<<<<<<
@@ -3472,7 +3484,7 @@ static PyObject *__pyx_pf_11boxcounting_11boxcounting_6fill_tree(struct __pyx_ob
  */
   __pyx_v_self->n = __pyx_v_n;
 
-  /* "boxcounting.pyx":70
+  /* "boxcounting.pyx":71
  *         fclose(self.cfile)
  *         self.n = n
  *         self.tot_data += n             # <<<<<<<<<<<<<<
@@ -3481,7 +3493,7 @@ static PyObject *__pyx_pf_11boxcounting_11boxcounting_6fill_tree(struct __pyx_ob
  */
   __pyx_v_self->tot_data = (__pyx_v_self->tot_data + __pyx_v_n);
 
-  /* "boxcounting.pyx":71
+  /* "boxcounting.pyx":72
  *         self.n = n
  *         self.tot_data += n
  *         free(x)             # <<<<<<<<<<<<<<
@@ -3490,7 +3502,7 @@ static PyObject *__pyx_pf_11boxcounting_11boxcounting_6fill_tree(struct __pyx_ob
  */
   free(__pyx_v_x);
 
-  /* "boxcounting.pyx":57
+  /* "boxcounting.pyx":58
  *         self.initialize_size(size)
  * 
  *     def fill_tree(self):             # <<<<<<<<<<<<<<
@@ -3505,7 +3517,7 @@ static PyObject *__pyx_pf_11boxcounting_11boxcounting_6fill_tree(struct __pyx_ob
   return __pyx_r;
 }
 
-/* "boxcounting.pyx":76
+/* "boxcounting.pyx":77
  * #        free(self.ccomments)
  * 
  *     def count_occupation(self):             # <<<<<<<<<<<<<<
@@ -3535,7 +3547,7 @@ static PyObject *__pyx_pf_11boxcounting_11boxcounting_8count_occupation(struct _
   int __pyx_t_3;
   __Pyx_RefNannySetupContext("count_occupation", 0);
 
-  /* "boxcounting.pyx":78
+  /* "boxcounting.pyx":79
  *     def count_occupation(self):
  *         cdef int i
  *         for i in range(self.num_tree):             # <<<<<<<<<<<<<<
@@ -3547,7 +3559,7 @@ static PyObject *__pyx_pf_11boxcounting_11boxcounting_8count_occupation(struct _
   for (__pyx_t_3 = 0; __pyx_t_3 < __pyx_t_2; __pyx_t_3+=1) {
     __pyx_v_i = __pyx_t_3;
 
-    /* "boxcounting.pyx":79
+    /* "boxcounting.pyx":80
  *         cdef int i
  *         for i in range(self.num_tree):
  *             recursive_count(&self.tree[i], &self._occ[i*self.max_level], self.max_level, self.dim)             # <<<<<<<<<<<<<<
@@ -3557,7 +3569,7 @@ static PyObject *__pyx_pf_11boxcounting_11boxcounting_8count_occupation(struct _
     __pyx_f_11boxcounting_recursive_count((&(__pyx_v_self->tree[__pyx_v_i])), (&(__pyx_v_self->_occ[(__pyx_v_i * __pyx_v_self->max_level)])), __pyx_v_self->max_level, __pyx_v_self->dim);
   }
 
-  /* "boxcounting.pyx":76
+  /* "boxcounting.pyx":77
  * #        free(self.ccomments)
  * 
  *     def count_occupation(self):             # <<<<<<<<<<<<<<
@@ -3572,7 +3584,7 @@ static PyObject *__pyx_pf_11boxcounting_11boxcounting_8count_occupation(struct _
   return __pyx_r;
 }
 
-/* "boxcounting.pyx":81
+/* "boxcounting.pyx":82
  *             recursive_count(&self.tree[i], &self._occ[i*self.max_level], self.max_level, self.dim)
  * 
  *     def IO_initialize(self):             # <<<<<<<<<<<<<<
@@ -3598,7 +3610,7 @@ static PyObject *__pyx_pf_11boxcounting_11boxcounting_10IO_initialize(struct __p
   __Pyx_RefNannyDeclarations
   __Pyx_RefNannySetupContext("IO_initialize", 0);
 
-  /* "boxcounting.pyx":82
+  /* "boxcounting.pyx":83
  * 
  *     def IO_initialize(self):
  *         self.cdelimiter = <char*>malloc(10 * sizeof(char))             # <<<<<<<<<<<<<<
@@ -3607,7 +3619,7 @@ static PyObject *__pyx_pf_11boxcounting_11boxcounting_10IO_initialize(struct __p
  */
   __pyx_v_self->cdelimiter = ((char *)malloc((10 * (sizeof(char)))));
 
-  /* "boxcounting.pyx":83
+  /* "boxcounting.pyx":84
  *     def IO_initialize(self):
  *         self.cdelimiter = <char*>malloc(10 * sizeof(char))
  *         self.ccomments  = <char*>malloc(10 * sizeof(char))             # <<<<<<<<<<<<<<
@@ -3616,7 +3628,7 @@ static PyObject *__pyx_pf_11boxcounting_11boxcounting_10IO_initialize(struct __p
  */
   __pyx_v_self->ccomments = ((char *)malloc((10 * (sizeof(char)))));
 
-  /* "boxcounting.pyx":84
+  /* "boxcounting.pyx":85
  *         self.cdelimiter = <char*>malloc(10 * sizeof(char))
  *         self.ccomments  = <char*>malloc(10 * sizeof(char))
  *         self.fname      = <char*>malloc(100 * sizeof(char))             # <<<<<<<<<<<<<<
@@ -3625,7 +3637,7 @@ static PyObject *__pyx_pf_11boxcounting_11boxcounting_10IO_initialize(struct __p
  */
   __pyx_v_self->fname = ((char *)malloc((0x64 * (sizeof(char)))));
 
-  /* "boxcounting.pyx":85
+  /* "boxcounting.pyx":86
  *         self.ccomments  = <char*>malloc(10 * sizeof(char))
  *         self.fname      = <char*>malloc(100 * sizeof(char))
  *         self.token = NULL             # <<<<<<<<<<<<<<
@@ -3634,7 +3646,7 @@ static PyObject *__pyx_pf_11boxcounting_11boxcounting_10IO_initialize(struct __p
  */
   __pyx_v_self->token = NULL;
 
-  /* "boxcounting.pyx":81
+  /* "boxcounting.pyx":82
  *             recursive_count(&self.tree[i], &self._occ[i*self.max_level], self.max_level, self.dim)
  * 
  *     def IO_initialize(self):             # <<<<<<<<<<<<<<
@@ -3649,7 +3661,7 @@ static PyObject *__pyx_pf_11boxcounting_11boxcounting_10IO_initialize(struct __p
   return __pyx_r;
 }
 
-/* "boxcounting.pyx":87
+/* "boxcounting.pyx":88
  *         self.token = NULL
  * 
  *     def initialize_size(self, double size):             # <<<<<<<<<<<<<<
@@ -3668,7 +3680,7 @@ static PyObject *__pyx_pw_11boxcounting_11boxcounting_13initialize_size(PyObject
   __Pyx_RefNannyDeclarations
   __Pyx_RefNannySetupContext("initialize_size (wrapper)", 0);
   assert(__pyx_arg_size); {
-    __pyx_v_size = __pyx_PyFloat_AsDouble(__pyx_arg_size); if (unlikely((__pyx_v_size == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 87, __pyx_L3_error)
+    __pyx_v_size = __pyx_PyFloat_AsDouble(__pyx_arg_size); if (unlikely((__pyx_v_size == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 88, __pyx_L3_error)
   }
   goto __pyx_L4_argument_unpacking_done;
   __pyx_L3_error:;
@@ -3711,7 +3723,7 @@ static PyObject *__pyx_pf_11boxcounting_11boxcounting_12initialize_size(struct _
   int __pyx_clineno = 0;
   __Pyx_RefNannySetupContext("initialize_size", 0);
 
-  /* "boxcounting.pyx":88
+  /* "boxcounting.pyx":89
  * 
  *     def initialize_size(self, double size):
  *         cdef double radi, sizeM = 0             # <<<<<<<<<<<<<<
@@ -3720,7 +3732,7 @@ static PyObject *__pyx_pf_11boxcounting_11boxcounting_12initialize_size(struct _
  */
   __pyx_v_sizeM = 0.0;
 
-  /* "boxcounting.pyx":90
+  /* "boxcounting.pyx":91
  *         cdef double radi, sizeM = 0
  *         cdef double * x
  *         cdef int i, eof = 0             # <<<<<<<<<<<<<<
@@ -3729,7 +3741,7 @@ static PyObject *__pyx_pf_11boxcounting_11boxcounting_12initialize_size(struct _
  */
   __pyx_v_eof = 0;
 
-  /* "boxcounting.pyx":91
+  /* "boxcounting.pyx":92
  *         cdef double * x
  *         cdef int i, eof = 0
  *         x = <double*>malloc(self.dim*sizeof(double))             # <<<<<<<<<<<<<<
@@ -3738,7 +3750,7 @@ static PyObject *__pyx_pf_11boxcounting_11boxcounting_12initialize_size(struct _
  */
   __pyx_v_x = ((double *)malloc((__pyx_v_self->dim * (sizeof(double)))));
 
-  /* "boxcounting.pyx":93
+  /* "boxcounting.pyx":94
  *         x = <double*>malloc(self.dim*sizeof(double))
  * 
  *         if self.tot_data == 0:             # <<<<<<<<<<<<<<
@@ -3748,7 +3760,7 @@ static PyObject *__pyx_pf_11boxcounting_11boxcounting_12initialize_size(struct _
   __pyx_t_1 = ((__pyx_v_self->tot_data == 0) != 0);
   if (__pyx_t_1) {
 
-    /* "boxcounting.pyx":94
+    /* "boxcounting.pyx":95
  * 
  *         if self.tot_data == 0:
  *             self.M = <double*>malloc(self.dim*sizeof(double))             # <<<<<<<<<<<<<<
@@ -3757,7 +3769,7 @@ static PyObject *__pyx_pf_11boxcounting_11boxcounting_12initialize_size(struct _
  */
     __pyx_v_self->M = ((double *)malloc((__pyx_v_self->dim * (sizeof(double)))));
 
-    /* "boxcounting.pyx":95
+    /* "boxcounting.pyx":96
  *         if self.tot_data == 0:
  *             self.M = <double*>malloc(self.dim*sizeof(double))
  *             self.m = <double*>malloc(self.dim*sizeof(double))             # <<<<<<<<<<<<<<
@@ -3766,7 +3778,7 @@ static PyObject *__pyx_pf_11boxcounting_11boxcounting_12initialize_size(struct _
  */
     __pyx_v_self->m = ((double *)malloc((__pyx_v_self->dim * (sizeof(double)))));
 
-    /* "boxcounting.pyx":96
+    /* "boxcounting.pyx":97
  *             self.M = <double*>malloc(self.dim*sizeof(double))
  *             self.m = <double*>malloc(self.dim*sizeof(double))
  *             self.cmid = <double*>malloc(self.dim*sizeof(double))             # <<<<<<<<<<<<<<
@@ -3775,7 +3787,7 @@ static PyObject *__pyx_pf_11boxcounting_11boxcounting_12initialize_size(struct _
  */
     __pyx_v_self->cmid = ((double *)malloc((__pyx_v_self->dim * (sizeof(double)))));
 
-    /* "boxcounting.pyx":98
+    /* "boxcounting.pyx":99
  *             self.cmid = <double*>malloc(self.dim*sizeof(double))
  * 
  *             for i in range(self.dim):             # <<<<<<<<<<<<<<
@@ -3787,7 +3799,7 @@ static PyObject *__pyx_pf_11boxcounting_11boxcounting_12initialize_size(struct _
     for (__pyx_t_4 = 0; __pyx_t_4 < __pyx_t_3; __pyx_t_4+=1) {
       __pyx_v_i = __pyx_t_4;
 
-      /* "boxcounting.pyx":99
+      /* "boxcounting.pyx":100
  * 
  *             for i in range(self.dim):
  *                 self.M[i] = -1e8             # <<<<<<<<<<<<<<
@@ -3796,7 +3808,7 @@ static PyObject *__pyx_pf_11boxcounting_11boxcounting_12initialize_size(struct _
  */
       (__pyx_v_self->M[__pyx_v_i]) = -1e8;
 
-      /* "boxcounting.pyx":100
+      /* "boxcounting.pyx":101
  *             for i in range(self.dim):
  *                 self.M[i] = -1e8
  *                 self.m[i] = 1e8             # <<<<<<<<<<<<<<
@@ -3806,7 +3818,7 @@ static PyObject *__pyx_pf_11boxcounting_11boxcounting_12initialize_size(struct _
       (__pyx_v_self->m[__pyx_v_i]) = 1e8;
     }
 
-    /* "boxcounting.pyx":93
+    /* "boxcounting.pyx":94
  *         x = <double*>malloc(self.dim*sizeof(double))
  * 
  *         if self.tot_data == 0:             # <<<<<<<<<<<<<<
@@ -3815,7 +3827,7 @@ static PyObject *__pyx_pf_11boxcounting_11boxcounting_12initialize_size(struct _
  */
   }
 
-  /* "boxcounting.pyx":102
+  /* "boxcounting.pyx":103
  *                 self.m[i] = 1e8
  * 
  *         self.cfile = fopen(self.fname, "rb")             # <<<<<<<<<<<<<<
@@ -3824,7 +3836,7 @@ static PyObject *__pyx_pf_11boxcounting_11boxcounting_12initialize_size(struct _
  */
   __pyx_v_self->cfile = fopen(__pyx_v_self->fname, ((char const *)"rb"));
 
-  /* "boxcounting.pyx":103
+  /* "boxcounting.pyx":104
  * 
  *         self.cfile = fopen(self.fname, "rb")
  *         while eof != -1:             # <<<<<<<<<<<<<<
@@ -3835,7 +3847,7 @@ static PyObject *__pyx_pf_11boxcounting_11boxcounting_12initialize_size(struct _
     __pyx_t_1 = ((__pyx_v_eof != -1L) != 0);
     if (!__pyx_t_1) break;
 
-    /* "boxcounting.pyx":104
+    /* "boxcounting.pyx":105
  *         self.cfile = fopen(self.fname, "rb")
  *         while eof != -1:
  *             eof = get_data(x, self.cfile, self.token, self.dim, self.cdelimiter, self.ccomments)             # <<<<<<<<<<<<<<
@@ -3844,7 +3856,7 @@ static PyObject *__pyx_pf_11boxcounting_11boxcounting_12initialize_size(struct _
  */
     __pyx_v_eof = __pyx_f_8fastload_get_data(__pyx_v_x, __pyx_v_self->cfile, __pyx_v_self->token, __pyx_v_self->dim, __pyx_v_self->cdelimiter, __pyx_v_self->ccomments);
 
-    /* "boxcounting.pyx":105
+    /* "boxcounting.pyx":106
  *         while eof != -1:
  *             eof = get_data(x, self.cfile, self.token, self.dim, self.cdelimiter, self.ccomments)
  *             for i in range(self.dim):             # <<<<<<<<<<<<<<
@@ -3856,7 +3868,7 @@ static PyObject *__pyx_pf_11boxcounting_11boxcounting_12initialize_size(struct _
     for (__pyx_t_4 = 0; __pyx_t_4 < __pyx_t_3; __pyx_t_4+=1) {
       __pyx_v_i = __pyx_t_4;
 
-      /* "boxcounting.pyx":106
+      /* "boxcounting.pyx":107
  *             eof = get_data(x, self.cfile, self.token, self.dim, self.cdelimiter, self.ccomments)
  *             for i in range(self.dim):
  *                if self.m[i] > x[i]:             # <<<<<<<<<<<<<<
@@ -3866,7 +3878,7 @@ static PyObject *__pyx_pf_11boxcounting_11boxcounting_12initialize_size(struct _
       __pyx_t_1 = (((__pyx_v_self->m[__pyx_v_i]) > (__pyx_v_x[__pyx_v_i])) != 0);
       if (__pyx_t_1) {
 
-        /* "boxcounting.pyx":107
+        /* "boxcounting.pyx":108
  *             for i in range(self.dim):
  *                if self.m[i] > x[i]:
  *                     self.m[i] = x[i]             # <<<<<<<<<<<<<<
@@ -3875,7 +3887,7 @@ static PyObject *__pyx_pf_11boxcounting_11boxcounting_12initialize_size(struct _
  */
         (__pyx_v_self->m[__pyx_v_i]) = (__pyx_v_x[__pyx_v_i]);
 
-        /* "boxcounting.pyx":106
+        /* "boxcounting.pyx":107
  *             eof = get_data(x, self.cfile, self.token, self.dim, self.cdelimiter, self.ccomments)
  *             for i in range(self.dim):
  *                if self.m[i] > x[i]:             # <<<<<<<<<<<<<<
@@ -3884,7 +3896,7 @@ static PyObject *__pyx_pf_11boxcounting_11boxcounting_12initialize_size(struct _
  */
       }
 
-      /* "boxcounting.pyx":108
+      /* "boxcounting.pyx":109
  *                if self.m[i] > x[i]:
  *                     self.m[i] = x[i]
  *                if self.M[i] < x[i]:             # <<<<<<<<<<<<<<
@@ -3894,7 +3906,7 @@ static PyObject *__pyx_pf_11boxcounting_11boxcounting_12initialize_size(struct _
       __pyx_t_1 = (((__pyx_v_self->M[__pyx_v_i]) < (__pyx_v_x[__pyx_v_i])) != 0);
       if (__pyx_t_1) {
 
-        /* "boxcounting.pyx":109
+        /* "boxcounting.pyx":110
  *                     self.m[i] = x[i]
  *                if self.M[i] < x[i]:
  *                     self.M[i] = x[i]             # <<<<<<<<<<<<<<
@@ -3903,7 +3915,7 @@ static PyObject *__pyx_pf_11boxcounting_11boxcounting_12initialize_size(struct _
  */
         (__pyx_v_self->M[__pyx_v_i]) = (__pyx_v_x[__pyx_v_i]);
 
-        /* "boxcounting.pyx":108
+        /* "boxcounting.pyx":109
  *                if self.m[i] > x[i]:
  *                     self.m[i] = x[i]
  *                if self.M[i] < x[i]:             # <<<<<<<<<<<<<<
@@ -3914,7 +3926,7 @@ static PyObject *__pyx_pf_11boxcounting_11boxcounting_12initialize_size(struct _
     }
   }
 
-  /* "boxcounting.pyx":110
+  /* "boxcounting.pyx":111
  *                if self.M[i] < x[i]:
  *                     self.M[i] = x[i]
  *         fclose(self.cfile)             # <<<<<<<<<<<<<<
@@ -3923,7 +3935,7 @@ static PyObject *__pyx_pf_11boxcounting_11boxcounting_12initialize_size(struct _
  */
   (void)(fclose(__pyx_v_self->cfile));
 
-  /* "boxcounting.pyx":112
+  /* "boxcounting.pyx":113
  *         fclose(self.cfile)
  * 
  *         for i in range(self.dim):             # <<<<<<<<<<<<<<
@@ -3935,7 +3947,7 @@ static PyObject *__pyx_pf_11boxcounting_11boxcounting_12initialize_size(struct _
   for (__pyx_t_4 = 0; __pyx_t_4 < __pyx_t_3; __pyx_t_4+=1) {
     __pyx_v_i = __pyx_t_4;
 
-    /* "boxcounting.pyx":113
+    /* "boxcounting.pyx":114
  * 
  *         for i in range(self.dim):
  *             self.cmid[i] = 0.5*(self.M[i]+self.m[i])             # <<<<<<<<<<<<<<
@@ -3945,7 +3957,7 @@ static PyObject *__pyx_pf_11boxcounting_11boxcounting_12initialize_size(struct _
     (__pyx_v_self->cmid[__pyx_v_i]) = (0.5 * ((__pyx_v_self->M[__pyx_v_i]) + (__pyx_v_self->m[__pyx_v_i])));
   }
 
-  /* "boxcounting.pyx":114
+  /* "boxcounting.pyx":115
  *         for i in range(self.dim):
  *             self.cmid[i] = 0.5*(self.M[i]+self.m[i])
  *         for i in range(self.dim):             # <<<<<<<<<<<<<<
@@ -3957,25 +3969,25 @@ static PyObject *__pyx_pf_11boxcounting_11boxcounting_12initialize_size(struct _
   for (__pyx_t_4 = 0; __pyx_t_4 < __pyx_t_3; __pyx_t_4+=1) {
     __pyx_v_i = __pyx_t_4;
 
-    /* "boxcounting.pyx":115
+    /* "boxcounting.pyx":116
  *             self.cmid[i] = 0.5*(self.M[i]+self.m[i])
  *         for i in range(self.dim):
  *             for j in range(self.num_tree):             # <<<<<<<<<<<<<<
  *                 self.tree[j].centr[i] = self.cmid[i]
  *             radi =  0.5*(self.M[i]-self.m[i])
  */
-    __pyx_t_5 = __Pyx_PyInt_From_int(__pyx_v_self->num_tree); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 115, __pyx_L1_error)
+    __pyx_t_5 = __Pyx_PyInt_From_int(__pyx_v_self->num_tree); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 116, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_5);
-    __pyx_t_6 = __Pyx_PyObject_CallOneArg(__pyx_builtin_range, __pyx_t_5); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 115, __pyx_L1_error)
+    __pyx_t_6 = __Pyx_PyObject_CallOneArg(__pyx_builtin_range, __pyx_t_5); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 116, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_6);
     __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
     if (likely(PyList_CheckExact(__pyx_t_6)) || PyTuple_CheckExact(__pyx_t_6)) {
       __pyx_t_5 = __pyx_t_6; __Pyx_INCREF(__pyx_t_5); __pyx_t_7 = 0;
       __pyx_t_8 = NULL;
     } else {
-      __pyx_t_7 = -1; __pyx_t_5 = PyObject_GetIter(__pyx_t_6); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 115, __pyx_L1_error)
+      __pyx_t_7 = -1; __pyx_t_5 = PyObject_GetIter(__pyx_t_6); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 116, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_5);
-      __pyx_t_8 = Py_TYPE(__pyx_t_5)->tp_iternext; if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 115, __pyx_L1_error)
+      __pyx_t_8 = Py_TYPE(__pyx_t_5)->tp_iternext; if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 116, __pyx_L1_error)
     }
     __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
     for (;;) {
@@ -3983,17 +3995,17 @@ static PyObject *__pyx_pf_11boxcounting_11boxcounting_12initialize_size(struct _
         if (likely(PyList_CheckExact(__pyx_t_5))) {
           if (__pyx_t_7 >= PyList_GET_SIZE(__pyx_t_5)) break;
           #if CYTHON_ASSUME_SAFE_MACROS && !CYTHON_AVOID_BORROWED_REFS
-          __pyx_t_6 = PyList_GET_ITEM(__pyx_t_5, __pyx_t_7); __Pyx_INCREF(__pyx_t_6); __pyx_t_7++; if (unlikely(0 < 0)) __PYX_ERR(0, 115, __pyx_L1_error)
+          __pyx_t_6 = PyList_GET_ITEM(__pyx_t_5, __pyx_t_7); __Pyx_INCREF(__pyx_t_6); __pyx_t_7++; if (unlikely(0 < 0)) __PYX_ERR(0, 116, __pyx_L1_error)
           #else
-          __pyx_t_6 = PySequence_ITEM(__pyx_t_5, __pyx_t_7); __pyx_t_7++; if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 115, __pyx_L1_error)
+          __pyx_t_6 = PySequence_ITEM(__pyx_t_5, __pyx_t_7); __pyx_t_7++; if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 116, __pyx_L1_error)
           __Pyx_GOTREF(__pyx_t_6);
           #endif
         } else {
           if (__pyx_t_7 >= PyTuple_GET_SIZE(__pyx_t_5)) break;
           #if CYTHON_ASSUME_SAFE_MACROS && !CYTHON_AVOID_BORROWED_REFS
-          __pyx_t_6 = PyTuple_GET_ITEM(__pyx_t_5, __pyx_t_7); __Pyx_INCREF(__pyx_t_6); __pyx_t_7++; if (unlikely(0 < 0)) __PYX_ERR(0, 115, __pyx_L1_error)
+          __pyx_t_6 = PyTuple_GET_ITEM(__pyx_t_5, __pyx_t_7); __Pyx_INCREF(__pyx_t_6); __pyx_t_7++; if (unlikely(0 < 0)) __PYX_ERR(0, 116, __pyx_L1_error)
           #else
-          __pyx_t_6 = PySequence_ITEM(__pyx_t_5, __pyx_t_7); __pyx_t_7++; if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 115, __pyx_L1_error)
+          __pyx_t_6 = PySequence_ITEM(__pyx_t_5, __pyx_t_7); __pyx_t_7++; if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 116, __pyx_L1_error)
           __Pyx_GOTREF(__pyx_t_6);
           #endif
         }
@@ -4003,7 +4015,7 @@ static PyObject *__pyx_pf_11boxcounting_11boxcounting_12initialize_size(struct _
           PyObject* exc_type = PyErr_Occurred();
           if (exc_type) {
             if (likely(__Pyx_PyErr_GivenExceptionMatches(exc_type, PyExc_StopIteration))) PyErr_Clear();
-            else __PYX_ERR(0, 115, __pyx_L1_error)
+            else __PYX_ERR(0, 116, __pyx_L1_error)
           }
           break;
         }
@@ -4012,17 +4024,17 @@ static PyObject *__pyx_pf_11boxcounting_11boxcounting_12initialize_size(struct _
       __Pyx_XDECREF_SET(__pyx_v_j, __pyx_t_6);
       __pyx_t_6 = 0;
 
-      /* "boxcounting.pyx":116
+      /* "boxcounting.pyx":117
  *         for i in range(self.dim):
  *             for j in range(self.num_tree):
  *                 self.tree[j].centr[i] = self.cmid[i]             # <<<<<<<<<<<<<<
  *             radi =  0.5*(self.M[i]-self.m[i])
  *             if sizeM < radi:
  */
-      __pyx_t_9 = __Pyx_PyIndex_AsSsize_t(__pyx_v_j); if (unlikely((__pyx_t_9 == (Py_ssize_t)-1) && PyErr_Occurred())) __PYX_ERR(0, 116, __pyx_L1_error)
+      __pyx_t_9 = __Pyx_PyIndex_AsSsize_t(__pyx_v_j); if (unlikely((__pyx_t_9 == (Py_ssize_t)-1) && PyErr_Occurred())) __PYX_ERR(0, 117, __pyx_L1_error)
       ((__pyx_v_self->tree[__pyx_t_9]).centr[__pyx_v_i]) = (__pyx_v_self->cmid[__pyx_v_i]);
 
-      /* "boxcounting.pyx":115
+      /* "boxcounting.pyx":116
  *             self.cmid[i] = 0.5*(self.M[i]+self.m[i])
  *         for i in range(self.dim):
  *             for j in range(self.num_tree):             # <<<<<<<<<<<<<<
@@ -4032,7 +4044,7 @@ static PyObject *__pyx_pf_11boxcounting_11boxcounting_12initialize_size(struct _
     }
     __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
 
-    /* "boxcounting.pyx":117
+    /* "boxcounting.pyx":118
  *             for j in range(self.num_tree):
  *                 self.tree[j].centr[i] = self.cmid[i]
  *             radi =  0.5*(self.M[i]-self.m[i])             # <<<<<<<<<<<<<<
@@ -4041,7 +4053,7 @@ static PyObject *__pyx_pf_11boxcounting_11boxcounting_12initialize_size(struct _
  */
     __pyx_v_radi = (0.5 * ((__pyx_v_self->M[__pyx_v_i]) - (__pyx_v_self->m[__pyx_v_i])));
 
-    /* "boxcounting.pyx":118
+    /* "boxcounting.pyx":119
  *                 self.tree[j].centr[i] = self.cmid[i]
  *             radi =  0.5*(self.M[i]-self.m[i])
  *             if sizeM < radi:             # <<<<<<<<<<<<<<
@@ -4051,7 +4063,7 @@ static PyObject *__pyx_pf_11boxcounting_11boxcounting_12initialize_size(struct _
     __pyx_t_1 = ((__pyx_v_sizeM < __pyx_v_radi) != 0);
     if (__pyx_t_1) {
 
-      /* "boxcounting.pyx":119
+      /* "boxcounting.pyx":120
  *             radi =  0.5*(self.M[i]-self.m[i])
  *             if sizeM < radi:
  *                 sizeM = radi             # <<<<<<<<<<<<<<
@@ -4060,7 +4072,7 @@ static PyObject *__pyx_pf_11boxcounting_11boxcounting_12initialize_size(struct _
  */
       __pyx_v_sizeM = __pyx_v_radi;
 
-      /* "boxcounting.pyx":118
+      /* "boxcounting.pyx":119
  *                 self.tree[j].centr[i] = self.cmid[i]
  *             radi =  0.5*(self.M[i]-self.m[i])
  *             if sizeM < radi:             # <<<<<<<<<<<<<<
@@ -4070,7 +4082,7 @@ static PyObject *__pyx_pf_11boxcounting_11boxcounting_12initialize_size(struct _
     }
   }
 
-  /* "boxcounting.pyx":121
+  /* "boxcounting.pyx":122
  *                 sizeM = radi
  * 
  *         if size != 0:             # <<<<<<<<<<<<<<
@@ -4080,7 +4092,7 @@ static PyObject *__pyx_pf_11boxcounting_11boxcounting_12initialize_size(struct _
   __pyx_t_1 = ((__pyx_v_size != 0.0) != 0);
   if (__pyx_t_1) {
 
-    /* "boxcounting.pyx":122
+    /* "boxcounting.pyx":123
  * 
  *         if size != 0:
  *             sizeM = size             # <<<<<<<<<<<<<<
@@ -4089,7 +4101,7 @@ static PyObject *__pyx_pf_11boxcounting_11boxcounting_12initialize_size(struct _
  */
     __pyx_v_sizeM = __pyx_v_size;
 
-    /* "boxcounting.pyx":121
+    /* "boxcounting.pyx":122
  *                 sizeM = radi
  * 
  *         if size != 0:             # <<<<<<<<<<<<<<
@@ -4098,7 +4110,7 @@ static PyObject *__pyx_pf_11boxcounting_11boxcounting_12initialize_size(struct _
  */
   }
 
-  /* "boxcounting.pyx":123
+  /* "boxcounting.pyx":124
  *         if size != 0:
  *             sizeM = size
  *         self.tree[0].radi = sizeM             # <<<<<<<<<<<<<<
@@ -4107,16 +4119,16 @@ static PyObject *__pyx_pf_11boxcounting_11boxcounting_12initialize_size(struct _
  */
   (__pyx_v_self->tree[0]).radi = __pyx_v_sizeM;
 
-  /* "boxcounting.pyx":124
+  /* "boxcounting.pyx":125
  *             sizeM = size
  *         self.tree[0].radi = sizeM
  *         for j in range(1, self.num_tree):             # <<<<<<<<<<<<<<
  *             self.tree[j].radi = sizeM + sizeM / (j + 1)
  *         self.eps0 = sizeM
  */
-  __pyx_t_5 = __Pyx_PyInt_From_int(__pyx_v_self->num_tree); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 124, __pyx_L1_error)
+  __pyx_t_5 = __Pyx_PyInt_From_int(__pyx_v_self->num_tree); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 125, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_5);
-  __pyx_t_6 = PyTuple_New(2); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 124, __pyx_L1_error)
+  __pyx_t_6 = PyTuple_New(2); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 125, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_6);
   __Pyx_INCREF(__pyx_int_1);
   __Pyx_GIVEREF(__pyx_int_1);
@@ -4124,16 +4136,16 @@ static PyObject *__pyx_pf_11boxcounting_11boxcounting_12initialize_size(struct _
   __Pyx_GIVEREF(__pyx_t_5);
   PyTuple_SET_ITEM(__pyx_t_6, 1, __pyx_t_5);
   __pyx_t_5 = 0;
-  __pyx_t_5 = __Pyx_PyObject_Call(__pyx_builtin_range, __pyx_t_6, NULL); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 124, __pyx_L1_error)
+  __pyx_t_5 = __Pyx_PyObject_Call(__pyx_builtin_range, __pyx_t_6, NULL); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 125, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_5);
   __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
   if (likely(PyList_CheckExact(__pyx_t_5)) || PyTuple_CheckExact(__pyx_t_5)) {
     __pyx_t_6 = __pyx_t_5; __Pyx_INCREF(__pyx_t_6); __pyx_t_7 = 0;
     __pyx_t_8 = NULL;
   } else {
-    __pyx_t_7 = -1; __pyx_t_6 = PyObject_GetIter(__pyx_t_5); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 124, __pyx_L1_error)
+    __pyx_t_7 = -1; __pyx_t_6 = PyObject_GetIter(__pyx_t_5); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 125, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_6);
-    __pyx_t_8 = Py_TYPE(__pyx_t_6)->tp_iternext; if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 124, __pyx_L1_error)
+    __pyx_t_8 = Py_TYPE(__pyx_t_6)->tp_iternext; if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 125, __pyx_L1_error)
   }
   __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
   for (;;) {
@@ -4141,17 +4153,17 @@ static PyObject *__pyx_pf_11boxcounting_11boxcounting_12initialize_size(struct _
       if (likely(PyList_CheckExact(__pyx_t_6))) {
         if (__pyx_t_7 >= PyList_GET_SIZE(__pyx_t_6)) break;
         #if CYTHON_ASSUME_SAFE_MACROS && !CYTHON_AVOID_BORROWED_REFS
-        __pyx_t_5 = PyList_GET_ITEM(__pyx_t_6, __pyx_t_7); __Pyx_INCREF(__pyx_t_5); __pyx_t_7++; if (unlikely(0 < 0)) __PYX_ERR(0, 124, __pyx_L1_error)
+        __pyx_t_5 = PyList_GET_ITEM(__pyx_t_6, __pyx_t_7); __Pyx_INCREF(__pyx_t_5); __pyx_t_7++; if (unlikely(0 < 0)) __PYX_ERR(0, 125, __pyx_L1_error)
         #else
-        __pyx_t_5 = PySequence_ITEM(__pyx_t_6, __pyx_t_7); __pyx_t_7++; if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 124, __pyx_L1_error)
+        __pyx_t_5 = PySequence_ITEM(__pyx_t_6, __pyx_t_7); __pyx_t_7++; if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 125, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_5);
         #endif
       } else {
         if (__pyx_t_7 >= PyTuple_GET_SIZE(__pyx_t_6)) break;
         #if CYTHON_ASSUME_SAFE_MACROS && !CYTHON_AVOID_BORROWED_REFS
-        __pyx_t_5 = PyTuple_GET_ITEM(__pyx_t_6, __pyx_t_7); __Pyx_INCREF(__pyx_t_5); __pyx_t_7++; if (unlikely(0 < 0)) __PYX_ERR(0, 124, __pyx_L1_error)
+        __pyx_t_5 = PyTuple_GET_ITEM(__pyx_t_6, __pyx_t_7); __Pyx_INCREF(__pyx_t_5); __pyx_t_7++; if (unlikely(0 < 0)) __PYX_ERR(0, 125, __pyx_L1_error)
         #else
-        __pyx_t_5 = PySequence_ITEM(__pyx_t_6, __pyx_t_7); __pyx_t_7++; if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 124, __pyx_L1_error)
+        __pyx_t_5 = PySequence_ITEM(__pyx_t_6, __pyx_t_7); __pyx_t_7++; if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 125, __pyx_L1_error)
         __Pyx_GOTREF(__pyx_t_5);
         #endif
       }
@@ -4161,7 +4173,7 @@ static PyObject *__pyx_pf_11boxcounting_11boxcounting_12initialize_size(struct _
         PyObject* exc_type = PyErr_Occurred();
         if (exc_type) {
           if (likely(__Pyx_PyErr_GivenExceptionMatches(exc_type, PyExc_StopIteration))) PyErr_Clear();
-          else __PYX_ERR(0, 124, __pyx_L1_error)
+          else __PYX_ERR(0, 125, __pyx_L1_error)
         }
         break;
       }
@@ -4170,33 +4182,33 @@ static PyObject *__pyx_pf_11boxcounting_11boxcounting_12initialize_size(struct _
     __Pyx_XDECREF_SET(__pyx_v_j, __pyx_t_5);
     __pyx_t_5 = 0;
 
-    /* "boxcounting.pyx":125
+    /* "boxcounting.pyx":126
  *         self.tree[0].radi = sizeM
  *         for j in range(1, self.num_tree):
  *             self.tree[j].radi = sizeM + sizeM / (j + 1)             # <<<<<<<<<<<<<<
  *         self.eps0 = sizeM
  * 
  */
-    __pyx_t_5 = PyFloat_FromDouble(__pyx_v_sizeM); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 125, __pyx_L1_error)
+    __pyx_t_5 = PyFloat_FromDouble(__pyx_v_sizeM); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 126, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_5);
-    __pyx_t_10 = PyFloat_FromDouble(__pyx_v_sizeM); if (unlikely(!__pyx_t_10)) __PYX_ERR(0, 125, __pyx_L1_error)
+    __pyx_t_10 = PyFloat_FromDouble(__pyx_v_sizeM); if (unlikely(!__pyx_t_10)) __PYX_ERR(0, 126, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_10);
-    __pyx_t_11 = __Pyx_PyInt_AddObjC(__pyx_v_j, __pyx_int_1, 1, 0, 0); if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 125, __pyx_L1_error)
+    __pyx_t_11 = __Pyx_PyInt_AddObjC(__pyx_v_j, __pyx_int_1, 1, 0, 0); if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 126, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_11);
-    __pyx_t_12 = __Pyx_PyNumber_Divide(__pyx_t_10, __pyx_t_11); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 125, __pyx_L1_error)
+    __pyx_t_12 = __Pyx_PyNumber_Divide(__pyx_t_10, __pyx_t_11); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 126, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_12);
     __Pyx_DECREF(__pyx_t_10); __pyx_t_10 = 0;
     __Pyx_DECREF(__pyx_t_11); __pyx_t_11 = 0;
-    __pyx_t_11 = PyNumber_Add(__pyx_t_5, __pyx_t_12); if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 125, __pyx_L1_error)
+    __pyx_t_11 = PyNumber_Add(__pyx_t_5, __pyx_t_12); if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 126, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_11);
     __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
     __Pyx_DECREF(__pyx_t_12); __pyx_t_12 = 0;
-    __pyx_t_13 = __pyx_PyFloat_AsDouble(__pyx_t_11); if (unlikely((__pyx_t_13 == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 125, __pyx_L1_error)
+    __pyx_t_13 = __pyx_PyFloat_AsDouble(__pyx_t_11); if (unlikely((__pyx_t_13 == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 126, __pyx_L1_error)
     __Pyx_DECREF(__pyx_t_11); __pyx_t_11 = 0;
-    __pyx_t_9 = __Pyx_PyIndex_AsSsize_t(__pyx_v_j); if (unlikely((__pyx_t_9 == (Py_ssize_t)-1) && PyErr_Occurred())) __PYX_ERR(0, 125, __pyx_L1_error)
+    __pyx_t_9 = __Pyx_PyIndex_AsSsize_t(__pyx_v_j); if (unlikely((__pyx_t_9 == (Py_ssize_t)-1) && PyErr_Occurred())) __PYX_ERR(0, 126, __pyx_L1_error)
     (__pyx_v_self->tree[__pyx_t_9]).radi = __pyx_t_13;
 
-    /* "boxcounting.pyx":124
+    /* "boxcounting.pyx":125
  *             sizeM = size
  *         self.tree[0].radi = sizeM
  *         for j in range(1, self.num_tree):             # <<<<<<<<<<<<<<
@@ -4206,7 +4218,7 @@ static PyObject *__pyx_pf_11boxcounting_11boxcounting_12initialize_size(struct _
   }
   __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
 
-  /* "boxcounting.pyx":126
+  /* "boxcounting.pyx":127
  *         for j in range(1, self.num_tree):
  *             self.tree[j].radi = sizeM + sizeM / (j + 1)
  *         self.eps0 = sizeM             # <<<<<<<<<<<<<<
@@ -4215,7 +4227,7 @@ static PyObject *__pyx_pf_11boxcounting_11boxcounting_12initialize_size(struct _
  */
   __pyx_v_self->eps0 = __pyx_v_sizeM;
 
-  /* "boxcounting.pyx":128
+  /* "boxcounting.pyx":129
  *         self.eps0 = sizeM
  * 
  *         self._occ = <int*>calloc(self.max_level*self.num_tree, sizeof(int))             # <<<<<<<<<<<<<<
@@ -4224,7 +4236,7 @@ static PyObject *__pyx_pf_11boxcounting_11boxcounting_12initialize_size(struct _
  */
   __pyx_v_self->_occ = ((int *)calloc((__pyx_v_self->max_level * __pyx_v_self->num_tree), (sizeof(int))));
 
-  /* "boxcounting.pyx":129
+  /* "boxcounting.pyx":130
  * 
  *         self._occ = <int*>calloc(self.max_level*self.num_tree, sizeof(int))
  *         self._eps = <double*>malloc(self.max_level*self.num_tree*sizeof(double))             # <<<<<<<<<<<<<<
@@ -4233,7 +4245,7 @@ static PyObject *__pyx_pf_11boxcounting_11boxcounting_12initialize_size(struct _
  */
   __pyx_v_self->_eps = ((double *)malloc(((__pyx_v_self->max_level * __pyx_v_self->num_tree) * (sizeof(double)))));
 
-  /* "boxcounting.pyx":130
+  /* "boxcounting.pyx":131
  *         self._occ = <int*>calloc(self.max_level*self.num_tree, sizeof(int))
  *         self._eps = <double*>malloc(self.max_level*self.num_tree*sizeof(double))
  *         self._eps[0] = self.eps0             # <<<<<<<<<<<<<<
@@ -4243,7 +4255,7 @@ static PyObject *__pyx_pf_11boxcounting_11boxcounting_12initialize_size(struct _
   __pyx_t_13 = __pyx_v_self->eps0;
   (__pyx_v_self->_eps[0]) = __pyx_t_13;
 
-  /* "boxcounting.pyx":131
+  /* "boxcounting.pyx":132
  *         self._eps = <double*>malloc(self.max_level*self.num_tree*sizeof(double))
  *         self._eps[0] = self.eps0
  *         if self.num_tree > 1:             # <<<<<<<<<<<<<<
@@ -4253,16 +4265,16 @@ static PyObject *__pyx_pf_11boxcounting_11boxcounting_12initialize_size(struct _
   __pyx_t_1 = ((__pyx_v_self->num_tree > 1) != 0);
   if (__pyx_t_1) {
 
-    /* "boxcounting.pyx":132
+    /* "boxcounting.pyx":133
  *         self._eps[0] = self.eps0
  *         if self.num_tree > 1:
  *             for j in range(1, self.num_tree):             # <<<<<<<<<<<<<<
  *                 self._eps[j*self.max_level] = self.eps0 + self.eps0 / (j + 1)
  *         for i in range(1, self.max_level):
  */
-    __pyx_t_6 = __Pyx_PyInt_From_int(__pyx_v_self->num_tree); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 132, __pyx_L1_error)
+    __pyx_t_6 = __Pyx_PyInt_From_int(__pyx_v_self->num_tree); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 133, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_6);
-    __pyx_t_11 = PyTuple_New(2); if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 132, __pyx_L1_error)
+    __pyx_t_11 = PyTuple_New(2); if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 133, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_11);
     __Pyx_INCREF(__pyx_int_1);
     __Pyx_GIVEREF(__pyx_int_1);
@@ -4270,16 +4282,16 @@ static PyObject *__pyx_pf_11boxcounting_11boxcounting_12initialize_size(struct _
     __Pyx_GIVEREF(__pyx_t_6);
     PyTuple_SET_ITEM(__pyx_t_11, 1, __pyx_t_6);
     __pyx_t_6 = 0;
-    __pyx_t_6 = __Pyx_PyObject_Call(__pyx_builtin_range, __pyx_t_11, NULL); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 132, __pyx_L1_error)
+    __pyx_t_6 = __Pyx_PyObject_Call(__pyx_builtin_range, __pyx_t_11, NULL); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 133, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_6);
     __Pyx_DECREF(__pyx_t_11); __pyx_t_11 = 0;
     if (likely(PyList_CheckExact(__pyx_t_6)) || PyTuple_CheckExact(__pyx_t_6)) {
       __pyx_t_11 = __pyx_t_6; __Pyx_INCREF(__pyx_t_11); __pyx_t_7 = 0;
       __pyx_t_8 = NULL;
     } else {
-      __pyx_t_7 = -1; __pyx_t_11 = PyObject_GetIter(__pyx_t_6); if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 132, __pyx_L1_error)
+      __pyx_t_7 = -1; __pyx_t_11 = PyObject_GetIter(__pyx_t_6); if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 133, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_11);
-      __pyx_t_8 = Py_TYPE(__pyx_t_11)->tp_iternext; if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 132, __pyx_L1_error)
+      __pyx_t_8 = Py_TYPE(__pyx_t_11)->tp_iternext; if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 133, __pyx_L1_error)
     }
     __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
     for (;;) {
@@ -4287,17 +4299,17 @@ static PyObject *__pyx_pf_11boxcounting_11boxcounting_12initialize_size(struct _
         if (likely(PyList_CheckExact(__pyx_t_11))) {
           if (__pyx_t_7 >= PyList_GET_SIZE(__pyx_t_11)) break;
           #if CYTHON_ASSUME_SAFE_MACROS && !CYTHON_AVOID_BORROWED_REFS
-          __pyx_t_6 = PyList_GET_ITEM(__pyx_t_11, __pyx_t_7); __Pyx_INCREF(__pyx_t_6); __pyx_t_7++; if (unlikely(0 < 0)) __PYX_ERR(0, 132, __pyx_L1_error)
+          __pyx_t_6 = PyList_GET_ITEM(__pyx_t_11, __pyx_t_7); __Pyx_INCREF(__pyx_t_6); __pyx_t_7++; if (unlikely(0 < 0)) __PYX_ERR(0, 133, __pyx_L1_error)
           #else
-          __pyx_t_6 = PySequence_ITEM(__pyx_t_11, __pyx_t_7); __pyx_t_7++; if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 132, __pyx_L1_error)
+          __pyx_t_6 = PySequence_ITEM(__pyx_t_11, __pyx_t_7); __pyx_t_7++; if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 133, __pyx_L1_error)
           __Pyx_GOTREF(__pyx_t_6);
           #endif
         } else {
           if (__pyx_t_7 >= PyTuple_GET_SIZE(__pyx_t_11)) break;
           #if CYTHON_ASSUME_SAFE_MACROS && !CYTHON_AVOID_BORROWED_REFS
-          __pyx_t_6 = PyTuple_GET_ITEM(__pyx_t_11, __pyx_t_7); __Pyx_INCREF(__pyx_t_6); __pyx_t_7++; if (unlikely(0 < 0)) __PYX_ERR(0, 132, __pyx_L1_error)
+          __pyx_t_6 = PyTuple_GET_ITEM(__pyx_t_11, __pyx_t_7); __Pyx_INCREF(__pyx_t_6); __pyx_t_7++; if (unlikely(0 < 0)) __PYX_ERR(0, 133, __pyx_L1_error)
           #else
-          __pyx_t_6 = PySequence_ITEM(__pyx_t_11, __pyx_t_7); __pyx_t_7++; if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 132, __pyx_L1_error)
+          __pyx_t_6 = PySequence_ITEM(__pyx_t_11, __pyx_t_7); __pyx_t_7++; if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 133, __pyx_L1_error)
           __Pyx_GOTREF(__pyx_t_6);
           #endif
         }
@@ -4307,7 +4319,7 @@ static PyObject *__pyx_pf_11boxcounting_11boxcounting_12initialize_size(struct _
           PyObject* exc_type = PyErr_Occurred();
           if (exc_type) {
             if (likely(__Pyx_PyErr_GivenExceptionMatches(exc_type, PyExc_StopIteration))) PyErr_Clear();
-            else __PYX_ERR(0, 132, __pyx_L1_error)
+            else __PYX_ERR(0, 133, __pyx_L1_error)
           }
           break;
         }
@@ -4316,39 +4328,39 @@ static PyObject *__pyx_pf_11boxcounting_11boxcounting_12initialize_size(struct _
       __Pyx_XDECREF_SET(__pyx_v_j, __pyx_t_6);
       __pyx_t_6 = 0;
 
-      /* "boxcounting.pyx":133
+      /* "boxcounting.pyx":134
  *         if self.num_tree > 1:
  *             for j in range(1, self.num_tree):
  *                 self._eps[j*self.max_level] = self.eps0 + self.eps0 / (j + 1)             # <<<<<<<<<<<<<<
  *         for i in range(1, self.max_level):
  *             for j in range(self.num_tree):
  */
-      __pyx_t_6 = PyFloat_FromDouble(__pyx_v_self->eps0); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 133, __pyx_L1_error)
+      __pyx_t_6 = PyFloat_FromDouble(__pyx_v_self->eps0); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 134, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_6);
-      __pyx_t_12 = PyFloat_FromDouble(__pyx_v_self->eps0); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 133, __pyx_L1_error)
+      __pyx_t_12 = PyFloat_FromDouble(__pyx_v_self->eps0); if (unlikely(!__pyx_t_12)) __PYX_ERR(0, 134, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_12);
-      __pyx_t_5 = __Pyx_PyInt_AddObjC(__pyx_v_j, __pyx_int_1, 1, 0, 0); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 133, __pyx_L1_error)
+      __pyx_t_5 = __Pyx_PyInt_AddObjC(__pyx_v_j, __pyx_int_1, 1, 0, 0); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 134, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_5);
-      __pyx_t_10 = __Pyx_PyNumber_Divide(__pyx_t_12, __pyx_t_5); if (unlikely(!__pyx_t_10)) __PYX_ERR(0, 133, __pyx_L1_error)
+      __pyx_t_10 = __Pyx_PyNumber_Divide(__pyx_t_12, __pyx_t_5); if (unlikely(!__pyx_t_10)) __PYX_ERR(0, 134, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_10);
       __Pyx_DECREF(__pyx_t_12); __pyx_t_12 = 0;
       __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
-      __pyx_t_5 = PyNumber_Add(__pyx_t_6, __pyx_t_10); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 133, __pyx_L1_error)
+      __pyx_t_5 = PyNumber_Add(__pyx_t_6, __pyx_t_10); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 134, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_5);
       __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
       __Pyx_DECREF(__pyx_t_10); __pyx_t_10 = 0;
-      __pyx_t_13 = __pyx_PyFloat_AsDouble(__pyx_t_5); if (unlikely((__pyx_t_13 == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 133, __pyx_L1_error)
+      __pyx_t_13 = __pyx_PyFloat_AsDouble(__pyx_t_5); if (unlikely((__pyx_t_13 == (double)-1) && PyErr_Occurred())) __PYX_ERR(0, 134, __pyx_L1_error)
       __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
-      __pyx_t_5 = __Pyx_PyInt_From_int(__pyx_v_self->max_level); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 133, __pyx_L1_error)
+      __pyx_t_5 = __Pyx_PyInt_From_int(__pyx_v_self->max_level); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 134, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_5);
-      __pyx_t_10 = PyNumber_Multiply(__pyx_v_j, __pyx_t_5); if (unlikely(!__pyx_t_10)) __PYX_ERR(0, 133, __pyx_L1_error)
+      __pyx_t_10 = PyNumber_Multiply(__pyx_v_j, __pyx_t_5); if (unlikely(!__pyx_t_10)) __PYX_ERR(0, 134, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_10);
       __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
-      __pyx_t_9 = __Pyx_PyIndex_AsSsize_t(__pyx_t_10); if (unlikely((__pyx_t_9 == (Py_ssize_t)-1) && PyErr_Occurred())) __PYX_ERR(0, 133, __pyx_L1_error)
+      __pyx_t_9 = __Pyx_PyIndex_AsSsize_t(__pyx_t_10); if (unlikely((__pyx_t_9 == (Py_ssize_t)-1) && PyErr_Occurred())) __PYX_ERR(0, 134, __pyx_L1_error)
       __Pyx_DECREF(__pyx_t_10); __pyx_t_10 = 0;
       (__pyx_v_self->_eps[__pyx_t_9]) = __pyx_t_13;
 
-      /* "boxcounting.pyx":132
+      /* "boxcounting.pyx":133
  *         self._eps[0] = self.eps0
  *         if self.num_tree > 1:
  *             for j in range(1, self.num_tree):             # <<<<<<<<<<<<<<
@@ -4358,7 +4370,7 @@ static PyObject *__pyx_pf_11boxcounting_11boxcounting_12initialize_size(struct _
     }
     __Pyx_DECREF(__pyx_t_11); __pyx_t_11 = 0;
 
-    /* "boxcounting.pyx":131
+    /* "boxcounting.pyx":132
  *         self._eps = <double*>malloc(self.max_level*self.num_tree*sizeof(double))
  *         self._eps[0] = self.eps0
  *         if self.num_tree > 1:             # <<<<<<<<<<<<<<
@@ -4367,7 +4379,7 @@ static PyObject *__pyx_pf_11boxcounting_11boxcounting_12initialize_size(struct _
  */
   }
 
-  /* "boxcounting.pyx":134
+  /* "boxcounting.pyx":135
  *             for j in range(1, self.num_tree):
  *                 self._eps[j*self.max_level] = self.eps0 + self.eps0 / (j + 1)
  *         for i in range(1, self.max_level):             # <<<<<<<<<<<<<<
@@ -4379,25 +4391,25 @@ static PyObject *__pyx_pf_11boxcounting_11boxcounting_12initialize_size(struct _
   for (__pyx_t_4 = 1; __pyx_t_4 < __pyx_t_3; __pyx_t_4+=1) {
     __pyx_v_i = __pyx_t_4;
 
-    /* "boxcounting.pyx":135
+    /* "boxcounting.pyx":136
  *                 self._eps[j*self.max_level] = self.eps0 + self.eps0 / (j + 1)
  *         for i in range(1, self.max_level):
  *             for j in range(self.num_tree):             # <<<<<<<<<<<<<<
  *                 self._eps[i + j*self.max_level] = self._eps[i-1 + j*self.max_level]/2
  *         self.initialized = 1
  */
-    __pyx_t_11 = __Pyx_PyInt_From_int(__pyx_v_self->num_tree); if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 135, __pyx_L1_error)
+    __pyx_t_11 = __Pyx_PyInt_From_int(__pyx_v_self->num_tree); if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 136, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_11);
-    __pyx_t_10 = __Pyx_PyObject_CallOneArg(__pyx_builtin_range, __pyx_t_11); if (unlikely(!__pyx_t_10)) __PYX_ERR(0, 135, __pyx_L1_error)
+    __pyx_t_10 = __Pyx_PyObject_CallOneArg(__pyx_builtin_range, __pyx_t_11); if (unlikely(!__pyx_t_10)) __PYX_ERR(0, 136, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_10);
     __Pyx_DECREF(__pyx_t_11); __pyx_t_11 = 0;
     if (likely(PyList_CheckExact(__pyx_t_10)) || PyTuple_CheckExact(__pyx_t_10)) {
       __pyx_t_11 = __pyx_t_10; __Pyx_INCREF(__pyx_t_11); __pyx_t_7 = 0;
       __pyx_t_8 = NULL;
     } else {
-      __pyx_t_7 = -1; __pyx_t_11 = PyObject_GetIter(__pyx_t_10); if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 135, __pyx_L1_error)
+      __pyx_t_7 = -1; __pyx_t_11 = PyObject_GetIter(__pyx_t_10); if (unlikely(!__pyx_t_11)) __PYX_ERR(0, 136, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_11);
-      __pyx_t_8 = Py_TYPE(__pyx_t_11)->tp_iternext; if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 135, __pyx_L1_error)
+      __pyx_t_8 = Py_TYPE(__pyx_t_11)->tp_iternext; if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 136, __pyx_L1_error)
     }
     __Pyx_DECREF(__pyx_t_10); __pyx_t_10 = 0;
     for (;;) {
@@ -4405,17 +4417,17 @@ static PyObject *__pyx_pf_11boxcounting_11boxcounting_12initialize_size(struct _
         if (likely(PyList_CheckExact(__pyx_t_11))) {
           if (__pyx_t_7 >= PyList_GET_SIZE(__pyx_t_11)) break;
           #if CYTHON_ASSUME_SAFE_MACROS && !CYTHON_AVOID_BORROWED_REFS
-          __pyx_t_10 = PyList_GET_ITEM(__pyx_t_11, __pyx_t_7); __Pyx_INCREF(__pyx_t_10); __pyx_t_7++; if (unlikely(0 < 0)) __PYX_ERR(0, 135, __pyx_L1_error)
+          __pyx_t_10 = PyList_GET_ITEM(__pyx_t_11, __pyx_t_7); __Pyx_INCREF(__pyx_t_10); __pyx_t_7++; if (unlikely(0 < 0)) __PYX_ERR(0, 136, __pyx_L1_error)
           #else
-          __pyx_t_10 = PySequence_ITEM(__pyx_t_11, __pyx_t_7); __pyx_t_7++; if (unlikely(!__pyx_t_10)) __PYX_ERR(0, 135, __pyx_L1_error)
+          __pyx_t_10 = PySequence_ITEM(__pyx_t_11, __pyx_t_7); __pyx_t_7++; if (unlikely(!__pyx_t_10)) __PYX_ERR(0, 136, __pyx_L1_error)
           __Pyx_GOTREF(__pyx_t_10);
           #endif
         } else {
           if (__pyx_t_7 >= PyTuple_GET_SIZE(__pyx_t_11)) break;
           #if CYTHON_ASSUME_SAFE_MACROS && !CYTHON_AVOID_BORROWED_REFS
-          __pyx_t_10 = PyTuple_GET_ITEM(__pyx_t_11, __pyx_t_7); __Pyx_INCREF(__pyx_t_10); __pyx_t_7++; if (unlikely(0 < 0)) __PYX_ERR(0, 135, __pyx_L1_error)
+          __pyx_t_10 = PyTuple_GET_ITEM(__pyx_t_11, __pyx_t_7); __Pyx_INCREF(__pyx_t_10); __pyx_t_7++; if (unlikely(0 < 0)) __PYX_ERR(0, 136, __pyx_L1_error)
           #else
-          __pyx_t_10 = PySequence_ITEM(__pyx_t_11, __pyx_t_7); __pyx_t_7++; if (unlikely(!__pyx_t_10)) __PYX_ERR(0, 135, __pyx_L1_error)
+          __pyx_t_10 = PySequence_ITEM(__pyx_t_11, __pyx_t_7); __pyx_t_7++; if (unlikely(!__pyx_t_10)) __PYX_ERR(0, 136, __pyx_L1_error)
           __Pyx_GOTREF(__pyx_t_10);
           #endif
         }
@@ -4425,7 +4437,7 @@ static PyObject *__pyx_pf_11boxcounting_11boxcounting_12initialize_size(struct _
           PyObject* exc_type = PyErr_Occurred();
           if (exc_type) {
             if (likely(__Pyx_PyErr_GivenExceptionMatches(exc_type, PyExc_StopIteration))) PyErr_Clear();
-            else __PYX_ERR(0, 135, __pyx_L1_error)
+            else __PYX_ERR(0, 136, __pyx_L1_error)
           }
           break;
         }
@@ -4434,42 +4446,42 @@ static PyObject *__pyx_pf_11boxcounting_11boxcounting_12initialize_size(struct _
       __Pyx_XDECREF_SET(__pyx_v_j, __pyx_t_10);
       __pyx_t_10 = 0;
 
-      /* "boxcounting.pyx":136
+      /* "boxcounting.pyx":137
  *         for i in range(1, self.max_level):
  *             for j in range(self.num_tree):
  *                 self._eps[i + j*self.max_level] = self._eps[i-1 + j*self.max_level]/2             # <<<<<<<<<<<<<<
  *         self.initialized = 1
  * 
  */
-      __pyx_t_10 = __Pyx_PyInt_From_long((__pyx_v_i - 1)); if (unlikely(!__pyx_t_10)) __PYX_ERR(0, 136, __pyx_L1_error)
+      __pyx_t_10 = __Pyx_PyInt_From_long((__pyx_v_i - 1)); if (unlikely(!__pyx_t_10)) __PYX_ERR(0, 137, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_10);
-      __pyx_t_5 = __Pyx_PyInt_From_int(__pyx_v_self->max_level); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 136, __pyx_L1_error)
+      __pyx_t_5 = __Pyx_PyInt_From_int(__pyx_v_self->max_level); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 137, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_5);
-      __pyx_t_6 = PyNumber_Multiply(__pyx_v_j, __pyx_t_5); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 136, __pyx_L1_error)
+      __pyx_t_6 = PyNumber_Multiply(__pyx_v_j, __pyx_t_5); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 137, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_6);
       __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
-      __pyx_t_5 = PyNumber_Add(__pyx_t_10, __pyx_t_6); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 136, __pyx_L1_error)
+      __pyx_t_5 = PyNumber_Add(__pyx_t_10, __pyx_t_6); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 137, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_5);
       __Pyx_DECREF(__pyx_t_10); __pyx_t_10 = 0;
       __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
-      __pyx_t_9 = __Pyx_PyIndex_AsSsize_t(__pyx_t_5); if (unlikely((__pyx_t_9 == (Py_ssize_t)-1) && PyErr_Occurred())) __PYX_ERR(0, 136, __pyx_L1_error)
+      __pyx_t_9 = __Pyx_PyIndex_AsSsize_t(__pyx_t_5); if (unlikely((__pyx_t_9 == (Py_ssize_t)-1) && PyErr_Occurred())) __PYX_ERR(0, 137, __pyx_L1_error)
       __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
-      __pyx_t_5 = __Pyx_PyInt_From_int(__pyx_v_i); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 136, __pyx_L1_error)
+      __pyx_t_5 = __Pyx_PyInt_From_int(__pyx_v_i); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 137, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_5);
-      __pyx_t_6 = __Pyx_PyInt_From_int(__pyx_v_self->max_level); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 136, __pyx_L1_error)
+      __pyx_t_6 = __Pyx_PyInt_From_int(__pyx_v_self->max_level); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 137, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_6);
-      __pyx_t_10 = PyNumber_Multiply(__pyx_v_j, __pyx_t_6); if (unlikely(!__pyx_t_10)) __PYX_ERR(0, 136, __pyx_L1_error)
+      __pyx_t_10 = PyNumber_Multiply(__pyx_v_j, __pyx_t_6); if (unlikely(!__pyx_t_10)) __PYX_ERR(0, 137, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_10);
       __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
-      __pyx_t_6 = PyNumber_Add(__pyx_t_5, __pyx_t_10); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 136, __pyx_L1_error)
+      __pyx_t_6 = PyNumber_Add(__pyx_t_5, __pyx_t_10); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 137, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_6);
       __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
       __Pyx_DECREF(__pyx_t_10); __pyx_t_10 = 0;
-      __pyx_t_14 = __Pyx_PyIndex_AsSsize_t(__pyx_t_6); if (unlikely((__pyx_t_14 == (Py_ssize_t)-1) && PyErr_Occurred())) __PYX_ERR(0, 136, __pyx_L1_error)
+      __pyx_t_14 = __Pyx_PyIndex_AsSsize_t(__pyx_t_6); if (unlikely((__pyx_t_14 == (Py_ssize_t)-1) && PyErr_Occurred())) __PYX_ERR(0, 137, __pyx_L1_error)
       __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
       (__pyx_v_self->_eps[__pyx_t_14]) = ((__pyx_v_self->_eps[__pyx_t_9]) / 2.0);
 
-      /* "boxcounting.pyx":135
+      /* "boxcounting.pyx":136
  *                 self._eps[j*self.max_level] = self.eps0 + self.eps0 / (j + 1)
  *         for i in range(1, self.max_level):
  *             for j in range(self.num_tree):             # <<<<<<<<<<<<<<
@@ -4480,7 +4492,7 @@ static PyObject *__pyx_pf_11boxcounting_11boxcounting_12initialize_size(struct _
     __Pyx_DECREF(__pyx_t_11); __pyx_t_11 = 0;
   }
 
-  /* "boxcounting.pyx":137
+  /* "boxcounting.pyx":138
  *             for j in range(self.num_tree):
  *                 self._eps[i + j*self.max_level] = self._eps[i-1 + j*self.max_level]/2
  *         self.initialized = 1             # <<<<<<<<<<<<<<
@@ -4489,7 +4501,7 @@ static PyObject *__pyx_pf_11boxcounting_11boxcounting_12initialize_size(struct _
  */
   __pyx_v_self->initialized = 1;
 
-  /* "boxcounting.pyx":87
+  /* "boxcounting.pyx":88
  *         self.token = NULL
  * 
  *     def initialize_size(self, double size):             # <<<<<<<<<<<<<<
@@ -4515,7 +4527,7 @@ static PyObject *__pyx_pf_11boxcounting_11boxcounting_12initialize_size(struct _
   return __pyx_r;
 }
 
-/* "boxcounting.pyx":140
+/* "boxcounting.pyx":141
  * 
  *     @property
  *     def occ(self):             # <<<<<<<<<<<<<<
@@ -4554,19 +4566,19 @@ static PyObject *__pyx_pf_11boxcounting_11boxcounting_3occ___get__(struct __pyx_
   int __pyx_clineno = 0;
   __Pyx_RefNannySetupContext("__get__", 0);
 
-  /* "boxcounting.pyx":141
+  /* "boxcounting.pyx":142
  *     @property
  *     def occ(self):
  *         occc = np.ones(self.max_level*self.num_tree).astype(int)             # <<<<<<<<<<<<<<
  *         for i in range(self.max_level*self.num_tree):
  *             occc[i] = self._occ[i]
  */
-  __Pyx_GetModuleGlobalName(__pyx_t_3, __pyx_n_s_np); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 141, __pyx_L1_error)
+  __Pyx_GetModuleGlobalName(__pyx_t_3, __pyx_n_s_np); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 142, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
-  __pyx_t_4 = __Pyx_PyObject_GetAttrStr(__pyx_t_3, __pyx_n_s_ones); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 141, __pyx_L1_error)
+  __pyx_t_4 = __Pyx_PyObject_GetAttrStr(__pyx_t_3, __pyx_n_s_ones); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 142, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-  __pyx_t_3 = __Pyx_PyInt_From_int((__pyx_v_self->max_level * __pyx_v_self->num_tree)); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 141, __pyx_L1_error)
+  __pyx_t_3 = __Pyx_PyInt_From_int((__pyx_v_self->max_level * __pyx_v_self->num_tree)); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 142, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
   __pyx_t_5 = NULL;
   if (CYTHON_UNPACK_METHODS && unlikely(PyMethod_Check(__pyx_t_4))) {
@@ -4581,10 +4593,10 @@ static PyObject *__pyx_pf_11boxcounting_11boxcounting_3occ___get__(struct __pyx_
   __pyx_t_2 = (__pyx_t_5) ? __Pyx_PyObject_Call2Args(__pyx_t_4, __pyx_t_5, __pyx_t_3) : __Pyx_PyObject_CallOneArg(__pyx_t_4, __pyx_t_3);
   __Pyx_XDECREF(__pyx_t_5); __pyx_t_5 = 0;
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-  if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 141, __pyx_L1_error)
+  if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 142, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-  __pyx_t_4 = __Pyx_PyObject_GetAttrStr(__pyx_t_2, __pyx_n_s_astype); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 141, __pyx_L1_error)
+  __pyx_t_4 = __Pyx_PyObject_GetAttrStr(__pyx_t_2, __pyx_n_s_astype); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 142, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   __pyx_t_2 = NULL;
@@ -4599,13 +4611,13 @@ static PyObject *__pyx_pf_11boxcounting_11boxcounting_3occ___get__(struct __pyx_
   }
   __pyx_t_1 = (__pyx_t_2) ? __Pyx_PyObject_Call2Args(__pyx_t_4, __pyx_t_2, ((PyObject *)(&PyInt_Type))) : __Pyx_PyObject_CallOneArg(__pyx_t_4, ((PyObject *)(&PyInt_Type)));
   __Pyx_XDECREF(__pyx_t_2); __pyx_t_2 = 0;
-  if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 141, __pyx_L1_error)
+  if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 142, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
   __pyx_v_occc = __pyx_t_1;
   __pyx_t_1 = 0;
 
-  /* "boxcounting.pyx":142
+  /* "boxcounting.pyx":143
  *     def occ(self):
  *         occc = np.ones(self.max_level*self.num_tree).astype(int)
  *         for i in range(self.max_level*self.num_tree):             # <<<<<<<<<<<<<<
@@ -4617,20 +4629,20 @@ static PyObject *__pyx_pf_11boxcounting_11boxcounting_3occ___get__(struct __pyx_
   for (__pyx_t_8 = 0; __pyx_t_8 < __pyx_t_7; __pyx_t_8+=1) {
     __pyx_v_i = __pyx_t_8;
 
-    /* "boxcounting.pyx":143
+    /* "boxcounting.pyx":144
  *         occc = np.ones(self.max_level*self.num_tree).astype(int)
  *         for i in range(self.max_level*self.num_tree):
  *             occc[i] = self._occ[i]             # <<<<<<<<<<<<<<
  *         return occc
  * 
  */
-    __pyx_t_1 = __Pyx_PyInt_From_int((__pyx_v_self->_occ[__pyx_v_i])); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 143, __pyx_L1_error)
+    __pyx_t_1 = __Pyx_PyInt_From_int((__pyx_v_self->_occ[__pyx_v_i])); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 144, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
-    if (unlikely(__Pyx_SetItemInt(__pyx_v_occc, __pyx_v_i, __pyx_t_1, int, 1, __Pyx_PyInt_From_int, 0, 1, 1) < 0)) __PYX_ERR(0, 143, __pyx_L1_error)
+    if (unlikely(__Pyx_SetItemInt(__pyx_v_occc, __pyx_v_i, __pyx_t_1, int, 1, __Pyx_PyInt_From_int, 0, 1, 1) < 0)) __PYX_ERR(0, 144, __pyx_L1_error)
     __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
   }
 
-  /* "boxcounting.pyx":144
+  /* "boxcounting.pyx":145
  *         for i in range(self.max_level*self.num_tree):
  *             occc[i] = self._occ[i]
  *         return occc             # <<<<<<<<<<<<<<
@@ -4642,7 +4654,7 @@ static PyObject *__pyx_pf_11boxcounting_11boxcounting_3occ___get__(struct __pyx_
   __pyx_r = __pyx_v_occc;
   goto __pyx_L0;
 
-  /* "boxcounting.pyx":140
+  /* "boxcounting.pyx":141
  * 
  *     @property
  *     def occ(self):             # <<<<<<<<<<<<<<
@@ -4666,7 +4678,7 @@ static PyObject *__pyx_pf_11boxcounting_11boxcounting_3occ___get__(struct __pyx_
   return __pyx_r;
 }
 
-/* "boxcounting.pyx":147
+/* "boxcounting.pyx":148
  * 
  *     @property
  *     def eps(self):             # <<<<<<<<<<<<<<
@@ -4705,19 +4717,19 @@ static PyObject *__pyx_pf_11boxcounting_11boxcounting_3eps___get__(struct __pyx_
   int __pyx_clineno = 0;
   __Pyx_RefNannySetupContext("__get__", 0);
 
-  /* "boxcounting.pyx":148
+  /* "boxcounting.pyx":149
  *     @property
  *     def eps(self):
  *         epss = np.zeros(self.max_level*self.num_tree).astype(np.double)             # <<<<<<<<<<<<<<
  *         for i in range(self.max_level*self.num_tree):
  *             epss[i] = self._eps[i]/self.eps0
  */
-  __Pyx_GetModuleGlobalName(__pyx_t_3, __pyx_n_s_np); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 148, __pyx_L1_error)
+  __Pyx_GetModuleGlobalName(__pyx_t_3, __pyx_n_s_np); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 149, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
-  __pyx_t_4 = __Pyx_PyObject_GetAttrStr(__pyx_t_3, __pyx_n_s_zeros); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 148, __pyx_L1_error)
+  __pyx_t_4 = __Pyx_PyObject_GetAttrStr(__pyx_t_3, __pyx_n_s_zeros); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 149, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-  __pyx_t_3 = __Pyx_PyInt_From_int((__pyx_v_self->max_level * __pyx_v_self->num_tree)); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 148, __pyx_L1_error)
+  __pyx_t_3 = __Pyx_PyInt_From_int((__pyx_v_self->max_level * __pyx_v_self->num_tree)); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 149, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
   __pyx_t_5 = NULL;
   if (CYTHON_UNPACK_METHODS && unlikely(PyMethod_Check(__pyx_t_4))) {
@@ -4732,15 +4744,15 @@ static PyObject *__pyx_pf_11boxcounting_11boxcounting_3eps___get__(struct __pyx_
   __pyx_t_2 = (__pyx_t_5) ? __Pyx_PyObject_Call2Args(__pyx_t_4, __pyx_t_5, __pyx_t_3) : __Pyx_PyObject_CallOneArg(__pyx_t_4, __pyx_t_3);
   __Pyx_XDECREF(__pyx_t_5); __pyx_t_5 = 0;
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-  if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 148, __pyx_L1_error)
+  if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 149, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
   __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-  __pyx_t_4 = __Pyx_PyObject_GetAttrStr(__pyx_t_2, __pyx_n_s_astype); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 148, __pyx_L1_error)
+  __pyx_t_4 = __Pyx_PyObject_GetAttrStr(__pyx_t_2, __pyx_n_s_astype); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 149, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
-  __Pyx_GetModuleGlobalName(__pyx_t_2, __pyx_n_s_np); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 148, __pyx_L1_error)
+  __Pyx_GetModuleGlobalName(__pyx_t_2, __pyx_n_s_np); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 149, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
-  __pyx_t_3 = __Pyx_PyObject_GetAttrStr(__pyx_t_2, __pyx_n_s_double); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 148, __pyx_L1_error)
+  __pyx_t_3 = __Pyx_PyObject_GetAttrStr(__pyx_t_2, __pyx_n_s_double); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 149, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_3);
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
   __pyx_t_2 = NULL;
@@ -4756,13 +4768,13 @@ static PyObject *__pyx_pf_11boxcounting_11boxcounting_3eps___get__(struct __pyx_
   __pyx_t_1 = (__pyx_t_2) ? __Pyx_PyObject_Call2Args(__pyx_t_4, __pyx_t_2, __pyx_t_3) : __Pyx_PyObject_CallOneArg(__pyx_t_4, __pyx_t_3);
   __Pyx_XDECREF(__pyx_t_2); __pyx_t_2 = 0;
   __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-  if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 148, __pyx_L1_error)
+  if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 149, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
   __pyx_v_epss = __pyx_t_1;
   __pyx_t_1 = 0;
 
-  /* "boxcounting.pyx":149
+  /* "boxcounting.pyx":150
  *     def eps(self):
  *         epss = np.zeros(self.max_level*self.num_tree).astype(np.double)
  *         for i in range(self.max_level*self.num_tree):             # <<<<<<<<<<<<<<
@@ -4774,7 +4786,7 @@ static PyObject *__pyx_pf_11boxcounting_11boxcounting_3eps___get__(struct __pyx_
   for (__pyx_t_8 = 0; __pyx_t_8 < __pyx_t_7; __pyx_t_8+=1) {
     __pyx_v_i = __pyx_t_8;
 
-    /* "boxcounting.pyx":150
+    /* "boxcounting.pyx":151
  *         epss = np.zeros(self.max_level*self.num_tree).astype(np.double)
  *         for i in range(self.max_level*self.num_tree):
  *             epss[i] = self._eps[i]/self.eps0             # <<<<<<<<<<<<<<
@@ -4783,15 +4795,15 @@ static PyObject *__pyx_pf_11boxcounting_11boxcounting_3eps___get__(struct __pyx_
  */
     if (unlikely(__pyx_v_self->eps0 == 0)) {
       PyErr_SetString(PyExc_ZeroDivisionError, "float division");
-      __PYX_ERR(0, 150, __pyx_L1_error)
+      __PYX_ERR(0, 151, __pyx_L1_error)
     }
-    __pyx_t_1 = PyFloat_FromDouble(((__pyx_v_self->_eps[__pyx_v_i]) / __pyx_v_self->eps0)); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 150, __pyx_L1_error)
+    __pyx_t_1 = PyFloat_FromDouble(((__pyx_v_self->_eps[__pyx_v_i]) / __pyx_v_self->eps0)); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 151, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
-    if (unlikely(__Pyx_SetItemInt(__pyx_v_epss, __pyx_v_i, __pyx_t_1, int, 1, __Pyx_PyInt_From_int, 0, 1, 1) < 0)) __PYX_ERR(0, 150, __pyx_L1_error)
+    if (unlikely(__Pyx_SetItemInt(__pyx_v_epss, __pyx_v_i, __pyx_t_1, int, 1, __Pyx_PyInt_From_int, 0, 1, 1) < 0)) __PYX_ERR(0, 151, __pyx_L1_error)
     __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
   }
 
-  /* "boxcounting.pyx":151
+  /* "boxcounting.pyx":152
  *         for i in range(self.max_level*self.num_tree):
  *             epss[i] = self._eps[i]/self.eps0
  *         return epss             # <<<<<<<<<<<<<<
@@ -4803,7 +4815,7 @@ static PyObject *__pyx_pf_11boxcounting_11boxcounting_3eps___get__(struct __pyx_
   __pyx_r = __pyx_v_epss;
   goto __pyx_L0;
 
-  /* "boxcounting.pyx":147
+  /* "boxcounting.pyx":148
  * 
  *     @property
  *     def eps(self):             # <<<<<<<<<<<<<<
@@ -4827,7 +4839,7 @@ static PyObject *__pyx_pf_11boxcounting_11boxcounting_3eps___get__(struct __pyx_
   return __pyx_r;
 }
 
-/* "boxcounting.pyx":166
+/* "boxcounting.pyx":170
  *         return self.tot_data
  *     @property
  *     def max_level(self):             # <<<<<<<<<<<<<<
@@ -4857,7 +4869,7 @@ static PyObject *__pyx_pf_11boxcounting_11boxcounting_9max_level___get__(struct 
   int __pyx_clineno = 0;
   __Pyx_RefNannySetupContext("__get__", 0);
 
-  /* "boxcounting.pyx":167
+  /* "boxcounting.pyx":171
  *     @property
  *     def max_level(self):
  *         return self.max_level             # <<<<<<<<<<<<<<
@@ -4865,13 +4877,13 @@ static PyObject *__pyx_pf_11boxcounting_11boxcounting_9max_level___get__(struct 
  *     def num_tree(self):
  */
   __Pyx_XDECREF(__pyx_r);
-  __pyx_t_1 = __Pyx_PyInt_From_int(__pyx_v_self->max_level); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 167, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyInt_From_int(__pyx_v_self->max_level); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 171, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __pyx_r = __pyx_t_1;
   __pyx_t_1 = 0;
   goto __pyx_L0;
 
-  /* "boxcounting.pyx":166
+  /* "boxcounting.pyx":170
  *         return self.tot_data
  *     @property
  *     def max_level(self):             # <<<<<<<<<<<<<<
@@ -4890,7 +4902,7 @@ static PyObject *__pyx_pf_11boxcounting_11boxcounting_9max_level___get__(struct 
   return __pyx_r;
 }
 
-/* "boxcounting.pyx":157
+/* "boxcounting.pyx":158
  *         return self.max_level
  *     @property
  *     def eps0(self):             # <<<<<<<<<<<<<<
@@ -4920,7 +4932,7 @@ static PyObject *__pyx_pf_11boxcounting_11boxcounting_4eps0___get__(struct __pyx
   int __pyx_clineno = 0;
   __Pyx_RefNannySetupContext("__get__", 0);
 
-  /* "boxcounting.pyx":158
+  /* "boxcounting.pyx":159
  *     @property
  *     def eps0(self):
  *         return self.eps0             # <<<<<<<<<<<<<<
@@ -4928,13 +4940,13 @@ static PyObject *__pyx_pf_11boxcounting_11boxcounting_4eps0___get__(struct __pyx
  *     def n(self):
  */
   __Pyx_XDECREF(__pyx_r);
-  __pyx_t_1 = PyFloat_FromDouble(__pyx_v_self->eps0); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 158, __pyx_L1_error)
+  __pyx_t_1 = PyFloat_FromDouble(__pyx_v_self->eps0); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 159, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __pyx_r = __pyx_t_1;
   __pyx_t_1 = 0;
   goto __pyx_L0;
 
-  /* "boxcounting.pyx":157
+  /* "boxcounting.pyx":158
  *         return self.max_level
  *     @property
  *     def eps0(self):             # <<<<<<<<<<<<<<
@@ -4953,7 +4965,7 @@ static PyObject *__pyx_pf_11boxcounting_11boxcounting_4eps0___get__(struct __pyx
   return __pyx_r;
 }
 
-/* "boxcounting.pyx":160
+/* "boxcounting.pyx":161
  *         return self.eps0
  *     @property
  *     def n(self):             # <<<<<<<<<<<<<<
@@ -4983,21 +4995,21 @@ static PyObject *__pyx_pf_11boxcounting_11boxcounting_1n___get__(struct __pyx_ob
   int __pyx_clineno = 0;
   __Pyx_RefNannySetupContext("__get__", 0);
 
-  /* "boxcounting.pyx":161
+  /* "boxcounting.pyx":162
  *     @property
  *     def n(self):
  *         return self.n             # <<<<<<<<<<<<<<
  *     @property
- *     def tot_data(self):
+ *     def dim(self):
  */
   __Pyx_XDECREF(__pyx_r);
-  __pyx_t_1 = __Pyx_PyInt_From_int(__pyx_v_self->n); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 161, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyInt_From_int(__pyx_v_self->n); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 162, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __pyx_r = __pyx_t_1;
   __pyx_t_1 = 0;
   goto __pyx_L0;
 
-  /* "boxcounting.pyx":160
+  /* "boxcounting.pyx":161
  *         return self.eps0
  *     @property
  *     def n(self):             # <<<<<<<<<<<<<<
@@ -5016,8 +5028,71 @@ static PyObject *__pyx_pf_11boxcounting_11boxcounting_1n___get__(struct __pyx_ob
   return __pyx_r;
 }
 
-/* "boxcounting.pyx":163
+/* "boxcounting.pyx":164
  *         return self.n
+ *     @property
+ *     def dim(self):             # <<<<<<<<<<<<<<
+ *         return self.dim
+ *     @property
+ */
+
+/* Python wrapper */
+static PyObject *__pyx_pw_11boxcounting_11boxcounting_3dim_1__get__(PyObject *__pyx_v_self); /*proto*/
+static PyObject *__pyx_pw_11boxcounting_11boxcounting_3dim_1__get__(PyObject *__pyx_v_self) {
+  PyObject *__pyx_r = 0;
+  __Pyx_RefNannyDeclarations
+  __Pyx_RefNannySetupContext("__get__ (wrapper)", 0);
+  __pyx_r = __pyx_pf_11boxcounting_11boxcounting_3dim___get__(((struct __pyx_obj_11boxcounting_boxcounting *)__pyx_v_self));
+
+  /* function exit code */
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+static PyObject *__pyx_pf_11boxcounting_11boxcounting_3dim___get__(struct __pyx_obj_11boxcounting_boxcounting *__pyx_v_self) {
+  PyObject *__pyx_r = NULL;
+  __Pyx_RefNannyDeclarations
+  PyObject *__pyx_t_1 = NULL;
+  int __pyx_lineno = 0;
+  const char *__pyx_filename = NULL;
+  int __pyx_clineno = 0;
+  __Pyx_RefNannySetupContext("__get__", 0);
+
+  /* "boxcounting.pyx":165
+ *     @property
+ *     def dim(self):
+ *         return self.dim             # <<<<<<<<<<<<<<
+ *     @property
+ *     def tot_data(self):
+ */
+  __Pyx_XDECREF(__pyx_r);
+  __pyx_t_1 = __Pyx_PyInt_From_int(__pyx_v_self->dim); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 165, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_1);
+  __pyx_r = __pyx_t_1;
+  __pyx_t_1 = 0;
+  goto __pyx_L0;
+
+  /* "boxcounting.pyx":164
+ *         return self.n
+ *     @property
+ *     def dim(self):             # <<<<<<<<<<<<<<
+ *         return self.dim
+ *     @property
+ */
+
+  /* function exit code */
+  __pyx_L1_error:;
+  __Pyx_XDECREF(__pyx_t_1);
+  __Pyx_AddTraceback("boxcounting.boxcounting.dim.__get__", __pyx_clineno, __pyx_lineno, __pyx_filename);
+  __pyx_r = NULL;
+  __pyx_L0:;
+  __Pyx_XGIVEREF(__pyx_r);
+  __Pyx_RefNannyFinishContext();
+  return __pyx_r;
+}
+
+/* "boxcounting.pyx":167
+ *         return self.dim
  *     @property
  *     def tot_data(self):             # <<<<<<<<<<<<<<
  *         return self.tot_data
@@ -5046,7 +5121,7 @@ static PyObject *__pyx_pf_11boxcounting_11boxcounting_8tot_data___get__(struct _
   int __pyx_clineno = 0;
   __Pyx_RefNannySetupContext("__get__", 0);
 
-  /* "boxcounting.pyx":164
+  /* "boxcounting.pyx":168
  *     @property
  *     def tot_data(self):
  *         return self.tot_data             # <<<<<<<<<<<<<<
@@ -5054,14 +5129,14 @@ static PyObject *__pyx_pf_11boxcounting_11boxcounting_8tot_data___get__(struct _
  *     def max_level(self):
  */
   __Pyx_XDECREF(__pyx_r);
-  __pyx_t_1 = __Pyx_PyInt_From_int(__pyx_v_self->tot_data); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 164, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyInt_From_int(__pyx_v_self->tot_data); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 168, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __pyx_r = __pyx_t_1;
   __pyx_t_1 = 0;
   goto __pyx_L0;
 
-  /* "boxcounting.pyx":163
- *         return self.n
+  /* "boxcounting.pyx":167
+ *         return self.dim
  *     @property
  *     def tot_data(self):             # <<<<<<<<<<<<<<
  *         return self.tot_data
@@ -5079,7 +5154,7 @@ static PyObject *__pyx_pf_11boxcounting_11boxcounting_8tot_data___get__(struct _
   return __pyx_r;
 }
 
-/* "boxcounting.pyx":169
+/* "boxcounting.pyx":173
  *         return self.max_level
  *     @property
  *     def num_tree(self):             # <<<<<<<<<<<<<<
@@ -5109,7 +5184,7 @@ static PyObject *__pyx_pf_11boxcounting_11boxcounting_8num_tree___get__(struct _
   int __pyx_clineno = 0;
   __Pyx_RefNannySetupContext("__get__", 0);
 
-  /* "boxcounting.pyx":170
+  /* "boxcounting.pyx":174
  *     @property
  *     def num_tree(self):
  *         return self.num_tree             # <<<<<<<<<<<<<<
@@ -5117,13 +5192,13 @@ static PyObject *__pyx_pf_11boxcounting_11boxcounting_8num_tree___get__(struct _
  *         cdef int i
  */
   __Pyx_XDECREF(__pyx_r);
-  __pyx_t_1 = __Pyx_PyInt_From_int(__pyx_v_self->num_tree); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 170, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyInt_From_int(__pyx_v_self->num_tree); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 174, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __pyx_r = __pyx_t_1;
   __pyx_t_1 = 0;
   goto __pyx_L0;
 
-  /* "boxcounting.pyx":169
+  /* "boxcounting.pyx":173
  *         return self.max_level
  *     @property
  *     def num_tree(self):             # <<<<<<<<<<<<<<
@@ -5142,7 +5217,7 @@ static PyObject *__pyx_pf_11boxcounting_11boxcounting_8num_tree___get__(struct _
   return __pyx_r;
 }
 
-/* "boxcounting.pyx":171
+/* "boxcounting.pyx":175
  *     def num_tree(self):
  *         return self.num_tree
  *     def free(self):             # <<<<<<<<<<<<<<
@@ -5172,7 +5247,7 @@ static PyObject *__pyx_pf_11boxcounting_11boxcounting_14free(struct __pyx_obj_11
   int __pyx_t_3;
   __Pyx_RefNannySetupContext("free", 0);
 
-  /* "boxcounting.pyx":173
+  /* "boxcounting.pyx":177
  *     def free(self):
  *         cdef int i
  *         for i in range(self.num_tree):             # <<<<<<<<<<<<<<
@@ -5184,7 +5259,7 @@ static PyObject *__pyx_pf_11boxcounting_11boxcounting_14free(struct __pyx_obj_11
   for (__pyx_t_3 = 0; __pyx_t_3 < __pyx_t_2; __pyx_t_3+=1) {
     __pyx_v_i = __pyx_t_3;
 
-    /* "boxcounting.pyx":174
+    /* "boxcounting.pyx":178
  *         cdef int i
  *         for i in range(self.num_tree):
  *             free_tree(&self.tree[i], self.dim)             # <<<<<<<<<<<<<<
@@ -5194,7 +5269,7 @@ static PyObject *__pyx_pf_11boxcounting_11boxcounting_14free(struct __pyx_obj_11
     __pyx_f_11boxcounting_free_tree((&(__pyx_v_self->tree[__pyx_v_i])), __pyx_v_self->dim);
   }
 
-  /* "boxcounting.pyx":171
+  /* "boxcounting.pyx":175
  *     def num_tree(self):
  *         return self.num_tree
  *     def free(self):             # <<<<<<<<<<<<<<
@@ -5209,11 +5284,11 @@ static PyObject *__pyx_pf_11boxcounting_11boxcounting_14free(struct __pyx_obj_11
   return __pyx_r;
 }
 
-/* "boxcounting.pyx":176
+/* "boxcounting.pyx":180
  *             free_tree(&self.tree[i], self.dim)
  *     @property
  *     def nodes(self):             # <<<<<<<<<<<<<<
- *         cdef int n
+ *         cdef int n = 0
  *         for i in range(self.num_tree):
  */
 
@@ -5234,6 +5309,7 @@ static PyObject *__pyx_pf_11boxcounting_11boxcounting_5nodes___get__(struct __py
   int __pyx_v_n;
   CYTHON_UNUSED int __pyx_v_i;
   PyObject *__pyx_v_nodes = NULL;
+  PyObject *__pyx_v_levels = NULL;
   PyObject *__pyx_r = NULL;
   __Pyx_RefNannyDeclarations
   int __pyx_t_1;
@@ -5251,45 +5327,54 @@ static PyObject *__pyx_pf_11boxcounting_11boxcounting_5nodes___get__(struct __py
   int __pyx_clineno = 0;
   __Pyx_RefNannySetupContext("__get__", 0);
 
-  /* "boxcounting.pyx":178
+  /* "boxcounting.pyx":181
+ *     @property
  *     def nodes(self):
- *         cdef int n
+ *         cdef int n = 0             # <<<<<<<<<<<<<<
+ *         for i in range(self.num_tree):
+ *             n = get_num_nodes(self.tree, 0, self.dim)
+ */
+  __pyx_v_n = 0;
+
+  /* "boxcounting.pyx":182
+ *     def nodes(self):
+ *         cdef int n = 0
  *         for i in range(self.num_tree):             # <<<<<<<<<<<<<<
  *             n = get_num_nodes(self.tree, 0, self.dim)
- *         nodes = np.zeros((n, self.dim + 1)).astype(np.double)
+ *         nodes = np.zeros((n, self.dim + 2)).astype(np.double)
  */
   __pyx_t_1 = __pyx_v_self->num_tree;
   __pyx_t_2 = __pyx_t_1;
   for (__pyx_t_3 = 0; __pyx_t_3 < __pyx_t_2; __pyx_t_3+=1) {
     __pyx_v_i = __pyx_t_3;
 
-    /* "boxcounting.pyx":179
- *         cdef int n
+    /* "boxcounting.pyx":183
+ *         cdef int n = 0
  *         for i in range(self.num_tree):
  *             n = get_num_nodes(self.tree, 0, self.dim)             # <<<<<<<<<<<<<<
- *         nodes = np.zeros((n, self.dim + 1)).astype(np.double)
+ *         nodes = np.zeros((n, self.dim + 2)).astype(np.double)
  *         get_nodes(self.tree, nodes, self.dim, 0)
  */
     __pyx_v_n = __pyx_f_11boxcounting_get_num_nodes(__pyx_v_self->tree, 0, __pyx_v_self->dim);
   }
 
-  /* "boxcounting.pyx":180
+  /* "boxcounting.pyx":184
  *         for i in range(self.num_tree):
  *             n = get_num_nodes(self.tree, 0, self.dim)
- *         nodes = np.zeros((n, self.dim + 1)).astype(np.double)             # <<<<<<<<<<<<<<
+ *         nodes = np.zeros((n, self.dim + 2)).astype(np.double)             # <<<<<<<<<<<<<<
  *         get_nodes(self.tree, nodes, self.dim, 0)
- *         return nodes, n
+ *         levels = nodes[:, -1]
  */
-  __Pyx_GetModuleGlobalName(__pyx_t_6, __pyx_n_s_np); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 180, __pyx_L1_error)
+  __Pyx_GetModuleGlobalName(__pyx_t_6, __pyx_n_s_np); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 184, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_6);
-  __pyx_t_7 = __Pyx_PyObject_GetAttrStr(__pyx_t_6, __pyx_n_s_zeros); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 180, __pyx_L1_error)
+  __pyx_t_7 = __Pyx_PyObject_GetAttrStr(__pyx_t_6, __pyx_n_s_zeros); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 184, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_7);
   __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
-  __pyx_t_6 = __Pyx_PyInt_From_int(__pyx_v_n); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 180, __pyx_L1_error)
+  __pyx_t_6 = __Pyx_PyInt_From_int(__pyx_v_n); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 184, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_6);
-  __pyx_t_8 = __Pyx_PyInt_From_long((__pyx_v_self->dim + 1)); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 180, __pyx_L1_error)
+  __pyx_t_8 = __Pyx_PyInt_From_long((__pyx_v_self->dim + 2)); if (unlikely(!__pyx_t_8)) __PYX_ERR(0, 184, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_8);
-  __pyx_t_9 = PyTuple_New(2); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 180, __pyx_L1_error)
+  __pyx_t_9 = PyTuple_New(2); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 184, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_9);
   __Pyx_GIVEREF(__pyx_t_6);
   PyTuple_SET_ITEM(__pyx_t_9, 0, __pyx_t_6);
@@ -5310,15 +5395,15 @@ static PyObject *__pyx_pf_11boxcounting_11boxcounting_5nodes___get__(struct __py
   __pyx_t_5 = (__pyx_t_8) ? __Pyx_PyObject_Call2Args(__pyx_t_7, __pyx_t_8, __pyx_t_9) : __Pyx_PyObject_CallOneArg(__pyx_t_7, __pyx_t_9);
   __Pyx_XDECREF(__pyx_t_8); __pyx_t_8 = 0;
   __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
-  if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 180, __pyx_L1_error)
+  if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 184, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_5);
   __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
-  __pyx_t_7 = __Pyx_PyObject_GetAttrStr(__pyx_t_5, __pyx_n_s_astype); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 180, __pyx_L1_error)
+  __pyx_t_7 = __Pyx_PyObject_GetAttrStr(__pyx_t_5, __pyx_n_s_astype); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 184, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_7);
   __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
-  __Pyx_GetModuleGlobalName(__pyx_t_5, __pyx_n_s_np); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 180, __pyx_L1_error)
+  __Pyx_GetModuleGlobalName(__pyx_t_5, __pyx_n_s_np); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 184, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_5);
-  __pyx_t_9 = __Pyx_PyObject_GetAttrStr(__pyx_t_5, __pyx_n_s_double); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 180, __pyx_L1_error)
+  __pyx_t_9 = __Pyx_PyObject_GetAttrStr(__pyx_t_5, __pyx_n_s_double); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 184, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_9);
   __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
   __pyx_t_5 = NULL;
@@ -5334,52 +5419,93 @@ static PyObject *__pyx_pf_11boxcounting_11boxcounting_5nodes___get__(struct __py
   __pyx_t_4 = (__pyx_t_5) ? __Pyx_PyObject_Call2Args(__pyx_t_7, __pyx_t_5, __pyx_t_9) : __Pyx_PyObject_CallOneArg(__pyx_t_7, __pyx_t_9);
   __Pyx_XDECREF(__pyx_t_5); __pyx_t_5 = 0;
   __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
-  if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 180, __pyx_L1_error)
+  if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 184, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_4);
   __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
   __pyx_v_nodes = __pyx_t_4;
   __pyx_t_4 = 0;
 
-  /* "boxcounting.pyx":181
+  /* "boxcounting.pyx":185
  *             n = get_num_nodes(self.tree, 0, self.dim)
- *         nodes = np.zeros((n, self.dim + 1)).astype(np.double)
+ *         nodes = np.zeros((n, self.dim + 2)).astype(np.double)
  *         get_nodes(self.tree, nodes, self.dim, 0)             # <<<<<<<<<<<<<<
- *         return nodes, n
- * 
+ *         levels = nodes[:, -1]
+ *         nodes = nodes[:, :self.dim + 1]
  */
-  __pyx_t_10 = __Pyx_PyObject_to_MemoryviewSlice_dsds_nn___pyx_t_5numpy_double_t(__pyx_v_nodes, PyBUF_WRITABLE); if (unlikely(!__pyx_t_10.memview)) __PYX_ERR(0, 181, __pyx_L1_error)
+  __pyx_t_10 = __Pyx_PyObject_to_MemoryviewSlice_dsds_nn___pyx_t_5numpy_double_t(__pyx_v_nodes, PyBUF_WRITABLE); if (unlikely(!__pyx_t_10.memview)) __PYX_ERR(0, 185, __pyx_L1_error)
   (void)(__pyx_f_11boxcounting_get_nodes(__pyx_v_self->tree, __pyx_t_10, __pyx_v_self->dim, 0));
   __PYX_XDEC_MEMVIEW(&__pyx_t_10, 1);
   __pyx_t_10.memview = NULL;
   __pyx_t_10.data = NULL;
 
-  /* "boxcounting.pyx":182
- *         nodes = np.zeros((n, self.dim + 1)).astype(np.double)
+  /* "boxcounting.pyx":186
+ *         nodes = np.zeros((n, self.dim + 2)).astype(np.double)
  *         get_nodes(self.tree, nodes, self.dim, 0)
- *         return nodes, n             # <<<<<<<<<<<<<<
+ *         levels = nodes[:, -1]             # <<<<<<<<<<<<<<
+ *         nodes = nodes[:, :self.dim + 1]
+ *         return nodes, levels, n
+ */
+  __pyx_t_4 = __Pyx_PyObject_GetItem(__pyx_v_nodes, __pyx_tuple__4); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 186, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_4);
+  __pyx_v_levels = __pyx_t_4;
+  __pyx_t_4 = 0;
+
+  /* "boxcounting.pyx":187
+ *         get_nodes(self.tree, nodes, self.dim, 0)
+ *         levels = nodes[:, -1]
+ *         nodes = nodes[:, :self.dim + 1]             # <<<<<<<<<<<<<<
+ *         return nodes, levels, n
  * 
- * cdef tree_t create_tree(int n, int level):
+ */
+  __pyx_t_4 = __Pyx_PyInt_From_long((__pyx_v_self->dim + 1)); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 187, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_4);
+  __pyx_t_7 = PySlice_New(Py_None, __pyx_t_4, Py_None); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 187, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_7);
+  __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
+  __pyx_t_4 = PyTuple_New(2); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 187, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_4);
+  __Pyx_INCREF(__pyx_slice__3);
+  __Pyx_GIVEREF(__pyx_slice__3);
+  PyTuple_SET_ITEM(__pyx_t_4, 0, __pyx_slice__3);
+  __Pyx_GIVEREF(__pyx_t_7);
+  PyTuple_SET_ITEM(__pyx_t_4, 1, __pyx_t_7);
+  __pyx_t_7 = 0;
+  __pyx_t_7 = __Pyx_PyObject_GetItem(__pyx_v_nodes, __pyx_t_4); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 187, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_7);
+  __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
+  __Pyx_DECREF_SET(__pyx_v_nodes, __pyx_t_7);
+  __pyx_t_7 = 0;
+
+  /* "boxcounting.pyx":188
+ *         levels = nodes[:, -1]
+ *         nodes = nodes[:, :self.dim + 1]
+ *         return nodes, levels, n             # <<<<<<<<<<<<<<
+ * 
+ * cdef tree_t create_tree(int n, int num_quadrants, int level):
  */
   __Pyx_XDECREF(__pyx_r);
-  __pyx_t_4 = __Pyx_PyInt_From_int(__pyx_v_n); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 182, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_t_4);
-  __pyx_t_7 = PyTuple_New(2); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 182, __pyx_L1_error)
+  __pyx_t_7 = __Pyx_PyInt_From_int(__pyx_v_n); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 188, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_7);
+  __pyx_t_4 = PyTuple_New(3); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 188, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_t_4);
   __Pyx_INCREF(__pyx_v_nodes);
   __Pyx_GIVEREF(__pyx_v_nodes);
-  PyTuple_SET_ITEM(__pyx_t_7, 0, __pyx_v_nodes);
-  __Pyx_GIVEREF(__pyx_t_4);
-  PyTuple_SET_ITEM(__pyx_t_7, 1, __pyx_t_4);
-  __pyx_t_4 = 0;
-  __pyx_r = __pyx_t_7;
+  PyTuple_SET_ITEM(__pyx_t_4, 0, __pyx_v_nodes);
+  __Pyx_INCREF(__pyx_v_levels);
+  __Pyx_GIVEREF(__pyx_v_levels);
+  PyTuple_SET_ITEM(__pyx_t_4, 1, __pyx_v_levels);
+  __Pyx_GIVEREF(__pyx_t_7);
+  PyTuple_SET_ITEM(__pyx_t_4, 2, __pyx_t_7);
   __pyx_t_7 = 0;
+  __pyx_r = __pyx_t_4;
+  __pyx_t_4 = 0;
   goto __pyx_L0;
 
-  /* "boxcounting.pyx":176
+  /* "boxcounting.pyx":180
  *             free_tree(&self.tree[i], self.dim)
  *     @property
  *     def nodes(self):             # <<<<<<<<<<<<<<
- *         cdef int n
+ *         cdef int n = 0
  *         for i in range(self.num_tree):
  */
 
@@ -5396,6 +5522,7 @@ static PyObject *__pyx_pf_11boxcounting_11boxcounting_5nodes___get__(struct __py
   __pyx_r = NULL;
   __pyx_L0:;
   __Pyx_XDECREF(__pyx_v_nodes);
+  __Pyx_XDECREF(__pyx_v_levels);
   __Pyx_XGIVEREF(__pyx_r);
   __Pyx_RefNannyFinishContext();
   return __pyx_r;
@@ -5435,7 +5562,7 @@ static PyObject *__pyx_pf_11boxcounting_11boxcounting_16__reduce_cython__(CYTHON
  * def __setstate_cython__(self, __pyx_state):
  *     raise TypeError("self.M,self._eps,self._occ,self.cfile,self.cmid,self.m,self.tree cannot be converted to a Python object for pickling")
  */
-  __pyx_t_1 = __Pyx_PyObject_Call(__pyx_builtin_TypeError, __pyx_tuple__3, NULL); if (unlikely(!__pyx_t_1)) __PYX_ERR(1, 2, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyObject_Call(__pyx_builtin_TypeError, __pyx_tuple__5, NULL); if (unlikely(!__pyx_t_1)) __PYX_ERR(1, 2, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __Pyx_Raise(__pyx_t_1, 0, 0, 0);
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
@@ -5491,7 +5618,7 @@ static PyObject *__pyx_pf_11boxcounting_11boxcounting_18__setstate_cython__(CYTH
  * def __setstate_cython__(self, __pyx_state):
  *     raise TypeError("self.M,self._eps,self._occ,self.cfile,self.cmid,self.m,self.tree cannot be converted to a Python object for pickling")             # <<<<<<<<<<<<<<
  */
-  __pyx_t_1 = __Pyx_PyObject_Call(__pyx_builtin_TypeError, __pyx_tuple__4, NULL); if (unlikely(!__pyx_t_1)) __PYX_ERR(1, 4, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyObject_Call(__pyx_builtin_TypeError, __pyx_tuple__6, NULL); if (unlikely(!__pyx_t_1)) __PYX_ERR(1, 4, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __Pyx_Raise(__pyx_t_1, 0, 0, 0);
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
@@ -5514,60 +5641,59 @@ static PyObject *__pyx_pf_11boxcounting_11boxcounting_18__setstate_cython__(CYTH
   return __pyx_r;
 }
 
-/* "boxcounting.pyx":184
- *         return nodes, n
+/* "boxcounting.pyx":190
+ *         return nodes, levels, n
  * 
- * cdef tree_t create_tree(int n, int level):             # <<<<<<<<<<<<<<
+ * cdef tree_t create_tree(int n, int num_quadrants, int level):             # <<<<<<<<<<<<<<
  *     cdef int i
  *     cdef tree_t tree
  */
 
-static struct __pyx_t_4tree_tree_t __pyx_f_11boxcounting_create_tree(int __pyx_v_n, int __pyx_v_level) {
+static struct __pyx_t_4tree_tree_t __pyx_f_11boxcounting_create_tree(int __pyx_v_n, int __pyx_v_num_quadrants, int __pyx_v_level) {
   struct __pyx_t_4tree_tree_t __pyx_v_tree;
-  int __pyx_v_num_quadrants;
   struct __pyx_t_4tree_tree_t __pyx_r;
   __Pyx_RefNannyDeclarations
   __Pyx_RefNannySetupContext("create_tree", 0);
 
-  /* "boxcounting.pyx":187
+  /* "boxcounting.pyx":193
  *     cdef int i
  *     cdef tree_t tree
- *     cdef int num_quadrants = 2**n # Quadrants for n-dim problem: 2^n             # <<<<<<<<<<<<<<
- *     tree.child   = <tree_t*>calloc(num_quadrants, sizeof(tree_t))
- *     tree.centr = <double*>malloc(n*sizeof(double))
- */
-  __pyx_v_num_quadrants = __Pyx_pow_long(2, ((long)__pyx_v_n));
-
-  /* "boxcounting.pyx":188
- *     cdef tree_t tree
- *     cdef int num_quadrants = 2**n # Quadrants for n-dim problem: 2^n
  *     tree.child   = <tree_t*>calloc(num_quadrants, sizeof(tree_t))             # <<<<<<<<<<<<<<
  *     tree.centr = <double*>malloc(n*sizeof(double))
  *     tree.level = level
  */
   __pyx_v_tree.child = ((struct __pyx_t_4tree_tree_t *)calloc(__pyx_v_num_quadrants, (sizeof(struct __pyx_t_4tree_tree_t))));
 
-  /* "boxcounting.pyx":189
- *     cdef int num_quadrants = 2**n # Quadrants for n-dim problem: 2^n
+  /* "boxcounting.pyx":194
+ *     cdef tree_t tree
  *     tree.child   = <tree_t*>calloc(num_quadrants, sizeof(tree_t))
  *     tree.centr = <double*>malloc(n*sizeof(double))             # <<<<<<<<<<<<<<
  *     tree.level = level
- *     return tree
+ *     tree.radi = 0
  */
   __pyx_v_tree.centr = ((double *)malloc((__pyx_v_n * (sizeof(double)))));
 
-  /* "boxcounting.pyx":190
+  /* "boxcounting.pyx":195
  *     tree.child   = <tree_t*>calloc(num_quadrants, sizeof(tree_t))
  *     tree.centr = <double*>malloc(n*sizeof(double))
  *     tree.level = level             # <<<<<<<<<<<<<<
+ *     tree.radi = 0
  *     return tree
- * 
  */
   __pyx_v_tree.level = __pyx_v_level;
 
-  /* "boxcounting.pyx":191
+  /* "boxcounting.pyx":196
  *     tree.centr = <double*>malloc(n*sizeof(double))
  *     tree.level = level
+ *     tree.radi = 0             # <<<<<<<<<<<<<<
+ *     return tree
+ * 
+ */
+  __pyx_v_tree.radi = 0.0;
+
+  /* "boxcounting.pyx":197
+ *     tree.level = level
+ *     tree.radi = 0
  *     return tree             # <<<<<<<<<<<<<<
  * 
  * cdef void free_tree(tree_t * tree, int dim):
@@ -5575,10 +5701,10 @@ static struct __pyx_t_4tree_tree_t __pyx_f_11boxcounting_create_tree(int __pyx_v
   __pyx_r = __pyx_v_tree;
   goto __pyx_L0;
 
-  /* "boxcounting.pyx":184
- *         return nodes, n
+  /* "boxcounting.pyx":190
+ *         return nodes, levels, n
  * 
- * cdef tree_t create_tree(int n, int level):             # <<<<<<<<<<<<<<
+ * cdef tree_t create_tree(int n, int num_quadrants, int level):             # <<<<<<<<<<<<<<
  *     cdef int i
  *     cdef tree_t tree
  */
@@ -5589,7 +5715,7 @@ static struct __pyx_t_4tree_tree_t __pyx_f_11boxcounting_create_tree(int __pyx_v
   return __pyx_r;
 }
 
-/* "boxcounting.pyx":193
+/* "boxcounting.pyx":199
  *     return tree
  * 
  * cdef void free_tree(tree_t * tree, int dim):             # <<<<<<<<<<<<<<
@@ -5606,7 +5732,7 @@ static void __pyx_f_11boxcounting_free_tree(struct __pyx_t_4tree_tree_t *__pyx_v
   int __pyx_t_4;
   __Pyx_RefNannySetupContext("free_tree", 0);
 
-  /* "boxcounting.pyx":195
+  /* "boxcounting.pyx":201
  * cdef void free_tree(tree_t * tree, int dim):
  *     cdef int i
  *     if tree.level != 0:             # <<<<<<<<<<<<<<
@@ -5616,7 +5742,7 @@ static void __pyx_f_11boxcounting_free_tree(struct __pyx_t_4tree_tree_t *__pyx_v
   __pyx_t_1 = ((__pyx_v_tree->level != 0) != 0);
   if (__pyx_t_1) {
 
-    /* "boxcounting.pyx":196
+    /* "boxcounting.pyx":202
  *     cdef int i
  *     if tree.level != 0:
  *         for i in range(dim):             # <<<<<<<<<<<<<<
@@ -5628,7 +5754,7 @@ static void __pyx_f_11boxcounting_free_tree(struct __pyx_t_4tree_tree_t *__pyx_v
     for (__pyx_t_4 = 0; __pyx_t_4 < __pyx_t_3; __pyx_t_4+=1) {
       __pyx_v_i = __pyx_t_4;
 
-      /* "boxcounting.pyx":197
+      /* "boxcounting.pyx":203
  *     if tree.level != 0:
  *         for i in range(dim):
  *             free_tree(&tree.child[i], dim)             # <<<<<<<<<<<<<<
@@ -5638,7 +5764,7 @@ static void __pyx_f_11boxcounting_free_tree(struct __pyx_t_4tree_tree_t *__pyx_v
       __pyx_f_11boxcounting_free_tree((&(__pyx_v_tree->child[__pyx_v_i])), __pyx_v_dim);
     }
 
-    /* "boxcounting.pyx":195
+    /* "boxcounting.pyx":201
  * cdef void free_tree(tree_t * tree, int dim):
  *     cdef int i
  *     if tree.level != 0:             # <<<<<<<<<<<<<<
@@ -5648,7 +5774,7 @@ static void __pyx_f_11boxcounting_free_tree(struct __pyx_t_4tree_tree_t *__pyx_v
     goto __pyx_L3;
   }
 
-  /* "boxcounting.pyx":198
+  /* "boxcounting.pyx":204
  *         for i in range(dim):
  *             free_tree(&tree.child[i], dim)
  *     else: return             # <<<<<<<<<<<<<<
@@ -5660,7 +5786,7 @@ static void __pyx_f_11boxcounting_free_tree(struct __pyx_t_4tree_tree_t *__pyx_v
   }
   __pyx_L3:;
 
-  /* "boxcounting.pyx":199
+  /* "boxcounting.pyx":205
  *             free_tree(&tree.child[i], dim)
  *     else: return
  *     free(tree.centr)             # <<<<<<<<<<<<<<
@@ -5669,7 +5795,7 @@ static void __pyx_f_11boxcounting_free_tree(struct __pyx_t_4tree_tree_t *__pyx_v
  */
   free(__pyx_v_tree->centr);
 
-  /* "boxcounting.pyx":200
+  /* "boxcounting.pyx":206
  *     else: return
  *     free(tree.centr)
  *     free(tree.child)             # <<<<<<<<<<<<<<
@@ -5678,16 +5804,16 @@ static void __pyx_f_11boxcounting_free_tree(struct __pyx_t_4tree_tree_t *__pyx_v
  */
   free(__pyx_v_tree->child);
 
-  /* "boxcounting.pyx":201
+  /* "boxcounting.pyx":207
  *     free(tree.centr)
  *     free(tree.child)
  *     return             # <<<<<<<<<<<<<<
  * 
- * cdef void recursive_occupation(tree_t * tree, double * x, int max_level, int dim):
+ * cdef void recursive_occupation(tree_t * tree, double * x, int max_level, int dim, int num_quadrants):
  */
   goto __pyx_L0;
 
-  /* "boxcounting.pyx":193
+  /* "boxcounting.pyx":199
  *     return tree
  * 
  * cdef void free_tree(tree_t * tree, int dim):             # <<<<<<<<<<<<<<
@@ -5700,22 +5826,22 @@ static void __pyx_f_11boxcounting_free_tree(struct __pyx_t_4tree_tree_t *__pyx_v
   __Pyx_RefNannyFinishContext();
 }
 
-/* "boxcounting.pyx":203
+/* "boxcounting.pyx":209
  *     return
  * 
- * cdef void recursive_occupation(tree_t * tree, double * x, int max_level, int dim):             # <<<<<<<<<<<<<<
+ * cdef void recursive_occupation(tree_t * tree, double * x, int max_level, int dim, int num_quadrants):             # <<<<<<<<<<<<<<
  *     cdef tree_t * next_tree
  *     if tree.level < max_level:
  */
 
-static void __pyx_f_11boxcounting_recursive_occupation(struct __pyx_t_4tree_tree_t *__pyx_v_tree, double *__pyx_v_x, int __pyx_v_max_level, int __pyx_v_dim) {
+static void __pyx_f_11boxcounting_recursive_occupation(struct __pyx_t_4tree_tree_t *__pyx_v_tree, double *__pyx_v_x, int __pyx_v_max_level, int __pyx_v_dim, int __pyx_v_num_quadrants) {
   struct __pyx_t_4tree_tree_t *__pyx_v_next_tree;
   __Pyx_RefNannyDeclarations
   int __pyx_t_1;
   __Pyx_RefNannySetupContext("recursive_occupation", 0);
 
-  /* "boxcounting.pyx":205
- * cdef void recursive_occupation(tree_t * tree, double * x, int max_level, int dim):
+  /* "boxcounting.pyx":211
+ * cdef void recursive_occupation(tree_t * tree, double * x, int max_level, int dim, int num_quadrants):
  *     cdef tree_t * next_tree
  *     if tree.level < max_level:             # <<<<<<<<<<<<<<
  * #        if tree.filled == 0:
@@ -5724,26 +5850,26 @@ static void __pyx_f_11boxcounting_recursive_occupation(struct __pyx_t_4tree_tree
   __pyx_t_1 = ((__pyx_v_tree->level < __pyx_v_max_level) != 0);
   if (__pyx_t_1) {
 
-    /* "boxcounting.pyx":208
+    /* "boxcounting.pyx":214
  * #        if tree.filled == 0:
  * #            tree.filled += 1
- *         next_tree = next_child(tree, x, dim)             # <<<<<<<<<<<<<<
- *         recursive_occupation(next_tree, x, max_level, dim)
+ *         next_tree = next_child(tree, x, dim, num_quadrants)             # <<<<<<<<<<<<<<
+ *         recursive_occupation(next_tree, x, max_level, dim, num_quadrants)
  *     return
  */
-    __pyx_v_next_tree = __pyx_f_11boxcounting_next_child(__pyx_v_tree, __pyx_v_x, __pyx_v_dim);
+    __pyx_v_next_tree = __pyx_f_11boxcounting_next_child(__pyx_v_tree, __pyx_v_x, __pyx_v_dim, __pyx_v_num_quadrants);
 
-    /* "boxcounting.pyx":209
+    /* "boxcounting.pyx":215
  * #            tree.filled += 1
- *         next_tree = next_child(tree, x, dim)
- *         recursive_occupation(next_tree, x, max_level, dim)             # <<<<<<<<<<<<<<
+ *         next_tree = next_child(tree, x, dim, num_quadrants)
+ *         recursive_occupation(next_tree, x, max_level, dim, num_quadrants)             # <<<<<<<<<<<<<<
  *     return
  * 
  */
-    __pyx_f_11boxcounting_recursive_occupation(__pyx_v_next_tree, __pyx_v_x, __pyx_v_max_level, __pyx_v_dim);
+    __pyx_f_11boxcounting_recursive_occupation(__pyx_v_next_tree, __pyx_v_x, __pyx_v_max_level, __pyx_v_dim, __pyx_v_num_quadrants);
 
-    /* "boxcounting.pyx":205
- * cdef void recursive_occupation(tree_t * tree, double * x, int max_level, int dim):
+    /* "boxcounting.pyx":211
+ * cdef void recursive_occupation(tree_t * tree, double * x, int max_level, int dim, int num_quadrants):
  *     cdef tree_t * next_tree
  *     if tree.level < max_level:             # <<<<<<<<<<<<<<
  * #        if tree.filled == 0:
@@ -5751,19 +5877,19 @@ static void __pyx_f_11boxcounting_recursive_occupation(struct __pyx_t_4tree_tree
  */
   }
 
-  /* "boxcounting.pyx":210
- *         next_tree = next_child(tree, x, dim)
- *         recursive_occupation(next_tree, x, max_level, dim)
+  /* "boxcounting.pyx":216
+ *         next_tree = next_child(tree, x, dim, num_quadrants)
+ *         recursive_occupation(next_tree, x, max_level, dim, num_quadrants)
  *     return             # <<<<<<<<<<<<<<
  * 
  * cdef void recursive_count(tree_t * tree, int * occ, int max_level, int dim):
  */
   goto __pyx_L0;
 
-  /* "boxcounting.pyx":203
+  /* "boxcounting.pyx":209
  *     return
  * 
- * cdef void recursive_occupation(tree_t * tree, double * x, int max_level, int dim):             # <<<<<<<<<<<<<<
+ * cdef void recursive_occupation(tree_t * tree, double * x, int max_level, int dim, int num_quadrants):             # <<<<<<<<<<<<<<
  *     cdef tree_t * next_tree
  *     if tree.level < max_level:
  */
@@ -5773,7 +5899,7 @@ static void __pyx_f_11boxcounting_recursive_occupation(struct __pyx_t_4tree_tree
   __Pyx_RefNannyFinishContext();
 }
 
-/* "boxcounting.pyx":212
+/* "boxcounting.pyx":218
  *     return
  * 
  * cdef void recursive_count(tree_t * tree, int * occ, int max_level, int dim):             # <<<<<<<<<<<<<<
@@ -5791,7 +5917,7 @@ static void __pyx_f_11boxcounting_recursive_count(struct __pyx_t_4tree_tree_t *_
   int __pyx_t_4;
   __Pyx_RefNannySetupContext("recursive_count", 0);
 
-  /* "boxcounting.pyx":214
+  /* "boxcounting.pyx":220
  * cdef void recursive_count(tree_t * tree, int * occ, int max_level, int dim):
  *     cdef int i
  *     cdef int num_quadrants = 2**dim             # <<<<<<<<<<<<<<
@@ -5800,7 +5926,7 @@ static void __pyx_f_11boxcounting_recursive_count(struct __pyx_t_4tree_tree_t *_
  */
   __pyx_v_num_quadrants = __Pyx_pow_long(2, ((long)__pyx_v_dim));
 
-  /* "boxcounting.pyx":215
+  /* "boxcounting.pyx":221
  *     cdef int i
  *     cdef int num_quadrants = 2**dim
  *     if tree.level < max_level:             # <<<<<<<<<<<<<<
@@ -5810,7 +5936,7 @@ static void __pyx_f_11boxcounting_recursive_count(struct __pyx_t_4tree_tree_t *_
   __pyx_t_1 = ((__pyx_v_tree->level < __pyx_v_max_level) != 0);
   if (__pyx_t_1) {
 
-    /* "boxcounting.pyx":216
+    /* "boxcounting.pyx":222
  *     cdef int num_quadrants = 2**dim
  *     if tree.level < max_level:
  *         if tree.radi != 0:             # <<<<<<<<<<<<<<
@@ -5820,7 +5946,7 @@ static void __pyx_f_11boxcounting_recursive_count(struct __pyx_t_4tree_tree_t *_
     __pyx_t_1 = ((__pyx_v_tree->radi != 0.0) != 0);
     if (__pyx_t_1) {
 
-      /* "boxcounting.pyx":217
+      /* "boxcounting.pyx":223
  *     if tree.level < max_level:
  *         if tree.radi != 0:
  *             occ[tree.level] += 1             # <<<<<<<<<<<<<<
@@ -5830,7 +5956,7 @@ static void __pyx_f_11boxcounting_recursive_count(struct __pyx_t_4tree_tree_t *_
       __pyx_t_2 = __pyx_v_tree->level;
       (__pyx_v_occ[__pyx_t_2]) = ((__pyx_v_occ[__pyx_t_2]) + 1);
 
-      /* "boxcounting.pyx":218
+      /* "boxcounting.pyx":224
  *         if tree.radi != 0:
  *             occ[tree.level] += 1
  *             for i in range(num_quadrants):             # <<<<<<<<<<<<<<
@@ -5842,7 +5968,7 @@ static void __pyx_f_11boxcounting_recursive_count(struct __pyx_t_4tree_tree_t *_
       for (__pyx_t_4 = 0; __pyx_t_4 < __pyx_t_3; __pyx_t_4+=1) {
         __pyx_v_i = __pyx_t_4;
 
-        /* "boxcounting.pyx":219
+        /* "boxcounting.pyx":225
  *             occ[tree.level] += 1
  *             for i in range(num_quadrants):
  *                 recursive_count(&tree.child[i], occ, max_level, dim)             # <<<<<<<<<<<<<<
@@ -5852,7 +5978,7 @@ static void __pyx_f_11boxcounting_recursive_count(struct __pyx_t_4tree_tree_t *_
         __pyx_f_11boxcounting_recursive_count((&(__pyx_v_tree->child[__pyx_v_i])), __pyx_v_occ, __pyx_v_max_level, __pyx_v_dim);
       }
 
-      /* "boxcounting.pyx":216
+      /* "boxcounting.pyx":222
  *     cdef int num_quadrants = 2**dim
  *     if tree.level < max_level:
  *         if tree.radi != 0:             # <<<<<<<<<<<<<<
@@ -5861,7 +5987,7 @@ static void __pyx_f_11boxcounting_recursive_count(struct __pyx_t_4tree_tree_t *_
  */
     }
 
-    /* "boxcounting.pyx":215
+    /* "boxcounting.pyx":221
  *     cdef int i
  *     cdef int num_quadrants = 2**dim
  *     if tree.level < max_level:             # <<<<<<<<<<<<<<
@@ -5870,16 +5996,16 @@ static void __pyx_f_11boxcounting_recursive_count(struct __pyx_t_4tree_tree_t *_
  */
   }
 
-  /* "boxcounting.pyx":220
+  /* "boxcounting.pyx":226
  *             for i in range(num_quadrants):
  *                 recursive_count(&tree.child[i], occ, max_level, dim)
  *     return             # <<<<<<<<<<<<<<
  * 
- * cdef tree_t * next_child(tree_t * tree, double * x, int dim):
+ * cdef tree_t * next_child(tree_t * tree, double * x, int dim, int num_quadrants):
  */
   goto __pyx_L0;
 
-  /* "boxcounting.pyx":212
+  /* "boxcounting.pyx":218
  *     return
  * 
  * cdef void recursive_count(tree_t * tree, int * occ, int max_level, int dim):             # <<<<<<<<<<<<<<
@@ -5892,15 +6018,15 @@ static void __pyx_f_11boxcounting_recursive_count(struct __pyx_t_4tree_tree_t *_
   __Pyx_RefNannyFinishContext();
 }
 
-/* "boxcounting.pyx":222
+/* "boxcounting.pyx":228
  *     return
  * 
- * cdef tree_t * next_child(tree_t * tree, double * x, int dim):             # <<<<<<<<<<<<<<
+ * cdef tree_t * next_child(tree_t * tree, double * x, int dim, int num_quadrants):             # <<<<<<<<<<<<<<
  *     """
  *     Function that select the quadrant for the next step based on the input data.
  */
 
-static struct __pyx_t_4tree_tree_t *__pyx_f_11boxcounting_next_child(struct __pyx_t_4tree_tree_t *__pyx_v_tree, double *__pyx_v_x, int __pyx_v_dim) {
+static struct __pyx_t_4tree_tree_t *__pyx_f_11boxcounting_next_child(struct __pyx_t_4tree_tree_t *__pyx_v_tree, double *__pyx_v_x, int __pyx_v_dim, int __pyx_v_num_quadrants) {
   int __pyx_v_i;
   int __pyx_v_quadrant;
   int __pyx_v_inc_bool;
@@ -5915,7 +6041,7 @@ static struct __pyx_t_4tree_tree_t *__pyx_f_11boxcounting_next_child(struct __py
   int __pyx_t_4;
   __Pyx_RefNannySetupContext("next_child", 0);
 
-  /* "boxcounting.pyx":242
+  /* "boxcounting.pyx":248
  *         data x.
  *     """
  *     cdef int i, quadrant = 0 # output quadrant (starting from zero)             # <<<<<<<<<<<<<<
@@ -5924,7 +6050,7 @@ static struct __pyx_t_4tree_tree_t *__pyx_f_11boxcounting_next_child(struct __py
  */
   __pyx_v_quadrant = 0;
 
-  /* "boxcounting.pyx":245
+  /* "boxcounting.pyx":251
  *     cdef int inc_bool # for each data dimension inc_bool is 0 if the data
  *     #                 # is under the mid, otherwise is 1
  *     cdef int inc = 1  # inc is incremented by himself after each step of the             # <<<<<<<<<<<<<<
@@ -5933,7 +6059,7 @@ static struct __pyx_t_4tree_tree_t *__pyx_f_11boxcounting_next_child(struct __py
  */
   __pyx_v_inc = 1;
 
-  /* "boxcounting.pyx":247
+  /* "boxcounting.pyx":253
  *     cdef int inc = 1  # inc is incremented by himself after each step of the
  *     #                 # next loop.
  *     cdef double * next_mid =  <double*>malloc(dim*sizeof(double))             # <<<<<<<<<<<<<<
@@ -5942,7 +6068,7 @@ static struct __pyx_t_4tree_tree_t *__pyx_f_11boxcounting_next_child(struct __py
  */
   __pyx_v_next_mid = ((double *)malloc((__pyx_v_dim * (sizeof(double)))));
 
-  /* "boxcounting.pyx":248
+  /* "boxcounting.pyx":254
  *     #                 # next loop.
  *     cdef double * next_mid =  <double*>malloc(dim*sizeof(double))
  *     cdef double next_radi = tree.radi*0.5             # <<<<<<<<<<<<<<
@@ -5951,7 +6077,7 @@ static struct __pyx_t_4tree_tree_t *__pyx_f_11boxcounting_next_child(struct __py
  */
   __pyx_v_next_radi = (__pyx_v_tree->radi * 0.5);
 
-  /* "boxcounting.pyx":249
+  /* "boxcounting.pyx":255
  *     cdef double * next_mid =  <double*>malloc(dim*sizeof(double))
  *     cdef double next_radi = tree.radi*0.5
  *     for i in range(dim):             # <<<<<<<<<<<<<<
@@ -5963,7 +6089,7 @@ static struct __pyx_t_4tree_tree_t *__pyx_f_11boxcounting_next_child(struct __py
   for (__pyx_t_3 = 0; __pyx_t_3 < __pyx_t_2; __pyx_t_3+=1) {
     __pyx_v_i = __pyx_t_3;
 
-    /* "boxcounting.pyx":250
+    /* "boxcounting.pyx":256
  *     cdef double next_radi = tree.radi*0.5
  *     for i in range(dim):
  *         if tree.centr[i] < x[i]:             # <<<<<<<<<<<<<<
@@ -5973,7 +6099,7 @@ static struct __pyx_t_4tree_tree_t *__pyx_f_11boxcounting_next_child(struct __py
     __pyx_t_4 = (((__pyx_v_tree->centr[__pyx_v_i]) < (__pyx_v_x[__pyx_v_i])) != 0);
     if (__pyx_t_4) {
 
-      /* "boxcounting.pyx":253
+      /* "boxcounting.pyx":259
  * #            if tree.centr[i] + tree.radi < x[i]:
  * #                printf("out of bound")
  *             inc_bool = 1             # <<<<<<<<<<<<<<
@@ -5982,7 +6108,7 @@ static struct __pyx_t_4tree_tree_t *__pyx_f_11boxcounting_next_child(struct __py
  */
       __pyx_v_inc_bool = 1;
 
-      /* "boxcounting.pyx":254
+      /* "boxcounting.pyx":260
  * #                printf("out of bound")
  *             inc_bool = 1
  *             next_mid[i] = tree.centr[i] + next_radi             # <<<<<<<<<<<<<<
@@ -5991,7 +6117,7 @@ static struct __pyx_t_4tree_tree_t *__pyx_f_11boxcounting_next_child(struct __py
  */
       (__pyx_v_next_mid[__pyx_v_i]) = ((__pyx_v_tree->centr[__pyx_v_i]) + __pyx_v_next_radi);
 
-      /* "boxcounting.pyx":250
+      /* "boxcounting.pyx":256
  *     cdef double next_radi = tree.radi*0.5
  *     for i in range(dim):
  *         if tree.centr[i] < x[i]:             # <<<<<<<<<<<<<<
@@ -6001,7 +6127,7 @@ static struct __pyx_t_4tree_tree_t *__pyx_f_11boxcounting_next_child(struct __py
       goto __pyx_L5;
     }
 
-    /* "boxcounting.pyx":256
+    /* "boxcounting.pyx":262
  *             next_mid[i] = tree.centr[i] + next_radi
  *         else:
  *             inc_bool = 0             # <<<<<<<<<<<<<<
@@ -6011,7 +6137,7 @@ static struct __pyx_t_4tree_tree_t *__pyx_f_11boxcounting_next_child(struct __py
     /*else*/ {
       __pyx_v_inc_bool = 0;
 
-      /* "boxcounting.pyx":257
+      /* "boxcounting.pyx":263
  *         else:
  *             inc_bool = 0
  *             next_mid[i] = tree.centr[i] - next_radi             # <<<<<<<<<<<<<<
@@ -6022,7 +6148,7 @@ static struct __pyx_t_4tree_tree_t *__pyx_f_11boxcounting_next_child(struct __py
     }
     __pyx_L5:;
 
-    /* "boxcounting.pyx":258
+    /* "boxcounting.pyx":264
  *             inc_bool = 0
  *             next_mid[i] = tree.centr[i] - next_radi
  *         quadrant += inc * inc_bool             # <<<<<<<<<<<<<<
@@ -6031,7 +6157,7 @@ static struct __pyx_t_4tree_tree_t *__pyx_f_11boxcounting_next_child(struct __py
  */
     __pyx_v_quadrant = (__pyx_v_quadrant + (__pyx_v_inc * __pyx_v_inc_bool));
 
-    /* "boxcounting.pyx":259
+    /* "boxcounting.pyx":265
  *             next_mid[i] = tree.centr[i] - next_radi
  *         quadrant += inc * inc_bool
  *         inc += inc             # <<<<<<<<<<<<<<
@@ -6041,28 +6167,28 @@ static struct __pyx_t_4tree_tree_t *__pyx_f_11boxcounting_next_child(struct __py
     __pyx_v_inc = (__pyx_v_inc + __pyx_v_inc);
   }
 
-  /* "boxcounting.pyx":261
+  /* "boxcounting.pyx":267
  *         inc += inc
  * 
  *     if tree.child[quadrant].radi == 0:             # <<<<<<<<<<<<<<
- *         tree.child[quadrant] = create_tree(dim, tree.level + 1)
+ *         tree.child[quadrant] = create_tree(dim, num_quadrants, tree.level + 1)
  *         for i in range(dim):
  */
   __pyx_t_4 = (((__pyx_v_tree->child[__pyx_v_quadrant]).radi == 0.0) != 0);
   if (__pyx_t_4) {
 
-    /* "boxcounting.pyx":262
+    /* "boxcounting.pyx":268
  * 
  *     if tree.child[quadrant].radi == 0:
- *         tree.child[quadrant] = create_tree(dim, tree.level + 1)             # <<<<<<<<<<<<<<
+ *         tree.child[quadrant] = create_tree(dim, num_quadrants, tree.level + 1)             # <<<<<<<<<<<<<<
  *         for i in range(dim):
  *             tree.child[quadrant].centr[i] = next_mid[i]
  */
-    (__pyx_v_tree->child[__pyx_v_quadrant]) = __pyx_f_11boxcounting_create_tree(__pyx_v_dim, (__pyx_v_tree->level + 1));
+    (__pyx_v_tree->child[__pyx_v_quadrant]) = __pyx_f_11boxcounting_create_tree(__pyx_v_dim, __pyx_v_num_quadrants, (__pyx_v_tree->level + 1));
 
-    /* "boxcounting.pyx":263
+    /* "boxcounting.pyx":269
  *     if tree.child[quadrant].radi == 0:
- *         tree.child[quadrant] = create_tree(dim, tree.level + 1)
+ *         tree.child[quadrant] = create_tree(dim, num_quadrants, tree.level + 1)
  *         for i in range(dim):             # <<<<<<<<<<<<<<
  *             tree.child[quadrant].centr[i] = next_mid[i]
  *         tree.child[quadrant].radi = next_radi
@@ -6072,8 +6198,8 @@ static struct __pyx_t_4tree_tree_t *__pyx_f_11boxcounting_next_child(struct __py
     for (__pyx_t_3 = 0; __pyx_t_3 < __pyx_t_2; __pyx_t_3+=1) {
       __pyx_v_i = __pyx_t_3;
 
-      /* "boxcounting.pyx":264
- *         tree.child[quadrant] = create_tree(dim, tree.level + 1)
+      /* "boxcounting.pyx":270
+ *         tree.child[quadrant] = create_tree(dim, num_quadrants, tree.level + 1)
  *         for i in range(dim):
  *             tree.child[quadrant].centr[i] = next_mid[i]             # <<<<<<<<<<<<<<
  *         tree.child[quadrant].radi = next_radi
@@ -6082,7 +6208,7 @@ static struct __pyx_t_4tree_tree_t *__pyx_f_11boxcounting_next_child(struct __py
       ((__pyx_v_tree->child[__pyx_v_quadrant]).centr[__pyx_v_i]) = (__pyx_v_next_mid[__pyx_v_i]);
     }
 
-    /* "boxcounting.pyx":265
+    /* "boxcounting.pyx":271
  *         for i in range(dim):
  *             tree.child[quadrant].centr[i] = next_mid[i]
  *         tree.child[quadrant].radi = next_radi             # <<<<<<<<<<<<<<
@@ -6091,16 +6217,16 @@ static struct __pyx_t_4tree_tree_t *__pyx_f_11boxcounting_next_child(struct __py
  */
     (__pyx_v_tree->child[__pyx_v_quadrant]).radi = __pyx_v_next_radi;
 
-    /* "boxcounting.pyx":261
+    /* "boxcounting.pyx":267
  *         inc += inc
  * 
  *     if tree.child[quadrant].radi == 0:             # <<<<<<<<<<<<<<
- *         tree.child[quadrant] = create_tree(dim, tree.level + 1)
+ *         tree.child[quadrant] = create_tree(dim, num_quadrants, tree.level + 1)
  *         for i in range(dim):
  */
   }
 
-  /* "boxcounting.pyx":266
+  /* "boxcounting.pyx":272
  *             tree.child[quadrant].centr[i] = next_mid[i]
  *         tree.child[quadrant].radi = next_radi
  *     free(next_mid)             # <<<<<<<<<<<<<<
@@ -6109,7 +6235,7 @@ static struct __pyx_t_4tree_tree_t *__pyx_f_11boxcounting_next_child(struct __py
  */
   free(__pyx_v_next_mid);
 
-  /* "boxcounting.pyx":267
+  /* "boxcounting.pyx":273
  *         tree.child[quadrant].radi = next_radi
  *     free(next_mid)
  *     return &tree.child[quadrant]             # <<<<<<<<<<<<<<
@@ -6119,10 +6245,10 @@ static struct __pyx_t_4tree_tree_t *__pyx_f_11boxcounting_next_child(struct __py
   __pyx_r = (&(__pyx_v_tree->child[__pyx_v_quadrant]));
   goto __pyx_L0;
 
-  /* "boxcounting.pyx":222
+  /* "boxcounting.pyx":228
  *     return
  * 
- * cdef tree_t * next_child(tree_t * tree, double * x, int dim):             # <<<<<<<<<<<<<<
+ * cdef tree_t * next_child(tree_t * tree, double * x, int dim, int num_quadrants):             # <<<<<<<<<<<<<<
  *     """
  *     Function that select the quadrant for the next step based on the input data.
  */
@@ -6133,7 +6259,7 @@ static struct __pyx_t_4tree_tree_t *__pyx_f_11boxcounting_next_child(struct __py
   return __pyx_r;
 }
 
-/* "boxcounting.pyx":269
+/* "boxcounting.pyx":275
  *     return &tree.child[quadrant]
  * 
  * cdef int get_num_nodes(tree_t * tree, int n_nodes, int dim):             # <<<<<<<<<<<<<<
@@ -6152,7 +6278,7 @@ static int __pyx_f_11boxcounting_get_num_nodes(struct __pyx_t_4tree_tree_t *__py
   int __pyx_t_4;
   __Pyx_RefNannySetupContext("get_num_nodes", 0);
 
-  /* "boxcounting.pyx":270
+  /* "boxcounting.pyx":276
  * 
  * cdef int get_num_nodes(tree_t * tree, int n_nodes, int dim):
  *     cdef int i, num_quadrants = 2**dim             # <<<<<<<<<<<<<<
@@ -6161,7 +6287,7 @@ static int __pyx_f_11boxcounting_get_num_nodes(struct __pyx_t_4tree_tree_t *__py
  */
   __pyx_v_num_quadrants = __Pyx_pow_long(2, ((long)__pyx_v_dim));
 
-  /* "boxcounting.pyx":271
+  /* "boxcounting.pyx":277
  * cdef int get_num_nodes(tree_t * tree, int n_nodes, int dim):
  *     cdef int i, num_quadrants = 2**dim
  *     if tree.radi != 0:             # <<<<<<<<<<<<<<
@@ -6171,7 +6297,7 @@ static int __pyx_f_11boxcounting_get_num_nodes(struct __pyx_t_4tree_tree_t *__py
   __pyx_t_1 = ((__pyx_v_tree->radi != 0.0) != 0);
   if (__pyx_t_1) {
 
-    /* "boxcounting.pyx":272
+    /* "boxcounting.pyx":278
  *     cdef int i, num_quadrants = 2**dim
  *     if tree.radi != 0:
  *         n_nodes += 1             # <<<<<<<<<<<<<<
@@ -6180,7 +6306,7 @@ static int __pyx_f_11boxcounting_get_num_nodes(struct __pyx_t_4tree_tree_t *__py
  */
     __pyx_v_n_nodes = (__pyx_v_n_nodes + 1);
 
-    /* "boxcounting.pyx":273
+    /* "boxcounting.pyx":279
  *     if tree.radi != 0:
  *         n_nodes += 1
  *         for i in range(num_quadrants):             # <<<<<<<<<<<<<<
@@ -6192,7 +6318,7 @@ static int __pyx_f_11boxcounting_get_num_nodes(struct __pyx_t_4tree_tree_t *__py
     for (__pyx_t_4 = 0; __pyx_t_4 < __pyx_t_3; __pyx_t_4+=1) {
       __pyx_v_i = __pyx_t_4;
 
-      /* "boxcounting.pyx":274
+      /* "boxcounting.pyx":280
  *         n_nodes += 1
  *         for i in range(num_quadrants):
  *             n_nodes = get_num_nodes(&tree.child[i], n_nodes, dim)             # <<<<<<<<<<<<<<
@@ -6202,7 +6328,7 @@ static int __pyx_f_11boxcounting_get_num_nodes(struct __pyx_t_4tree_tree_t *__py
       __pyx_v_n_nodes = __pyx_f_11boxcounting_get_num_nodes((&(__pyx_v_tree->child[__pyx_v_i])), __pyx_v_n_nodes, __pyx_v_dim);
     }
 
-    /* "boxcounting.pyx":271
+    /* "boxcounting.pyx":277
  * cdef int get_num_nodes(tree_t * tree, int n_nodes, int dim):
  *     cdef int i, num_quadrants = 2**dim
  *     if tree.radi != 0:             # <<<<<<<<<<<<<<
@@ -6211,7 +6337,7 @@ static int __pyx_f_11boxcounting_get_num_nodes(struct __pyx_t_4tree_tree_t *__py
  */
   }
 
-  /* "boxcounting.pyx":275
+  /* "boxcounting.pyx":281
  *         for i in range(num_quadrants):
  *             n_nodes = get_num_nodes(&tree.child[i], n_nodes, dim)
  *     return n_nodes             # <<<<<<<<<<<<<<
@@ -6221,7 +6347,7 @@ static int __pyx_f_11boxcounting_get_num_nodes(struct __pyx_t_4tree_tree_t *__py
   __pyx_r = __pyx_v_n_nodes;
   goto __pyx_L0;
 
-  /* "boxcounting.pyx":269
+  /* "boxcounting.pyx":275
  *     return &tree.child[quadrant]
  * 
  * cdef int get_num_nodes(tree_t * tree, int n_nodes, int dim):             # <<<<<<<<<<<<<<
@@ -6235,7 +6361,7 @@ static int __pyx_f_11boxcounting_get_num_nodes(struct __pyx_t_4tree_tree_t *__py
   return __pyx_r;
 }
 
-/* "boxcounting.pyx":277
+/* "boxcounting.pyx":283
  *     return n_nodes
  * 
  * cdef int get_nodes(tree_t * tree, np.double_t[:,:] x, int dim, int line):             # <<<<<<<<<<<<<<
@@ -6261,7 +6387,7 @@ static int __pyx_f_11boxcounting_get_nodes(struct __pyx_t_4tree_tree_t *__pyx_v_
   int __pyx_clineno = 0;
   __Pyx_RefNannySetupContext("get_nodes", 0);
 
-  /* "boxcounting.pyx":278
+  /* "boxcounting.pyx":284
  * 
  * cdef int get_nodes(tree_t * tree, np.double_t[:,:] x, int dim, int line):
  *     cdef int i, num_quadrants = 2**dim             # <<<<<<<<<<<<<<
@@ -6270,7 +6396,7 @@ static int __pyx_f_11boxcounting_get_nodes(struct __pyx_t_4tree_tree_t *__pyx_v_
  */
   __pyx_v_num_quadrants = __Pyx_pow_long(2, ((long)__pyx_v_dim));
 
-  /* "boxcounting.pyx":279
+  /* "boxcounting.pyx":285
  * cdef int get_nodes(tree_t * tree, np.double_t[:,:] x, int dim, int line):
  *     cdef int i, num_quadrants = 2**dim
  *     if tree.radi != 0:             # <<<<<<<<<<<<<<
@@ -6280,7 +6406,7 @@ static int __pyx_f_11boxcounting_get_nodes(struct __pyx_t_4tree_tree_t *__pyx_v_
   __pyx_t_1 = ((__pyx_v_tree->radi != 0.0) != 0);
   if (__pyx_t_1) {
 
-    /* "boxcounting.pyx":280
+    /* "boxcounting.pyx":286
  *     cdef int i, num_quadrants = 2**dim
  *     if tree.radi != 0:
  *         for i in range(dim):             # <<<<<<<<<<<<<<
@@ -6292,12 +6418,12 @@ static int __pyx_f_11boxcounting_get_nodes(struct __pyx_t_4tree_tree_t *__pyx_v_
     for (__pyx_t_4 = 0; __pyx_t_4 < __pyx_t_3; __pyx_t_4+=1) {
       __pyx_v_i = __pyx_t_4;
 
-      /* "boxcounting.pyx":281
+      /* "boxcounting.pyx":287
  *     if tree.radi != 0:
  *         for i in range(dim):
  *             x[line,i] = tree.centr[i]             # <<<<<<<<<<<<<<
  *         x[line, dim] = tree.radi
- *         line += 1
+ *         x[line, dim + 1] = tree.level
  */
       __pyx_t_5 = __pyx_v_line;
       __pyx_t_6 = __pyx_v_i;
@@ -6312,17 +6438,17 @@ static int __pyx_f_11boxcounting_get_nodes(struct __pyx_t_4tree_tree_t *__pyx_v_
       } else if (unlikely(__pyx_t_6 >= __pyx_v_x.shape[1])) __pyx_t_7 = 1;
       if (unlikely(__pyx_t_7 != -1)) {
         __Pyx_RaiseBufferIndexError(__pyx_t_7);
-        __PYX_ERR(0, 281, __pyx_L1_error)
+        __PYX_ERR(0, 287, __pyx_L1_error)
       }
       *((__pyx_t_5numpy_double_t *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_x.data + __pyx_t_5 * __pyx_v_x.strides[0]) ) + __pyx_t_6 * __pyx_v_x.strides[1]) )) = (__pyx_v_tree->centr[__pyx_v_i]);
     }
 
-    /* "boxcounting.pyx":282
+    /* "boxcounting.pyx":288
  *         for i in range(dim):
  *             x[line,i] = tree.centr[i]
  *         x[line, dim] = tree.radi             # <<<<<<<<<<<<<<
+ *         x[line, dim + 1] = tree.level
  *         line += 1
- *         for i in range(num_quadrants):
  */
     __pyx_t_8 = __pyx_v_tree->radi;
     __pyx_t_6 = __pyx_v_line;
@@ -6338,21 +6464,46 @@ static int __pyx_f_11boxcounting_get_nodes(struct __pyx_t_4tree_tree_t *__pyx_v_
     } else if (unlikely(__pyx_t_5 >= __pyx_v_x.shape[1])) __pyx_t_2 = 1;
     if (unlikely(__pyx_t_2 != -1)) {
       __Pyx_RaiseBufferIndexError(__pyx_t_2);
-      __PYX_ERR(0, 282, __pyx_L1_error)
+      __PYX_ERR(0, 288, __pyx_L1_error)
     }
     *((__pyx_t_5numpy_double_t *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_x.data + __pyx_t_6 * __pyx_v_x.strides[0]) ) + __pyx_t_5 * __pyx_v_x.strides[1]) )) = __pyx_t_8;
 
-    /* "boxcounting.pyx":283
+    /* "boxcounting.pyx":289
  *             x[line,i] = tree.centr[i]
  *         x[line, dim] = tree.radi
+ *         x[line, dim + 1] = tree.level             # <<<<<<<<<<<<<<
+ *         line += 1
+ *         for i in range(num_quadrants):
+ */
+    __pyx_t_2 = __pyx_v_tree->level;
+    __pyx_t_5 = __pyx_v_line;
+    __pyx_t_6 = (__pyx_v_dim + 1);
+    __pyx_t_3 = -1;
+    if (__pyx_t_5 < 0) {
+      __pyx_t_5 += __pyx_v_x.shape[0];
+      if (unlikely(__pyx_t_5 < 0)) __pyx_t_3 = 0;
+    } else if (unlikely(__pyx_t_5 >= __pyx_v_x.shape[0])) __pyx_t_3 = 0;
+    if (__pyx_t_6 < 0) {
+      __pyx_t_6 += __pyx_v_x.shape[1];
+      if (unlikely(__pyx_t_6 < 0)) __pyx_t_3 = 1;
+    } else if (unlikely(__pyx_t_6 >= __pyx_v_x.shape[1])) __pyx_t_3 = 1;
+    if (unlikely(__pyx_t_3 != -1)) {
+      __Pyx_RaiseBufferIndexError(__pyx_t_3);
+      __PYX_ERR(0, 289, __pyx_L1_error)
+    }
+    *((__pyx_t_5numpy_double_t *) ( /* dim=1 */ (( /* dim=0 */ (__pyx_v_x.data + __pyx_t_5 * __pyx_v_x.strides[0]) ) + __pyx_t_6 * __pyx_v_x.strides[1]) )) = __pyx_t_2;
+
+    /* "boxcounting.pyx":290
+ *         x[line, dim] = tree.radi
+ *         x[line, dim + 1] = tree.level
  *         line += 1             # <<<<<<<<<<<<<<
  *         for i in range(num_quadrants):
  *             line = get_nodes(&tree.child[i], x, dim, line)
  */
     __pyx_v_line = (__pyx_v_line + 1);
 
-    /* "boxcounting.pyx":284
- *         x[line, dim] = tree.radi
+    /* "boxcounting.pyx":291
+ *         x[line, dim + 1] = tree.level
  *         line += 1
  *         for i in range(num_quadrants):             # <<<<<<<<<<<<<<
  *             line = get_nodes(&tree.child[i], x, dim, line)
@@ -6363,7 +6514,7 @@ static int __pyx_f_11boxcounting_get_nodes(struct __pyx_t_4tree_tree_t *__pyx_v_
     for (__pyx_t_4 = 0; __pyx_t_4 < __pyx_t_3; __pyx_t_4+=1) {
       __pyx_v_i = __pyx_t_4;
 
-      /* "boxcounting.pyx":285
+      /* "boxcounting.pyx":292
  *         line += 1
  *         for i in range(num_quadrants):
  *             line = get_nodes(&tree.child[i], x, dim, line)             # <<<<<<<<<<<<<<
@@ -6373,7 +6524,7 @@ static int __pyx_f_11boxcounting_get_nodes(struct __pyx_t_4tree_tree_t *__pyx_v_
       __pyx_v_line = __pyx_f_11boxcounting_get_nodes((&(__pyx_v_tree->child[__pyx_v_i])), __pyx_v_x, __pyx_v_dim, __pyx_v_line);
     }
 
-    /* "boxcounting.pyx":279
+    /* "boxcounting.pyx":285
  * cdef int get_nodes(tree_t * tree, np.double_t[:,:] x, int dim, int line):
  *     cdef int i, num_quadrants = 2**dim
  *     if tree.radi != 0:             # <<<<<<<<<<<<<<
@@ -6382,7 +6533,7 @@ static int __pyx_f_11boxcounting_get_nodes(struct __pyx_t_4tree_tree_t *__pyx_v_
  */
   }
 
-  /* "boxcounting.pyx":286
+  /* "boxcounting.pyx":293
  *         for i in range(num_quadrants):
  *             line = get_nodes(&tree.child[i], x, dim, line)
  *     return line             # <<<<<<<<<<<<<<
@@ -6392,7 +6543,7 @@ static int __pyx_f_11boxcounting_get_nodes(struct __pyx_t_4tree_tree_t *__pyx_v_
   __pyx_r = __pyx_v_line;
   goto __pyx_L0;
 
-  /* "boxcounting.pyx":277
+  /* "boxcounting.pyx":283
  *     return n_nodes
  * 
  * cdef int get_nodes(tree_t * tree, np.double_t[:,:] x, int dim, int line):             # <<<<<<<<<<<<<<
@@ -6941,7 +7092,7 @@ static CYTHON_INLINE int __pyx_f_5numpy_import_array(void) {
  * 
  * cdef inline int import_umath() except -1:
  */
-      __pyx_t_8 = __Pyx_PyObject_Call(__pyx_builtin_ImportError, __pyx_tuple__5, NULL); if (unlikely(!__pyx_t_8)) __PYX_ERR(2, 944, __pyx_L5_except_error)
+      __pyx_t_8 = __Pyx_PyObject_Call(__pyx_builtin_ImportError, __pyx_tuple__7, NULL); if (unlikely(!__pyx_t_8)) __PYX_ERR(2, 944, __pyx_L5_except_error)
       __Pyx_GOTREF(__pyx_t_8);
       __Pyx_Raise(__pyx_t_8, 0, 0, 0);
       __Pyx_DECREF(__pyx_t_8); __pyx_t_8 = 0;
@@ -7073,7 +7224,7 @@ static CYTHON_INLINE int __pyx_f_5numpy_import_umath(void) {
  * 
  * cdef inline int import_ufunc() except -1:
  */
-      __pyx_t_8 = __Pyx_PyObject_Call(__pyx_builtin_ImportError, __pyx_tuple__6, NULL); if (unlikely(!__pyx_t_8)) __PYX_ERR(2, 950, __pyx_L5_except_error)
+      __pyx_t_8 = __Pyx_PyObject_Call(__pyx_builtin_ImportError, __pyx_tuple__8, NULL); if (unlikely(!__pyx_t_8)) __PYX_ERR(2, 950, __pyx_L5_except_error)
       __Pyx_GOTREF(__pyx_t_8);
       __Pyx_Raise(__pyx_t_8, 0, 0, 0);
       __Pyx_DECREF(__pyx_t_8); __pyx_t_8 = 0;
@@ -7205,7 +7356,7 @@ static CYTHON_INLINE int __pyx_f_5numpy_import_ufunc(void) {
  * 
  * cdef extern from *:
  */
-      __pyx_t_8 = __Pyx_PyObject_Call(__pyx_builtin_ImportError, __pyx_tuple__6, NULL); if (unlikely(!__pyx_t_8)) __PYX_ERR(2, 956, __pyx_L5_except_error)
+      __pyx_t_8 = __Pyx_PyObject_Call(__pyx_builtin_ImportError, __pyx_tuple__8, NULL); if (unlikely(!__pyx_t_8)) __PYX_ERR(2, 956, __pyx_L5_except_error)
       __Pyx_GOTREF(__pyx_t_8);
       __Pyx_Raise(__pyx_t_8, 0, 0, 0);
       __Pyx_DECREF(__pyx_t_8); __pyx_t_8 = 0;
@@ -7680,7 +7831,7 @@ static int __pyx_array___pyx_pf_15View_dot_MemoryView_5array___cinit__(struct __
  * 
  *         if itemsize <= 0:
  */
-    __pyx_t_3 = __Pyx_PyObject_Call(__pyx_builtin_ValueError, __pyx_tuple__7, NULL); if (unlikely(!__pyx_t_3)) __PYX_ERR(1, 134, __pyx_L1_error)
+    __pyx_t_3 = __Pyx_PyObject_Call(__pyx_builtin_ValueError, __pyx_tuple__9, NULL); if (unlikely(!__pyx_t_3)) __PYX_ERR(1, 134, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_3);
     __Pyx_Raise(__pyx_t_3, 0, 0, 0);
     __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
@@ -7712,7 +7863,7 @@ static int __pyx_array___pyx_pf_15View_dot_MemoryView_5array___cinit__(struct __
  * 
  *         if not isinstance(format, bytes):
  */
-    __pyx_t_3 = __Pyx_PyObject_Call(__pyx_builtin_ValueError, __pyx_tuple__8, NULL); if (unlikely(!__pyx_t_3)) __PYX_ERR(1, 137, __pyx_L1_error)
+    __pyx_t_3 = __Pyx_PyObject_Call(__pyx_builtin_ValueError, __pyx_tuple__10, NULL); if (unlikely(!__pyx_t_3)) __PYX_ERR(1, 137, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_3);
     __Pyx_Raise(__pyx_t_3, 0, 0, 0);
     __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
@@ -7839,7 +7990,7 @@ static int __pyx_array___pyx_pf_15View_dot_MemoryView_5array___cinit__(struct __
  * 
  * 
  */
-    __pyx_t_3 = __Pyx_PyObject_Call(__pyx_builtin_MemoryError, __pyx_tuple__9, NULL); if (unlikely(!__pyx_t_3)) __PYX_ERR(1, 149, __pyx_L1_error)
+    __pyx_t_3 = __Pyx_PyObject_Call(__pyx_builtin_MemoryError, __pyx_tuple__11, NULL); if (unlikely(!__pyx_t_3)) __PYX_ERR(1, 149, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_3);
     __Pyx_Raise(__pyx_t_3, 0, 0, 0);
     __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
@@ -8113,7 +8264,7 @@ static int __pyx_array___pyx_pf_15View_dot_MemoryView_5array___cinit__(struct __
  * 
  *             if self.dtype_is_object:
  */
-      __pyx_t_10 = __Pyx_PyObject_Call(__pyx_builtin_MemoryError, __pyx_tuple__10, NULL); if (unlikely(!__pyx_t_10)) __PYX_ERR(1, 177, __pyx_L1_error)
+      __pyx_t_10 = __Pyx_PyObject_Call(__pyx_builtin_MemoryError, __pyx_tuple__12, NULL); if (unlikely(!__pyx_t_10)) __PYX_ERR(1, 177, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_10);
       __Pyx_Raise(__pyx_t_10, 0, 0, 0);
       __Pyx_DECREF(__pyx_t_10); __pyx_t_10 = 0;
@@ -8357,7 +8508,7 @@ static int __pyx_array___pyx_pf_15View_dot_MemoryView_5array_2__getbuffer__(stru
  *         info.buf = self.data
  *         info.len = self.len
  */
-    __pyx_t_3 = __Pyx_PyObject_Call(__pyx_builtin_ValueError, __pyx_tuple__11, NULL); if (unlikely(!__pyx_t_3)) __PYX_ERR(1, 193, __pyx_L1_error)
+    __pyx_t_3 = __Pyx_PyObject_Call(__pyx_builtin_ValueError, __pyx_tuple__13, NULL); if (unlikely(!__pyx_t_3)) __PYX_ERR(1, 193, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_3);
     __Pyx_Raise(__pyx_t_3, 0, 0, 0);
     __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
@@ -9091,7 +9242,7 @@ static PyObject *__pyx_pf___pyx_array___reduce_cython__(CYTHON_UNUSED struct __p
  * def __setstate_cython__(self, __pyx_state):
  *     raise TypeError("no default __reduce__ due to non-trivial __cinit__")
  */
-  __pyx_t_1 = __Pyx_PyObject_Call(__pyx_builtin_TypeError, __pyx_tuple__12, NULL); if (unlikely(!__pyx_t_1)) __PYX_ERR(1, 2, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyObject_Call(__pyx_builtin_TypeError, __pyx_tuple__14, NULL); if (unlikely(!__pyx_t_1)) __PYX_ERR(1, 2, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __Pyx_Raise(__pyx_t_1, 0, 0, 0);
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
@@ -9147,7 +9298,7 @@ static PyObject *__pyx_pf___pyx_array_2__setstate_cython__(CYTHON_UNUSED struct 
  * def __setstate_cython__(self, __pyx_state):
  *     raise TypeError("no default __reduce__ due to non-trivial __cinit__")             # <<<<<<<<<<<<<<
  */
-  __pyx_t_1 = __Pyx_PyObject_Call(__pyx_builtin_TypeError, __pyx_tuple__13, NULL); if (unlikely(!__pyx_t_1)) __PYX_ERR(1, 4, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyObject_Call(__pyx_builtin_TypeError, __pyx_tuple__15, NULL); if (unlikely(!__pyx_t_1)) __PYX_ERR(1, 4, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __Pyx_Raise(__pyx_t_1, 0, 0, 0);
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
@@ -10876,7 +11027,7 @@ static int __pyx_memoryview___pyx_pf_15View_dot_MemoryView_10memoryview_6__setit
  * 
  *         have_slices, index = _unellipsify(index, self.view.ndim)
  */
-    __pyx_t_2 = __Pyx_PyObject_Call(__pyx_builtin_TypeError, __pyx_tuple__14, NULL); if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 420, __pyx_L1_error)
+    __pyx_t_2 = __Pyx_PyObject_Call(__pyx_builtin_TypeError, __pyx_tuple__16, NULL); if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 420, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_2);
     __Pyx_Raise(__pyx_t_2, 0, 0, 0);
     __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
@@ -11924,7 +12075,7 @@ static PyObject *__pyx_memoryview_convert_item_to_object(struct __pyx_memoryview
  *         else:
  *             if len(self.view.format) == 1:
  */
-      __pyx_t_6 = __Pyx_PyObject_Call(__pyx_builtin_ValueError, __pyx_tuple__15, NULL); if (unlikely(!__pyx_t_6)) __PYX_ERR(1, 497, __pyx_L5_except_error)
+      __pyx_t_6 = __Pyx_PyObject_Call(__pyx_builtin_ValueError, __pyx_tuple__17, NULL); if (unlikely(!__pyx_t_6)) __PYX_ERR(1, 497, __pyx_L5_except_error)
       __Pyx_GOTREF(__pyx_t_6);
       __Pyx_Raise(__pyx_t_6, 0, 0, 0);
       __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
@@ -12286,7 +12437,7 @@ static int __pyx_memoryview___pyx_pf_15View_dot_MemoryView_10memoryview_8__getbu
  * 
  *         if flags & PyBUF_ND:
  */
-    __pyx_t_3 = __Pyx_PyObject_Call(__pyx_builtin_ValueError, __pyx_tuple__16, NULL); if (unlikely(!__pyx_t_3)) __PYX_ERR(1, 522, __pyx_L1_error)
+    __pyx_t_3 = __Pyx_PyObject_Call(__pyx_builtin_ValueError, __pyx_tuple__18, NULL); if (unlikely(!__pyx_t_3)) __PYX_ERR(1, 522, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_3);
     __Pyx_Raise(__pyx_t_3, 0, 0, 0);
     __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
@@ -12835,7 +12986,7 @@ static PyObject *__pyx_pf_15View_dot_MemoryView_10memoryview_7strides___get__(st
  * 
  *         return tuple([stride for stride in self.view.strides[:self.view.ndim]])
  */
-    __pyx_t_2 = __Pyx_PyObject_Call(__pyx_builtin_ValueError, __pyx_tuple__17, NULL); if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 572, __pyx_L1_error)
+    __pyx_t_2 = __Pyx_PyObject_Call(__pyx_builtin_ValueError, __pyx_tuple__19, NULL); if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 572, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_2);
     __Pyx_Raise(__pyx_t_2, 0, 0, 0);
     __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
@@ -12952,7 +13103,7 @@ static PyObject *__pyx_pf_15View_dot_MemoryView_10memoryview_10suboffsets___get_
     __Pyx_XDECREF(__pyx_r);
     __pyx_t_2 = __Pyx_PyInt_From_int(__pyx_v_self->view.ndim); if (unlikely(!__pyx_t_2)) __PYX_ERR(1, 579, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_2);
-    __pyx_t_3 = PyNumber_Multiply(__pyx_tuple__18, __pyx_t_2); if (unlikely(!__pyx_t_3)) __PYX_ERR(1, 579, __pyx_L1_error)
+    __pyx_t_3 = PyNumber_Multiply(__pyx_tuple__20, __pyx_t_2); if (unlikely(!__pyx_t_3)) __PYX_ERR(1, 579, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_3);
     __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
     __pyx_r = __pyx_t_3;
@@ -13990,7 +14141,7 @@ static PyObject *__pyx_pf___pyx_memoryview___reduce_cython__(CYTHON_UNUSED struc
  * def __setstate_cython__(self, __pyx_state):
  *     raise TypeError("no default __reduce__ due to non-trivial __cinit__")
  */
-  __pyx_t_1 = __Pyx_PyObject_Call(__pyx_builtin_TypeError, __pyx_tuple__19, NULL); if (unlikely(!__pyx_t_1)) __PYX_ERR(1, 2, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyObject_Call(__pyx_builtin_TypeError, __pyx_tuple__21, NULL); if (unlikely(!__pyx_t_1)) __PYX_ERR(1, 2, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __Pyx_Raise(__pyx_t_1, 0, 0, 0);
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
@@ -14046,7 +14197,7 @@ static PyObject *__pyx_pf___pyx_memoryview_2__setstate_cython__(CYTHON_UNUSED st
  * def __setstate_cython__(self, __pyx_state):
  *     raise TypeError("no default __reduce__ due to non-trivial __cinit__")             # <<<<<<<<<<<<<<
  */
-  __pyx_t_1 = __Pyx_PyObject_Call(__pyx_builtin_TypeError, __pyx_tuple__20, NULL); if (unlikely(!__pyx_t_1)) __PYX_ERR(1, 4, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyObject_Call(__pyx_builtin_TypeError, __pyx_tuple__22, NULL); if (unlikely(!__pyx_t_1)) __PYX_ERR(1, 4, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __Pyx_Raise(__pyx_t_1, 0, 0, 0);
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
@@ -14403,9 +14554,9 @@ static PyObject *_unellipsify(PyObject *__pyx_v_index, int __pyx_v_ndim) {
         __Pyx_GOTREF(__pyx_t_7);
         { Py_ssize_t __pyx_temp;
           for (__pyx_temp=0; __pyx_temp < ((__pyx_v_ndim - __pyx_t_8) + 1); __pyx_temp++) {
-            __Pyx_INCREF(__pyx_slice__21);
-            __Pyx_GIVEREF(__pyx_slice__21);
-            PyList_SET_ITEM(__pyx_t_7, __pyx_temp, __pyx_slice__21);
+            __Pyx_INCREF(__pyx_slice__3);
+            __Pyx_GIVEREF(__pyx_slice__3);
+            PyList_SET_ITEM(__pyx_t_7, __pyx_temp, __pyx_slice__3);
           }
         }
         __pyx_t_9 = __Pyx_PyList_Extend(__pyx_v_result, __pyx_t_7); if (unlikely(__pyx_t_9 == ((int)-1))) __PYX_ERR(1, 684, __pyx_L1_error)
@@ -14438,7 +14589,7 @@ static PyObject *_unellipsify(PyObject *__pyx_v_index, int __pyx_v_ndim) {
  *         else:
  */
       /*else*/ {
-        __pyx_t_9 = __Pyx_PyList_Append(__pyx_v_result, __pyx_slice__21); if (unlikely(__pyx_t_9 == ((int)-1))) __PYX_ERR(1, 687, __pyx_L1_error)
+        __pyx_t_9 = __Pyx_PyList_Append(__pyx_v_result, __pyx_slice__3); if (unlikely(__pyx_t_9 == ((int)-1))) __PYX_ERR(1, 687, __pyx_L1_error)
       }
       __pyx_L7:;
 
@@ -14578,9 +14729,9 @@ static PyObject *_unellipsify(PyObject *__pyx_v_index, int __pyx_v_ndim) {
     __Pyx_GOTREF(__pyx_t_3);
     { Py_ssize_t __pyx_temp;
       for (__pyx_temp=0; __pyx_temp < __pyx_v_nslices; __pyx_temp++) {
-        __Pyx_INCREF(__pyx_slice__21);
-        __Pyx_GIVEREF(__pyx_slice__21);
-        PyList_SET_ITEM(__pyx_t_3, __pyx_temp, __pyx_slice__21);
+        __Pyx_INCREF(__pyx_slice__3);
+        __Pyx_GIVEREF(__pyx_slice__3);
+        PyList_SET_ITEM(__pyx_t_3, __pyx_temp, __pyx_slice__3);
       }
     }
     __pyx_t_9 = __Pyx_PyList_Extend(__pyx_v_result, __pyx_t_3); if (unlikely(__pyx_t_9 == ((int)-1))) __PYX_ERR(1, 698, __pyx_L1_error)
@@ -14707,7 +14858,7 @@ static PyObject *assert_direct_dimensions(Py_ssize_t *__pyx_v_suboffsets, int __
  * 
  * 
  */
-      __pyx_t_5 = __Pyx_PyObject_Call(__pyx_builtin_ValueError, __pyx_tuple__22, NULL); if (unlikely(!__pyx_t_5)) __PYX_ERR(1, 705, __pyx_L1_error)
+      __pyx_t_5 = __Pyx_PyObject_Call(__pyx_builtin_ValueError, __pyx_tuple__23, NULL); if (unlikely(!__pyx_t_5)) __PYX_ERR(1, 705, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_5);
       __Pyx_Raise(__pyx_t_5, 0, 0, 0);
       __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
@@ -16891,7 +17042,7 @@ static PyObject *__pyx_pf___pyx_memoryviewslice___reduce_cython__(CYTHON_UNUSED 
  * def __setstate_cython__(self, __pyx_state):
  *     raise TypeError("no default __reduce__ due to non-trivial __cinit__")
  */
-  __pyx_t_1 = __Pyx_PyObject_Call(__pyx_builtin_TypeError, __pyx_tuple__23, NULL); if (unlikely(!__pyx_t_1)) __PYX_ERR(1, 2, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyObject_Call(__pyx_builtin_TypeError, __pyx_tuple__24, NULL); if (unlikely(!__pyx_t_1)) __PYX_ERR(1, 2, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __Pyx_Raise(__pyx_t_1, 0, 0, 0);
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
@@ -16947,7 +17098,7 @@ static PyObject *__pyx_pf___pyx_memoryviewslice_2__setstate_cython__(CYTHON_UNUS
  * def __setstate_cython__(self, __pyx_state):
  *     raise TypeError("no default __reduce__ due to non-trivial __cinit__")             # <<<<<<<<<<<<<<
  */
-  __pyx_t_1 = __Pyx_PyObject_Call(__pyx_builtin_TypeError, __pyx_tuple__24, NULL); if (unlikely(!__pyx_t_1)) __PYX_ERR(1, 4, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyObject_Call(__pyx_builtin_TypeError, __pyx_tuple__25, NULL); if (unlikely(!__pyx_t_1)) __PYX_ERR(1, 4, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __Pyx_Raise(__pyx_t_1, 0, 0, 0);
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
@@ -20224,7 +20375,7 @@ static PyObject *__pyx_pf_15View_dot_MemoryView___pyx_unpickle_Enum(CYTHON_UNUSE
  */
   __pyx_t_1 = __Pyx_PyInt_From_long(__pyx_v___pyx_checksum); if (unlikely(!__pyx_t_1)) __PYX_ERR(1, 4, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
-  __pyx_t_2 = (__Pyx_PySequence_ContainsTF(__pyx_t_1, __pyx_tuple__25, Py_NE)); if (unlikely(__pyx_t_2 < 0)) __PYX_ERR(1, 4, __pyx_L1_error)
+  __pyx_t_2 = (__Pyx_PySequence_ContainsTF(__pyx_t_1, __pyx_tuple__26, Py_NE)); if (unlikely(__pyx_t_2 < 0)) __PYX_ERR(1, 4, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
   __pyx_t_3 = (__pyx_t_2 != 0);
   if (__pyx_t_3) {
@@ -20558,6 +20709,10 @@ static PyObject *__pyx_getprop_11boxcounting_11boxcounting_n(PyObject *o, CYTHON
   return __pyx_pw_11boxcounting_11boxcounting_1n_1__get__(o);
 }
 
+static PyObject *__pyx_getprop_11boxcounting_11boxcounting_dim(PyObject *o, CYTHON_UNUSED void *x) {
+  return __pyx_pw_11boxcounting_11boxcounting_3dim_1__get__(o);
+}
+
 static PyObject *__pyx_getprop_11boxcounting_11boxcounting_tot_data(PyObject *o, CYTHON_UNUSED void *x) {
   return __pyx_pw_11boxcounting_11boxcounting_8tot_data_1__get__(o);
 }
@@ -20589,6 +20744,7 @@ static struct PyGetSetDef __pyx_getsets_11boxcounting_boxcounting[] = {
   {(char *)"max_level", __pyx_getprop_11boxcounting_11boxcounting_max_level, 0, (char *)0, 0},
   {(char *)"eps0", __pyx_getprop_11boxcounting_11boxcounting_eps0, 0, (char *)0, 0},
   {(char *)"n", __pyx_getprop_11boxcounting_11boxcounting_n, 0, (char *)0, 0},
+  {(char *)"dim", __pyx_getprop_11boxcounting_11boxcounting_dim, 0, (char *)0, 0},
   {(char *)"tot_data", __pyx_getprop_11boxcounting_11boxcounting_tot_data, 0, (char *)0, 0},
   {(char *)"num_tree", __pyx_getprop_11boxcounting_11boxcounting_num_tree, 0, (char *)0, 0},
   {(char *)"nodes", __pyx_getprop_11boxcounting_11boxcounting_nodes, 0, (char *)0, 0},
@@ -21550,7 +21706,7 @@ static __Pyx_StringTabEntry __pyx_string_tab[] = {
   {0, 0, 0, 0, 0, 0, 0}
 };
 static CYTHON_SMALL_CODE int __Pyx_InitCachedBuiltins(void) {
-  __pyx_builtin_range = __Pyx_GetBuiltinName(__pyx_n_s_range); if (!__pyx_builtin_range) __PYX_ERR(0, 51, __pyx_L1_error)
+  __pyx_builtin_range = __Pyx_GetBuiltinName(__pyx_n_s_range); if (!__pyx_builtin_range) __PYX_ERR(0, 53, __pyx_L1_error)
   __pyx_builtin_TypeError = __Pyx_GetBuiltinName(__pyx_n_s_TypeError); if (!__pyx_builtin_TypeError) __PYX_ERR(1, 2, __pyx_L1_error)
   __pyx_builtin_ImportError = __Pyx_GetBuiltinName(__pyx_n_s_ImportError); if (!__pyx_builtin_ImportError) __PYX_ERR(2, 944, __pyx_L1_error)
   __pyx_builtin_ValueError = __Pyx_GetBuiltinName(__pyx_n_s_ValueError); if (!__pyx_builtin_ValueError) __PYX_ERR(1, 134, __pyx_L1_error)
@@ -21568,24 +21724,38 @@ static CYTHON_SMALL_CODE int __Pyx_InitCachedConstants(void) {
   __Pyx_RefNannyDeclarations
   __Pyx_RefNannySetupContext("__Pyx_InitCachedConstants", 0);
 
+  /* "boxcounting.pyx":186
+ *         nodes = np.zeros((n, self.dim + 2)).astype(np.double)
+ *         get_nodes(self.tree, nodes, self.dim, 0)
+ *         levels = nodes[:, -1]             # <<<<<<<<<<<<<<
+ *         nodes = nodes[:, :self.dim + 1]
+ *         return nodes, levels, n
+ */
+  __pyx_slice__3 = PySlice_New(Py_None, Py_None, Py_None); if (unlikely(!__pyx_slice__3)) __PYX_ERR(0, 186, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_slice__3);
+  __Pyx_GIVEREF(__pyx_slice__3);
+  __pyx_tuple__4 = PyTuple_Pack(2, __pyx_slice__3, __pyx_int_neg_1); if (unlikely(!__pyx_tuple__4)) __PYX_ERR(0, 186, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_tuple__4);
+  __Pyx_GIVEREF(__pyx_tuple__4);
+
   /* "(tree fragment)":2
  * def __reduce_cython__(self):
  *     raise TypeError("self.M,self._eps,self._occ,self.cfile,self.cmid,self.m,self.tree cannot be converted to a Python object for pickling")             # <<<<<<<<<<<<<<
  * def __setstate_cython__(self, __pyx_state):
  *     raise TypeError("self.M,self._eps,self._occ,self.cfile,self.cmid,self.m,self.tree cannot be converted to a Python object for pickling")
  */
-  __pyx_tuple__3 = PyTuple_Pack(1, __pyx_kp_s_self_M_self__eps_self__occ_self); if (unlikely(!__pyx_tuple__3)) __PYX_ERR(1, 2, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_tuple__3);
-  __Pyx_GIVEREF(__pyx_tuple__3);
+  __pyx_tuple__5 = PyTuple_Pack(1, __pyx_kp_s_self_M_self__eps_self__occ_self); if (unlikely(!__pyx_tuple__5)) __PYX_ERR(1, 2, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_tuple__5);
+  __Pyx_GIVEREF(__pyx_tuple__5);
 
   /* "(tree fragment)":4
  *     raise TypeError("self.M,self._eps,self._occ,self.cfile,self.cmid,self.m,self.tree cannot be converted to a Python object for pickling")
  * def __setstate_cython__(self, __pyx_state):
  *     raise TypeError("self.M,self._eps,self._occ,self.cfile,self.cmid,self.m,self.tree cannot be converted to a Python object for pickling")             # <<<<<<<<<<<<<<
  */
-  __pyx_tuple__4 = PyTuple_Pack(1, __pyx_kp_s_self_M_self__eps_self__occ_self); if (unlikely(!__pyx_tuple__4)) __PYX_ERR(1, 4, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_tuple__4);
-  __Pyx_GIVEREF(__pyx_tuple__4);
+  __pyx_tuple__6 = PyTuple_Pack(1, __pyx_kp_s_self_M_self__eps_self__occ_self); if (unlikely(!__pyx_tuple__6)) __PYX_ERR(1, 4, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_tuple__6);
+  __Pyx_GIVEREF(__pyx_tuple__6);
 
   /* "../../.local/lib/python3.10/site-packages/numpy/__init__.pxd":944
  *         __pyx_import_array()
@@ -21594,9 +21764,9 @@ static CYTHON_SMALL_CODE int __Pyx_InitCachedConstants(void) {
  * 
  * cdef inline int import_umath() except -1:
  */
-  __pyx_tuple__5 = PyTuple_Pack(1, __pyx_kp_u_numpy_core_multiarray_failed_to); if (unlikely(!__pyx_tuple__5)) __PYX_ERR(2, 944, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_tuple__5);
-  __Pyx_GIVEREF(__pyx_tuple__5);
+  __pyx_tuple__7 = PyTuple_Pack(1, __pyx_kp_u_numpy_core_multiarray_failed_to); if (unlikely(!__pyx_tuple__7)) __PYX_ERR(2, 944, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_tuple__7);
+  __Pyx_GIVEREF(__pyx_tuple__7);
 
   /* "../../.local/lib/python3.10/site-packages/numpy/__init__.pxd":950
  *         _import_umath()
@@ -21605,9 +21775,9 @@ static CYTHON_SMALL_CODE int __Pyx_InitCachedConstants(void) {
  * 
  * cdef inline int import_ufunc() except -1:
  */
-  __pyx_tuple__6 = PyTuple_Pack(1, __pyx_kp_u_numpy_core_umath_failed_to_impor); if (unlikely(!__pyx_tuple__6)) __PYX_ERR(2, 950, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_tuple__6);
-  __Pyx_GIVEREF(__pyx_tuple__6);
+  __pyx_tuple__8 = PyTuple_Pack(1, __pyx_kp_u_numpy_core_umath_failed_to_impor); if (unlikely(!__pyx_tuple__8)) __PYX_ERR(2, 950, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_tuple__8);
+  __Pyx_GIVEREF(__pyx_tuple__8);
 
   /* "View.MemoryView":134
  * 
@@ -21616,9 +21786,9 @@ static CYTHON_SMALL_CODE int __Pyx_InitCachedConstants(void) {
  * 
  *         if itemsize <= 0:
  */
-  __pyx_tuple__7 = PyTuple_Pack(1, __pyx_kp_s_Empty_shape_tuple_for_cython_arr); if (unlikely(!__pyx_tuple__7)) __PYX_ERR(1, 134, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_tuple__7);
-  __Pyx_GIVEREF(__pyx_tuple__7);
+  __pyx_tuple__9 = PyTuple_Pack(1, __pyx_kp_s_Empty_shape_tuple_for_cython_arr); if (unlikely(!__pyx_tuple__9)) __PYX_ERR(1, 134, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_tuple__9);
+  __Pyx_GIVEREF(__pyx_tuple__9);
 
   /* "View.MemoryView":137
  * 
@@ -21627,9 +21797,9 @@ static CYTHON_SMALL_CODE int __Pyx_InitCachedConstants(void) {
  * 
  *         if not isinstance(format, bytes):
  */
-  __pyx_tuple__8 = PyTuple_Pack(1, __pyx_kp_s_itemsize_0_for_cython_array); if (unlikely(!__pyx_tuple__8)) __PYX_ERR(1, 137, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_tuple__8);
-  __Pyx_GIVEREF(__pyx_tuple__8);
+  __pyx_tuple__10 = PyTuple_Pack(1, __pyx_kp_s_itemsize_0_for_cython_array); if (unlikely(!__pyx_tuple__10)) __PYX_ERR(1, 137, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_tuple__10);
+  __Pyx_GIVEREF(__pyx_tuple__10);
 
   /* "View.MemoryView":149
  * 
@@ -21638,9 +21808,9 @@ static CYTHON_SMALL_CODE int __Pyx_InitCachedConstants(void) {
  * 
  * 
  */
-  __pyx_tuple__9 = PyTuple_Pack(1, __pyx_kp_s_unable_to_allocate_shape_and_str); if (unlikely(!__pyx_tuple__9)) __PYX_ERR(1, 149, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_tuple__9);
-  __Pyx_GIVEREF(__pyx_tuple__9);
+  __pyx_tuple__11 = PyTuple_Pack(1, __pyx_kp_s_unable_to_allocate_shape_and_str); if (unlikely(!__pyx_tuple__11)) __PYX_ERR(1, 149, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_tuple__11);
+  __Pyx_GIVEREF(__pyx_tuple__11);
 
   /* "View.MemoryView":177
  *             self.data = <char *>malloc(self.len)
@@ -21649,9 +21819,9 @@ static CYTHON_SMALL_CODE int __Pyx_InitCachedConstants(void) {
  * 
  *             if self.dtype_is_object:
  */
-  __pyx_tuple__10 = PyTuple_Pack(1, __pyx_kp_s_unable_to_allocate_array_data); if (unlikely(!__pyx_tuple__10)) __PYX_ERR(1, 177, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_tuple__10);
-  __Pyx_GIVEREF(__pyx_tuple__10);
+  __pyx_tuple__12 = PyTuple_Pack(1, __pyx_kp_s_unable_to_allocate_array_data); if (unlikely(!__pyx_tuple__12)) __PYX_ERR(1, 177, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_tuple__12);
+  __Pyx_GIVEREF(__pyx_tuple__12);
 
   /* "View.MemoryView":193
  *             bufmode = PyBUF_F_CONTIGUOUS | PyBUF_ANY_CONTIGUOUS
@@ -21660,9 +21830,9 @@ static CYTHON_SMALL_CODE int __Pyx_InitCachedConstants(void) {
  *         info.buf = self.data
  *         info.len = self.len
  */
-  __pyx_tuple__11 = PyTuple_Pack(1, __pyx_kp_s_Can_only_create_a_buffer_that_is); if (unlikely(!__pyx_tuple__11)) __PYX_ERR(1, 193, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_tuple__11);
-  __Pyx_GIVEREF(__pyx_tuple__11);
+  __pyx_tuple__13 = PyTuple_Pack(1, __pyx_kp_s_Can_only_create_a_buffer_that_is); if (unlikely(!__pyx_tuple__13)) __PYX_ERR(1, 193, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_tuple__13);
+  __Pyx_GIVEREF(__pyx_tuple__13);
 
   /* "(tree fragment)":2
  * def __reduce_cython__(self):
@@ -21670,18 +21840,18 @@ static CYTHON_SMALL_CODE int __Pyx_InitCachedConstants(void) {
  * def __setstate_cython__(self, __pyx_state):
  *     raise TypeError("no default __reduce__ due to non-trivial __cinit__")
  */
-  __pyx_tuple__12 = PyTuple_Pack(1, __pyx_kp_s_no_default___reduce___due_to_non); if (unlikely(!__pyx_tuple__12)) __PYX_ERR(1, 2, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_tuple__12);
-  __Pyx_GIVEREF(__pyx_tuple__12);
+  __pyx_tuple__14 = PyTuple_Pack(1, __pyx_kp_s_no_default___reduce___due_to_non); if (unlikely(!__pyx_tuple__14)) __PYX_ERR(1, 2, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_tuple__14);
+  __Pyx_GIVEREF(__pyx_tuple__14);
 
   /* "(tree fragment)":4
  *     raise TypeError("no default __reduce__ due to non-trivial __cinit__")
  * def __setstate_cython__(self, __pyx_state):
  *     raise TypeError("no default __reduce__ due to non-trivial __cinit__")             # <<<<<<<<<<<<<<
  */
-  __pyx_tuple__13 = PyTuple_Pack(1, __pyx_kp_s_no_default___reduce___due_to_non); if (unlikely(!__pyx_tuple__13)) __PYX_ERR(1, 4, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_tuple__13);
-  __Pyx_GIVEREF(__pyx_tuple__13);
+  __pyx_tuple__15 = PyTuple_Pack(1, __pyx_kp_s_no_default___reduce___due_to_non); if (unlikely(!__pyx_tuple__15)) __PYX_ERR(1, 4, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_tuple__15);
+  __Pyx_GIVEREF(__pyx_tuple__15);
 
   /* "View.MemoryView":420
  *     def __setitem__(memoryview self, object index, object value):
@@ -21690,9 +21860,9 @@ static CYTHON_SMALL_CODE int __Pyx_InitCachedConstants(void) {
  * 
  *         have_slices, index = _unellipsify(index, self.view.ndim)
  */
-  __pyx_tuple__14 = PyTuple_Pack(1, __pyx_kp_s_Cannot_assign_to_read_only_memor); if (unlikely(!__pyx_tuple__14)) __PYX_ERR(1, 420, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_tuple__14);
-  __Pyx_GIVEREF(__pyx_tuple__14);
+  __pyx_tuple__16 = PyTuple_Pack(1, __pyx_kp_s_Cannot_assign_to_read_only_memor); if (unlikely(!__pyx_tuple__16)) __PYX_ERR(1, 420, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_tuple__16);
+  __Pyx_GIVEREF(__pyx_tuple__16);
 
   /* "View.MemoryView":497
  *             result = struct.unpack(self.view.format, bytesitem)
@@ -21701,9 +21871,9 @@ static CYTHON_SMALL_CODE int __Pyx_InitCachedConstants(void) {
  *         else:
  *             if len(self.view.format) == 1:
  */
-  __pyx_tuple__15 = PyTuple_Pack(1, __pyx_kp_s_Unable_to_convert_item_to_object); if (unlikely(!__pyx_tuple__15)) __PYX_ERR(1, 497, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_tuple__15);
-  __Pyx_GIVEREF(__pyx_tuple__15);
+  __pyx_tuple__17 = PyTuple_Pack(1, __pyx_kp_s_Unable_to_convert_item_to_object); if (unlikely(!__pyx_tuple__17)) __PYX_ERR(1, 497, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_tuple__17);
+  __Pyx_GIVEREF(__pyx_tuple__17);
 
   /* "View.MemoryView":522
  *     def __getbuffer__(self, Py_buffer *info, int flags):
@@ -21712,9 +21882,9 @@ static CYTHON_SMALL_CODE int __Pyx_InitCachedConstants(void) {
  * 
  *         if flags & PyBUF_ND:
  */
-  __pyx_tuple__16 = PyTuple_Pack(1, __pyx_kp_s_Cannot_create_writable_memory_vi); if (unlikely(!__pyx_tuple__16)) __PYX_ERR(1, 522, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_tuple__16);
-  __Pyx_GIVEREF(__pyx_tuple__16);
+  __pyx_tuple__18 = PyTuple_Pack(1, __pyx_kp_s_Cannot_create_writable_memory_vi); if (unlikely(!__pyx_tuple__18)) __PYX_ERR(1, 522, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_tuple__18);
+  __Pyx_GIVEREF(__pyx_tuple__18);
 
   /* "View.MemoryView":572
  *         if self.view.strides == NULL:
@@ -21723,9 +21893,9 @@ static CYTHON_SMALL_CODE int __Pyx_InitCachedConstants(void) {
  * 
  *         return tuple([stride for stride in self.view.strides[:self.view.ndim]])
  */
-  __pyx_tuple__17 = PyTuple_Pack(1, __pyx_kp_s_Buffer_view_does_not_expose_stri); if (unlikely(!__pyx_tuple__17)) __PYX_ERR(1, 572, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_tuple__17);
-  __Pyx_GIVEREF(__pyx_tuple__17);
+  __pyx_tuple__19 = PyTuple_Pack(1, __pyx_kp_s_Buffer_view_does_not_expose_stri); if (unlikely(!__pyx_tuple__19)) __PYX_ERR(1, 572, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_tuple__19);
+  __Pyx_GIVEREF(__pyx_tuple__19);
 
   /* "View.MemoryView":579
  *     def suboffsets(self):
@@ -21734,12 +21904,12 @@ static CYTHON_SMALL_CODE int __Pyx_InitCachedConstants(void) {
  * 
  *         return tuple([suboffset for suboffset in self.view.suboffsets[:self.view.ndim]])
  */
-  __pyx_tuple__18 = PyTuple_New(1); if (unlikely(!__pyx_tuple__18)) __PYX_ERR(1, 579, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_tuple__18);
+  __pyx_tuple__20 = PyTuple_New(1); if (unlikely(!__pyx_tuple__20)) __PYX_ERR(1, 579, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_tuple__20);
   __Pyx_INCREF(__pyx_int_neg_1);
   __Pyx_GIVEREF(__pyx_int_neg_1);
-  PyTuple_SET_ITEM(__pyx_tuple__18, 0, __pyx_int_neg_1);
-  __Pyx_GIVEREF(__pyx_tuple__18);
+  PyTuple_SET_ITEM(__pyx_tuple__20, 0, __pyx_int_neg_1);
+  __Pyx_GIVEREF(__pyx_tuple__20);
 
   /* "(tree fragment)":2
  * def __reduce_cython__(self):
@@ -21747,29 +21917,18 @@ static CYTHON_SMALL_CODE int __Pyx_InitCachedConstants(void) {
  * def __setstate_cython__(self, __pyx_state):
  *     raise TypeError("no default __reduce__ due to non-trivial __cinit__")
  */
-  __pyx_tuple__19 = PyTuple_Pack(1, __pyx_kp_s_no_default___reduce___due_to_non); if (unlikely(!__pyx_tuple__19)) __PYX_ERR(1, 2, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_tuple__19);
-  __Pyx_GIVEREF(__pyx_tuple__19);
+  __pyx_tuple__21 = PyTuple_Pack(1, __pyx_kp_s_no_default___reduce___due_to_non); if (unlikely(!__pyx_tuple__21)) __PYX_ERR(1, 2, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_tuple__21);
+  __Pyx_GIVEREF(__pyx_tuple__21);
 
   /* "(tree fragment)":4
  *     raise TypeError("no default __reduce__ due to non-trivial __cinit__")
  * def __setstate_cython__(self, __pyx_state):
  *     raise TypeError("no default __reduce__ due to non-trivial __cinit__")             # <<<<<<<<<<<<<<
  */
-  __pyx_tuple__20 = PyTuple_Pack(1, __pyx_kp_s_no_default___reduce___due_to_non); if (unlikely(!__pyx_tuple__20)) __PYX_ERR(1, 4, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_tuple__20);
-  __Pyx_GIVEREF(__pyx_tuple__20);
-
-  /* "View.MemoryView":684
- *         if item is Ellipsis:
- *             if not seen_ellipsis:
- *                 result.extend([slice(None)] * (ndim - len(tup) + 1))             # <<<<<<<<<<<<<<
- *                 seen_ellipsis = True
- *             else:
- */
-  __pyx_slice__21 = PySlice_New(Py_None, Py_None, Py_None); if (unlikely(!__pyx_slice__21)) __PYX_ERR(1, 684, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_slice__21);
-  __Pyx_GIVEREF(__pyx_slice__21);
+  __pyx_tuple__22 = PyTuple_Pack(1, __pyx_kp_s_no_default___reduce___due_to_non); if (unlikely(!__pyx_tuple__22)) __PYX_ERR(1, 4, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_tuple__22);
+  __Pyx_GIVEREF(__pyx_tuple__22);
 
   /* "View.MemoryView":705
  *     for suboffset in suboffsets[:ndim]:
@@ -21778,9 +21937,9 @@ static CYTHON_SMALL_CODE int __Pyx_InitCachedConstants(void) {
  * 
  * 
  */
-  __pyx_tuple__22 = PyTuple_Pack(1, __pyx_kp_s_Indirect_dimensions_not_supporte); if (unlikely(!__pyx_tuple__22)) __PYX_ERR(1, 705, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_tuple__22);
-  __Pyx_GIVEREF(__pyx_tuple__22);
+  __pyx_tuple__23 = PyTuple_Pack(1, __pyx_kp_s_Indirect_dimensions_not_supporte); if (unlikely(!__pyx_tuple__23)) __PYX_ERR(1, 705, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_tuple__23);
+  __Pyx_GIVEREF(__pyx_tuple__23);
 
   /* "(tree fragment)":2
  * def __reduce_cython__(self):
@@ -21788,21 +21947,21 @@ static CYTHON_SMALL_CODE int __Pyx_InitCachedConstants(void) {
  * def __setstate_cython__(self, __pyx_state):
  *     raise TypeError("no default __reduce__ due to non-trivial __cinit__")
  */
-  __pyx_tuple__23 = PyTuple_Pack(1, __pyx_kp_s_no_default___reduce___due_to_non); if (unlikely(!__pyx_tuple__23)) __PYX_ERR(1, 2, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_tuple__23);
-  __Pyx_GIVEREF(__pyx_tuple__23);
+  __pyx_tuple__24 = PyTuple_Pack(1, __pyx_kp_s_no_default___reduce___due_to_non); if (unlikely(!__pyx_tuple__24)) __PYX_ERR(1, 2, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_tuple__24);
+  __Pyx_GIVEREF(__pyx_tuple__24);
 
   /* "(tree fragment)":4
  *     raise TypeError("no default __reduce__ due to non-trivial __cinit__")
  * def __setstate_cython__(self, __pyx_state):
  *     raise TypeError("no default __reduce__ due to non-trivial __cinit__")             # <<<<<<<<<<<<<<
  */
-  __pyx_tuple__24 = PyTuple_Pack(1, __pyx_kp_s_no_default___reduce___due_to_non); if (unlikely(!__pyx_tuple__24)) __PYX_ERR(1, 4, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_tuple__24);
-  __Pyx_GIVEREF(__pyx_tuple__24);
-  __pyx_tuple__25 = PyTuple_Pack(3, __pyx_int_184977713, __pyx_int_136983863, __pyx_int_112105877); if (unlikely(!__pyx_tuple__25)) __PYX_ERR(1, 4, __pyx_L1_error)
+  __pyx_tuple__25 = PyTuple_Pack(1, __pyx_kp_s_no_default___reduce___due_to_non); if (unlikely(!__pyx_tuple__25)) __PYX_ERR(1, 4, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_tuple__25);
   __Pyx_GIVEREF(__pyx_tuple__25);
+  __pyx_tuple__26 = PyTuple_Pack(3, __pyx_int_184977713, __pyx_int_136983863, __pyx_int_112105877); if (unlikely(!__pyx_tuple__26)) __PYX_ERR(1, 4, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_tuple__26);
+  __Pyx_GIVEREF(__pyx_tuple__26);
 
   /* "View.MemoryView":287
  *         return self.name
@@ -21811,9 +21970,9 @@ static CYTHON_SMALL_CODE int __Pyx_InitCachedConstants(void) {
  * cdef strided = Enum("<strided and direct>") # default
  * cdef indirect = Enum("<strided and indirect>")
  */
-  __pyx_tuple__26 = PyTuple_Pack(1, __pyx_kp_s_strided_and_direct_or_indirect); if (unlikely(!__pyx_tuple__26)) __PYX_ERR(1, 287, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_tuple__26);
-  __Pyx_GIVEREF(__pyx_tuple__26);
+  __pyx_tuple__27 = PyTuple_Pack(1, __pyx_kp_s_strided_and_direct_or_indirect); if (unlikely(!__pyx_tuple__27)) __PYX_ERR(1, 287, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_tuple__27);
+  __Pyx_GIVEREF(__pyx_tuple__27);
 
   /* "View.MemoryView":288
  * 
@@ -21822,9 +21981,9 @@ static CYTHON_SMALL_CODE int __Pyx_InitCachedConstants(void) {
  * cdef indirect = Enum("<strided and indirect>")
  * 
  */
-  __pyx_tuple__27 = PyTuple_Pack(1, __pyx_kp_s_strided_and_direct); if (unlikely(!__pyx_tuple__27)) __PYX_ERR(1, 288, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_tuple__27);
-  __Pyx_GIVEREF(__pyx_tuple__27);
+  __pyx_tuple__28 = PyTuple_Pack(1, __pyx_kp_s_strided_and_direct); if (unlikely(!__pyx_tuple__28)) __PYX_ERR(1, 288, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_tuple__28);
+  __Pyx_GIVEREF(__pyx_tuple__28);
 
   /* "View.MemoryView":289
  * cdef generic = Enum("<strided and direct or indirect>")
@@ -21833,9 +21992,9 @@ static CYTHON_SMALL_CODE int __Pyx_InitCachedConstants(void) {
  * 
  * 
  */
-  __pyx_tuple__28 = PyTuple_Pack(1, __pyx_kp_s_strided_and_indirect); if (unlikely(!__pyx_tuple__28)) __PYX_ERR(1, 289, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_tuple__28);
-  __Pyx_GIVEREF(__pyx_tuple__28);
+  __pyx_tuple__29 = PyTuple_Pack(1, __pyx_kp_s_strided_and_indirect); if (unlikely(!__pyx_tuple__29)) __PYX_ERR(1, 289, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_tuple__29);
+  __Pyx_GIVEREF(__pyx_tuple__29);
 
   /* "View.MemoryView":292
  * 
@@ -21844,9 +22003,9 @@ static CYTHON_SMALL_CODE int __Pyx_InitCachedConstants(void) {
  * cdef indirect_contiguous = Enum("<contiguous and indirect>")
  * 
  */
-  __pyx_tuple__29 = PyTuple_Pack(1, __pyx_kp_s_contiguous_and_direct); if (unlikely(!__pyx_tuple__29)) __PYX_ERR(1, 292, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_tuple__29);
-  __Pyx_GIVEREF(__pyx_tuple__29);
+  __pyx_tuple__30 = PyTuple_Pack(1, __pyx_kp_s_contiguous_and_direct); if (unlikely(!__pyx_tuple__30)) __PYX_ERR(1, 292, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_tuple__30);
+  __Pyx_GIVEREF(__pyx_tuple__30);
 
   /* "View.MemoryView":293
  * 
@@ -21855,19 +22014,19 @@ static CYTHON_SMALL_CODE int __Pyx_InitCachedConstants(void) {
  * 
  * 
  */
-  __pyx_tuple__30 = PyTuple_Pack(1, __pyx_kp_s_contiguous_and_indirect); if (unlikely(!__pyx_tuple__30)) __PYX_ERR(1, 293, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_tuple__30);
-  __Pyx_GIVEREF(__pyx_tuple__30);
+  __pyx_tuple__31 = PyTuple_Pack(1, __pyx_kp_s_contiguous_and_indirect); if (unlikely(!__pyx_tuple__31)) __PYX_ERR(1, 293, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_tuple__31);
+  __Pyx_GIVEREF(__pyx_tuple__31);
 
   /* "(tree fragment)":1
  * def __pyx_unpickle_Enum(__pyx_type, long __pyx_checksum, __pyx_state):             # <<<<<<<<<<<<<<
  *     cdef object __pyx_PickleError
  *     cdef object __pyx_result
  */
-  __pyx_tuple__31 = PyTuple_Pack(5, __pyx_n_s_pyx_type, __pyx_n_s_pyx_checksum, __pyx_n_s_pyx_state, __pyx_n_s_pyx_PickleError, __pyx_n_s_pyx_result); if (unlikely(!__pyx_tuple__31)) __PYX_ERR(1, 1, __pyx_L1_error)
-  __Pyx_GOTREF(__pyx_tuple__31);
-  __Pyx_GIVEREF(__pyx_tuple__31);
-  __pyx_codeobj__32 = (PyObject*)__Pyx_PyCode_New(3, 0, 5, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__31, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_stringsource, __pyx_n_s_pyx_unpickle_Enum, 1, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__32)) __PYX_ERR(1, 1, __pyx_L1_error)
+  __pyx_tuple__32 = PyTuple_Pack(5, __pyx_n_s_pyx_type, __pyx_n_s_pyx_checksum, __pyx_n_s_pyx_state, __pyx_n_s_pyx_PickleError, __pyx_n_s_pyx_result); if (unlikely(!__pyx_tuple__32)) __PYX_ERR(1, 1, __pyx_L1_error)
+  __Pyx_GOTREF(__pyx_tuple__32);
+  __Pyx_GIVEREF(__pyx_tuple__32);
+  __pyx_codeobj__33 = (PyObject*)__Pyx_PyCode_New(3, 0, 5, 0, CO_OPTIMIZED|CO_NEWLOCALS, __pyx_empty_bytes, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_tuple__32, __pyx_empty_tuple, __pyx_empty_tuple, __pyx_kp_s_stringsource, __pyx_n_s_pyx_unpickle_Enum, 1, __pyx_empty_bytes); if (unlikely(!__pyx_codeobj__33)) __PYX_ERR(1, 1, __pyx_L1_error)
   __Pyx_RefNannyFinishContext();
   return 0;
   __pyx_L1_error:;
@@ -22338,7 +22497,7 @@ if (!__Pyx_RefNanny) {
  * cdef strided = Enum("<strided and direct>") # default
  * cdef indirect = Enum("<strided and indirect>")
  */
-  __pyx_t_1 = __Pyx_PyObject_Call(((PyObject *)__pyx_MemviewEnum_type), __pyx_tuple__26, NULL); if (unlikely(!__pyx_t_1)) __PYX_ERR(1, 287, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyObject_Call(((PyObject *)__pyx_MemviewEnum_type), __pyx_tuple__27, NULL); if (unlikely(!__pyx_t_1)) __PYX_ERR(1, 287, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __Pyx_XGOTREF(generic);
   __Pyx_DECREF_SET(generic, __pyx_t_1);
@@ -22352,7 +22511,7 @@ if (!__Pyx_RefNanny) {
  * cdef indirect = Enum("<strided and indirect>")
  * 
  */
-  __pyx_t_1 = __Pyx_PyObject_Call(((PyObject *)__pyx_MemviewEnum_type), __pyx_tuple__27, NULL); if (unlikely(!__pyx_t_1)) __PYX_ERR(1, 288, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyObject_Call(((PyObject *)__pyx_MemviewEnum_type), __pyx_tuple__28, NULL); if (unlikely(!__pyx_t_1)) __PYX_ERR(1, 288, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __Pyx_XGOTREF(strided);
   __Pyx_DECREF_SET(strided, __pyx_t_1);
@@ -22366,7 +22525,7 @@ if (!__Pyx_RefNanny) {
  * 
  * 
  */
-  __pyx_t_1 = __Pyx_PyObject_Call(((PyObject *)__pyx_MemviewEnum_type), __pyx_tuple__28, NULL); if (unlikely(!__pyx_t_1)) __PYX_ERR(1, 289, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyObject_Call(((PyObject *)__pyx_MemviewEnum_type), __pyx_tuple__29, NULL); if (unlikely(!__pyx_t_1)) __PYX_ERR(1, 289, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __Pyx_XGOTREF(indirect);
   __Pyx_DECREF_SET(indirect, __pyx_t_1);
@@ -22380,7 +22539,7 @@ if (!__Pyx_RefNanny) {
  * cdef indirect_contiguous = Enum("<contiguous and indirect>")
  * 
  */
-  __pyx_t_1 = __Pyx_PyObject_Call(((PyObject *)__pyx_MemviewEnum_type), __pyx_tuple__29, NULL); if (unlikely(!__pyx_t_1)) __PYX_ERR(1, 292, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyObject_Call(((PyObject *)__pyx_MemviewEnum_type), __pyx_tuple__30, NULL); if (unlikely(!__pyx_t_1)) __PYX_ERR(1, 292, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __Pyx_XGOTREF(contiguous);
   __Pyx_DECREF_SET(contiguous, __pyx_t_1);
@@ -22394,7 +22553,7 @@ if (!__Pyx_RefNanny) {
  * 
  * 
  */
-  __pyx_t_1 = __Pyx_PyObject_Call(((PyObject *)__pyx_MemviewEnum_type), __pyx_tuple__30, NULL); if (unlikely(!__pyx_t_1)) __PYX_ERR(1, 293, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyObject_Call(((PyObject *)__pyx_MemviewEnum_type), __pyx_tuple__31, NULL); if (unlikely(!__pyx_t_1)) __PYX_ERR(1, 293, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __Pyx_XGOTREF(indirect_contiguous);
   __Pyx_DECREF_SET(indirect_contiguous, __pyx_t_1);
@@ -23362,6 +23521,122 @@ static CYTHON_INLINE void __Pyx_XDEC_MEMVIEW(__Pyx_memviewslice *memslice,
     }
 }
 
+/* GetItemInt */
+static PyObject *__Pyx_GetItemInt_Generic(PyObject *o, PyObject* j) {
+    PyObject *r;
+    if (!j) return NULL;
+    r = PyObject_GetItem(o, j);
+    Py_DECREF(j);
+    return r;
+}
+static CYTHON_INLINE PyObject *__Pyx_GetItemInt_List_Fast(PyObject *o, Py_ssize_t i,
+                                                              CYTHON_NCP_UNUSED int wraparound,
+                                                              CYTHON_NCP_UNUSED int boundscheck) {
+#if CYTHON_ASSUME_SAFE_MACROS && !CYTHON_AVOID_BORROWED_REFS
+    Py_ssize_t wrapped_i = i;
+    if (wraparound & unlikely(i < 0)) {
+        wrapped_i += PyList_GET_SIZE(o);
+    }
+    if ((!boundscheck) || likely(__Pyx_is_valid_index(wrapped_i, PyList_GET_SIZE(o)))) {
+        PyObject *r = PyList_GET_ITEM(o, wrapped_i);
+        Py_INCREF(r);
+        return r;
+    }
+    return __Pyx_GetItemInt_Generic(o, PyInt_FromSsize_t(i));
+#else
+    return PySequence_GetItem(o, i);
+#endif
+}
+static CYTHON_INLINE PyObject *__Pyx_GetItemInt_Tuple_Fast(PyObject *o, Py_ssize_t i,
+                                                              CYTHON_NCP_UNUSED int wraparound,
+                                                              CYTHON_NCP_UNUSED int boundscheck) {
+#if CYTHON_ASSUME_SAFE_MACROS && !CYTHON_AVOID_BORROWED_REFS
+    Py_ssize_t wrapped_i = i;
+    if (wraparound & unlikely(i < 0)) {
+        wrapped_i += PyTuple_GET_SIZE(o);
+    }
+    if ((!boundscheck) || likely(__Pyx_is_valid_index(wrapped_i, PyTuple_GET_SIZE(o)))) {
+        PyObject *r = PyTuple_GET_ITEM(o, wrapped_i);
+        Py_INCREF(r);
+        return r;
+    }
+    return __Pyx_GetItemInt_Generic(o, PyInt_FromSsize_t(i));
+#else
+    return PySequence_GetItem(o, i);
+#endif
+}
+static CYTHON_INLINE PyObject *__Pyx_GetItemInt_Fast(PyObject *o, Py_ssize_t i, int is_list,
+                                                     CYTHON_NCP_UNUSED int wraparound,
+                                                     CYTHON_NCP_UNUSED int boundscheck) {
+#if CYTHON_ASSUME_SAFE_MACROS && !CYTHON_AVOID_BORROWED_REFS && CYTHON_USE_TYPE_SLOTS
+    if (is_list || PyList_CheckExact(o)) {
+        Py_ssize_t n = ((!wraparound) | likely(i >= 0)) ? i : i + PyList_GET_SIZE(o);
+        if ((!boundscheck) || (likely(__Pyx_is_valid_index(n, PyList_GET_SIZE(o))))) {
+            PyObject *r = PyList_GET_ITEM(o, n);
+            Py_INCREF(r);
+            return r;
+        }
+    }
+    else if (PyTuple_CheckExact(o)) {
+        Py_ssize_t n = ((!wraparound) | likely(i >= 0)) ? i : i + PyTuple_GET_SIZE(o);
+        if ((!boundscheck) || likely(__Pyx_is_valid_index(n, PyTuple_GET_SIZE(o)))) {
+            PyObject *r = PyTuple_GET_ITEM(o, n);
+            Py_INCREF(r);
+            return r;
+        }
+    } else {
+        PySequenceMethods *m = Py_TYPE(o)->tp_as_sequence;
+        if (likely(m && m->sq_item)) {
+            if (wraparound && unlikely(i < 0) && likely(m->sq_length)) {
+                Py_ssize_t l = m->sq_length(o);
+                if (likely(l >= 0)) {
+                    i += l;
+                } else {
+                    if (!PyErr_ExceptionMatches(PyExc_OverflowError))
+                        return NULL;
+                    PyErr_Clear();
+                }
+            }
+            return m->sq_item(o, i);
+        }
+    }
+#else
+    if (is_list || PySequence_Check(o)) {
+        return PySequence_GetItem(o, i);
+    }
+#endif
+    return __Pyx_GetItemInt_Generic(o, PyInt_FromSsize_t(i));
+}
+
+/* ObjectGetItem */
+#if CYTHON_USE_TYPE_SLOTS
+static PyObject *__Pyx_PyObject_GetIndex(PyObject *obj, PyObject* index) {
+    PyObject *runerr;
+    Py_ssize_t key_value;
+    PySequenceMethods *m = Py_TYPE(obj)->tp_as_sequence;
+    if (unlikely(!(m && m->sq_item))) {
+        PyErr_Format(PyExc_TypeError, "'%.200s' object is not subscriptable", Py_TYPE(obj)->tp_name);
+        return NULL;
+    }
+    key_value = __Pyx_PyIndex_AsSsize_t(index);
+    if (likely(key_value != -1 || !(runerr = PyErr_Occurred()))) {
+        return __Pyx_GetItemInt_Fast(obj, key_value, 0, 1, 1);
+    }
+    if (PyErr_GivenExceptionMatches(runerr, PyExc_OverflowError)) {
+        PyErr_Clear();
+        PyErr_Format(PyExc_IndexError, "cannot fit '%.200s' into an index-sized integer", Py_TYPE(index)->tp_name);
+    }
+    return NULL;
+}
+static PyObject *__Pyx_PyObject_GetItem(PyObject *obj, PyObject* key) {
+    PyMappingMethods *m = Py_TYPE(obj)->tp_as_mapping;
+    if (likely(m && m->mp_subscript)) {
+        return m->mp_subscript(obj, key);
+    }
+    return __Pyx_PyObject_GetIndex(obj, key);
+}
+#endif
+
 /* PyErrFetchRestore */
 #if CYTHON_FAST_THREAD_STATE
 static CYTHON_INLINE void __Pyx_ErrRestoreInState(PyThreadState *tstate, PyObject *type, PyObject *value, PyObject *tb) {
@@ -23938,122 +24213,6 @@ static CYTHON_INLINE PyObject *__Pyx_GetAttr(PyObject *o, PyObject *n) {
 #endif
     return PyObject_GetAttr(o, n);
 }
-
-/* GetItemInt */
-static PyObject *__Pyx_GetItemInt_Generic(PyObject *o, PyObject* j) {
-    PyObject *r;
-    if (!j) return NULL;
-    r = PyObject_GetItem(o, j);
-    Py_DECREF(j);
-    return r;
-}
-static CYTHON_INLINE PyObject *__Pyx_GetItemInt_List_Fast(PyObject *o, Py_ssize_t i,
-                                                              CYTHON_NCP_UNUSED int wraparound,
-                                                              CYTHON_NCP_UNUSED int boundscheck) {
-#if CYTHON_ASSUME_SAFE_MACROS && !CYTHON_AVOID_BORROWED_REFS
-    Py_ssize_t wrapped_i = i;
-    if (wraparound & unlikely(i < 0)) {
-        wrapped_i += PyList_GET_SIZE(o);
-    }
-    if ((!boundscheck) || likely(__Pyx_is_valid_index(wrapped_i, PyList_GET_SIZE(o)))) {
-        PyObject *r = PyList_GET_ITEM(o, wrapped_i);
-        Py_INCREF(r);
-        return r;
-    }
-    return __Pyx_GetItemInt_Generic(o, PyInt_FromSsize_t(i));
-#else
-    return PySequence_GetItem(o, i);
-#endif
-}
-static CYTHON_INLINE PyObject *__Pyx_GetItemInt_Tuple_Fast(PyObject *o, Py_ssize_t i,
-                                                              CYTHON_NCP_UNUSED int wraparound,
-                                                              CYTHON_NCP_UNUSED int boundscheck) {
-#if CYTHON_ASSUME_SAFE_MACROS && !CYTHON_AVOID_BORROWED_REFS
-    Py_ssize_t wrapped_i = i;
-    if (wraparound & unlikely(i < 0)) {
-        wrapped_i += PyTuple_GET_SIZE(o);
-    }
-    if ((!boundscheck) || likely(__Pyx_is_valid_index(wrapped_i, PyTuple_GET_SIZE(o)))) {
-        PyObject *r = PyTuple_GET_ITEM(o, wrapped_i);
-        Py_INCREF(r);
-        return r;
-    }
-    return __Pyx_GetItemInt_Generic(o, PyInt_FromSsize_t(i));
-#else
-    return PySequence_GetItem(o, i);
-#endif
-}
-static CYTHON_INLINE PyObject *__Pyx_GetItemInt_Fast(PyObject *o, Py_ssize_t i, int is_list,
-                                                     CYTHON_NCP_UNUSED int wraparound,
-                                                     CYTHON_NCP_UNUSED int boundscheck) {
-#if CYTHON_ASSUME_SAFE_MACROS && !CYTHON_AVOID_BORROWED_REFS && CYTHON_USE_TYPE_SLOTS
-    if (is_list || PyList_CheckExact(o)) {
-        Py_ssize_t n = ((!wraparound) | likely(i >= 0)) ? i : i + PyList_GET_SIZE(o);
-        if ((!boundscheck) || (likely(__Pyx_is_valid_index(n, PyList_GET_SIZE(o))))) {
-            PyObject *r = PyList_GET_ITEM(o, n);
-            Py_INCREF(r);
-            return r;
-        }
-    }
-    else if (PyTuple_CheckExact(o)) {
-        Py_ssize_t n = ((!wraparound) | likely(i >= 0)) ? i : i + PyTuple_GET_SIZE(o);
-        if ((!boundscheck) || likely(__Pyx_is_valid_index(n, PyTuple_GET_SIZE(o)))) {
-            PyObject *r = PyTuple_GET_ITEM(o, n);
-            Py_INCREF(r);
-            return r;
-        }
-    } else {
-        PySequenceMethods *m = Py_TYPE(o)->tp_as_sequence;
-        if (likely(m && m->sq_item)) {
-            if (wraparound && unlikely(i < 0) && likely(m->sq_length)) {
-                Py_ssize_t l = m->sq_length(o);
-                if (likely(l >= 0)) {
-                    i += l;
-                } else {
-                    if (!PyErr_ExceptionMatches(PyExc_OverflowError))
-                        return NULL;
-                    PyErr_Clear();
-                }
-            }
-            return m->sq_item(o, i);
-        }
-    }
-#else
-    if (is_list || PySequence_Check(o)) {
-        return PySequence_GetItem(o, i);
-    }
-#endif
-    return __Pyx_GetItemInt_Generic(o, PyInt_FromSsize_t(i));
-}
-
-/* ObjectGetItem */
-#if CYTHON_USE_TYPE_SLOTS
-static PyObject *__Pyx_PyObject_GetIndex(PyObject *obj, PyObject* index) {
-    PyObject *runerr;
-    Py_ssize_t key_value;
-    PySequenceMethods *m = Py_TYPE(obj)->tp_as_sequence;
-    if (unlikely(!(m && m->sq_item))) {
-        PyErr_Format(PyExc_TypeError, "'%.200s' object is not subscriptable", Py_TYPE(obj)->tp_name);
-        return NULL;
-    }
-    key_value = __Pyx_PyIndex_AsSsize_t(index);
-    if (likely(key_value != -1 || !(runerr = PyErr_Occurred()))) {
-        return __Pyx_GetItemInt_Fast(obj, key_value, 0, 1, 1);
-    }
-    if (PyErr_GivenExceptionMatches(runerr, PyExc_OverflowError)) {
-        PyErr_Clear();
-        PyErr_Format(PyExc_IndexError, "cannot fit '%.200s' into an index-sized integer", Py_TYPE(index)->tp_name);
-    }
-    return NULL;
-}
-static PyObject *__Pyx_PyObject_GetItem(PyObject *obj, PyObject* key) {
-    PyMappingMethods *m = Py_TYPE(obj)->tp_as_mapping;
-    if (likely(m && m->mp_subscript)) {
-        return m->mp_subscript(obj, key);
-    }
-    return __Pyx_PyObject_GetIndex(obj, key);
-}
-#endif
 
 /* decode_c_string */
 static CYTHON_INLINE PyObject* __Pyx_decode_c_string(
@@ -24978,6 +25137,33 @@ __pyx_capsule_create(void *p, CYTHON_UNUSED const char *sig)
         return (target_type) value;\
     }
 
+/* IntPow */
+static CYTHON_INLINE long __Pyx_pow_long(long b, long e) {
+    long t = b;
+    switch (e) {
+        case 3:
+            t *= b;
+        CYTHON_FALLTHROUGH;
+        case 2:
+            t *= b;
+        CYTHON_FALLTHROUGH;
+        case 1:
+            return t;
+        case 0:
+            return 1;
+    }
+    #if 1
+    if (unlikely(e<0)) return 0;
+    #endif
+    t = 1;
+    while (likely(e)) {
+        t *= (b * (e&1)) | ((~e)&1);
+        b *= b;
+        e >>= 1;
+    }
+    return t;
+}
+
 /* IsLittleEndian */
 static CYTHON_INLINE int __Pyx_Is_Little_Endian(void)
 {
@@ -25734,33 +25920,6 @@ __pyx_fail:
     result.memview = NULL;
     result.data = NULL;
     return result;
-}
-
-/* IntPow */
-  static CYTHON_INLINE long __Pyx_pow_long(long b, long e) {
-    long t = b;
-    switch (e) {
-        case 3:
-            t *= b;
-        CYTHON_FALLTHROUGH;
-        case 2:
-            t *= b;
-        CYTHON_FALLTHROUGH;
-        case 1:
-            return t;
-        case 0:
-            return 1;
-    }
-    #if 1
-    if (unlikely(e<0)) return 0;
-    #endif
-    t = 1;
-    while (likely(e)) {
-        t *= (b * (e&1)) | ((~e)&1);
-        b *= b;
-        e >>= 1;
-    }
-    return t;
 }
 
 /* Declarations */

@@ -18,7 +18,7 @@ cdef class boxcounting:
     cdef int initialized
     cdef int * _occ
     cdef double * _eps
-    cdef int max_level, n, dim, tot_data, num_tree, actual_tree
+    cdef int max_level, n, num_quadrants, dim, tot_data, num_tree, actual_tree
     cdef double final_dim, final_var, eps0
     cdef char * cdelimiter 
     cdef char * ccomments
@@ -48,10 +48,11 @@ cdef class boxcounting:
         self.num_tree = num_tree
         self.tree = <tree_t*>malloc(num_tree*sizeof(tree_t))
         Ndata, Ncol = get_dimension(self.fname, self.cdelimiter, self.ccomments)
-        for i in range(num_tree):
-            self.tree[i] = create_tree(Ncol, 0)
-        self.initialized = 1
         self.dim = Ncol
+        self.num_quadrants = 2**Ncol
+        for i in range(num_tree):
+            self.tree[i] = create_tree(Ncol, self.num_quadrants, 0)
+        self.initialized = 1
         self.initialize_size(size)
 
     def fill_tree(self):
@@ -62,7 +63,7 @@ cdef class boxcounting:
         eof = get_data(x, self.cfile, self.token, self.dim, self.cdelimiter, self.ccomments) 
         while eof != -1:
             for i in range(self.num_tree):
-                recursive_occupation(&self.tree[i], x, self.max_level, self.dim)
+                recursive_occupation(&self.tree[i], x, self.max_level, self.dim, self.num_quadrants)
             eof = get_data(x, self.cfile, self.token, self.dim, self.cdelimiter, self.ccomments) 
             n = n + 1
         fclose(self.cfile)
@@ -159,6 +160,9 @@ cdef class boxcounting:
     @property 
     def n(self):
         return self.n
+    @property
+    def dim(self):
+        return self.dim
     @property 
     def tot_data(self):
         return self.tot_data
@@ -174,20 +178,21 @@ cdef class boxcounting:
             free_tree(&self.tree[i], self.dim)
     @property
     def nodes(self):
-        cdef int n 
+        cdef int n = 0
         for i in range(self.num_tree):
             n = get_num_nodes(self.tree, 0, self.dim)
-        nodes = np.zeros((n, self.dim + 1)).astype(np.double)
+        nodes = np.zeros((n, self.dim + 2)).astype(np.double)
         get_nodes(self.tree, nodes, self.dim, 0)
-        return nodes, n
+        levels = nodes[:, -1]
+        nodes = nodes[:, :self.dim + 1]
+        return nodes, levels, n
 
-cdef tree_t create_tree(int n, int level):
-    cdef int i
+cdef tree_t create_tree(int n, int num_quadrants, int level):
     cdef tree_t tree
-    cdef int num_quadrants = 2**n # Quadrants for n-dim problem: 2^n
     tree.child   = <tree_t*>calloc(num_quadrants, sizeof(tree_t))
     tree.centr = <double*>malloc(n*sizeof(double))
     tree.level = level
+    tree.radi = 0
     return tree
 
 cdef void free_tree(tree_t * tree, int dim):
@@ -200,13 +205,13 @@ cdef void free_tree(tree_t * tree, int dim):
     free(tree.child)
     return 
 
-cdef void recursive_occupation(tree_t * tree, double * x, int max_level, int dim):
+cdef void recursive_occupation(tree_t * tree, double * x, int max_level, int dim, int num_quadrants):
     cdef tree_t * next_tree
     if tree.level < max_level:
 #        if tree.filled == 0:
 #            tree.filled += 1
-        next_tree = next_child(tree, x, dim)
-        recursive_occupation(next_tree, x, max_level, dim)
+        next_tree = next_child(tree, x, dim, num_quadrants)
+        recursive_occupation(next_tree, x, max_level, dim, num_quadrants)
     return
 
 cdef void recursive_count(tree_t * tree, int * occ, int max_level, int dim):
@@ -219,7 +224,7 @@ cdef void recursive_count(tree_t * tree, int * occ, int max_level, int dim):
                 recursive_count(&tree.child[i], occ, max_level, dim)
     return
 
-cdef tree_t * next_child(tree_t * tree, double * x, int dim):
+cdef tree_t * next_child(tree_t * tree, double * x, int dim, int num_quadrants):
     """
     Function that select the quadrant for the next step based on the input data.
     It also define the next node max, min, mid
@@ -259,7 +264,7 @@ cdef tree_t * next_child(tree_t * tree, double * x, int dim):
         inc += inc
 
     if tree.child[quadrant].radi == 0:
-        tree.child[quadrant] = create_tree(dim, tree.level + 1)
+        tree.child[quadrant] = create_tree(dim, num_quadrants, tree.level + 1)
         for i in range(dim):
             tree.child[quadrant].centr[i] = next_mid[i]
         tree.child[quadrant].radi = next_radi
@@ -280,6 +285,7 @@ cdef int get_nodes(tree_t * tree, np.double_t[:,:] x, int dim, int line):
         for i in range(dim):
             x[line,i] = tree.centr[i]
         x[line, dim] = tree.radi
+        x[line, dim + 1] = tree.level
         line += 1
         for i in range(num_quadrants):
             line = get_nodes(&tree.child[i], x, dim, line)

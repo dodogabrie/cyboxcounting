@@ -1,4 +1,5 @@
 import sys
+import os
 sys.path.append('../')
 import numpy as np
 import time
@@ -6,6 +7,30 @@ import matplotlib.pyplot as plt
 from scipy.optimize import curve_fit
 from build.boxcounting import boxcounting
 
+
+def create_tree(fname, max_level, min_level = 1, num_tree = 1, size = None):
+    if os.path.isfile(fname):
+        multi = False
+    elif os.path.isdir(fname):
+        multi = True 
+    else:
+        raise Exception(f"No such file or directory: {fname}")
+    bc = boxcounting()
+    if multi:
+        folderfiles = os.listdir(fname)
+        bc.set_data_file(fname + folderfiles[0])
+        bc.initialize(max_level, size = size, num_tree = num_tree)
+        bc.fill_tree()
+        for i, file in enumerate(folderfiles[1:], 1):
+            print(i, end = '\r')
+            bc.set_data_file(fname + file)
+            bc.fill_tree()
+    else:
+        bc.set_data_file(fname)
+        bc.initialize(max_level, size = size, num_tree = num_tree)
+        bc.fill_tree()
+    bc.count_occupation()
+    return bc
 
 def save_output(bc, filename, data_dir):
     N = bc.occ
@@ -19,6 +44,8 @@ def compute_dim(bc = None, file = None):
         eps = bc.eps
     elif file != None:
         occ, eps = np.loadtxt(file, unpack=True)
+    elif bc != None and file != None:
+        raise Exception("Please pass a tree or a data file (not both!)")
     else: raise Exception("Please pass a tree or a data file with occ and eps")
     num = np.log2(occ)
     den = np.log2(1/eps)#np.arange(bc.max_level) #- np.log2(bc.eps0)
@@ -26,9 +53,6 @@ def compute_dim(bc = None, file = None):
     den = den[sorter]
     num = num[sorter]
     den[den == 0] = 1
-#    print("Original Radius:", bc.eps0)
-#    print("List of dim:", num/den)
-    print(num, den)
     return num, den
 
 def dim_df(bc = None, file = None, block_dim = 4):
