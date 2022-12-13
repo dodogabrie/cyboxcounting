@@ -139,17 +139,32 @@ cdef class boxcounting:
 
     @property 
     def occ(self):
+        epss = np.zeros(self.max_level*self.num_tree).astype(np.double)
+        for i in range(self.max_level*self.num_tree):
+            epss[i] = self._eps[i]/self.eps0
+        eps_final = epss[epss <= self.eps0]
         occc = np.ones(self.max_level*self.num_tree).astype(int)
         for i in range(self.max_level*self.num_tree):
             occc[i] = self._occ[i]
-        return occc
+        occ_final = occc[epss <= 1]
+        occ_final = np.unique(occ_final)
+        return occ_final
 
     @property 
     def eps(self):
         epss = np.zeros(self.max_level*self.num_tree).astype(np.double)
         for i in range(self.max_level*self.num_tree):
             epss[i] = self._eps[i]/self.eps0
-        return epss
+        eps_final = epss[epss <= 1]
+
+        occc = np.ones(self.max_level*self.num_tree).astype(int)
+        for i in range(self.max_level*self.num_tree):
+            occc[i] = self._occ[i]
+        occ_final = occc[epss <= 1]
+
+        occ_final, occ_final_idx = np.unique(occ_final, return_index = True)
+        eps_final = eps_final[occ_final_idx]
+        return eps_final
 
     @property
     def max_level(self):

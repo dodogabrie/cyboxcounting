@@ -47,8 +47,8 @@ def compute_dim(bc = None, file = None):
     elif bc != None and file != None:
         raise Exception("Please pass a tree or a data file (not both!)")
     else: raise Exception("Please pass a tree or a data file with occ and eps")
-    num = np.log2(occ)
-    den = np.log2(1/eps)#np.arange(bc.max_level) #- np.log2(bc.eps0)
+    num = np.log(occ)
+    den = np.log(1/eps)#np.arange(bc.max_level) #- np.log2(bc.eps0)
     sorter = np.argsort(den) 
     den = den[sorter]
     num = num[sorter]
@@ -92,30 +92,24 @@ def fit_show(bc, min_index = 1, max_index = 0):
     min_index = min_index * bc.num_tree
     f, popt, D, var, y, den = fit_dim(bc, min_index, max_index)
     dim = y/den
+    all_num, all_den = compute_dim(bc)
     x_array = np.linspace(np.min(den), np.max(den), 100)
     print(f'D = {D} pm {var}')
     # Plot dei risultati
-    fig, axs = plt.subplots(1,2,figsize=(15,7))
-    plt.suptitle(r'Fattore di scala: $\epsilon = 2^n$', fontsize = 20)
-    for ax in axs: 
-        ax.grid()
-        plt.setp(ax.get_xticklabels(), fontsize=13)
-        plt.setp(ax.get_yticklabels(), fontsize=13)
-    axs[0].plot(x_array, f(x_array, *popt))
-    axs[0].scatter(den, y, c='k')
-    axs[0].set_xlim(np.min(den)-1,np.max(den)+1)
-    axs[0].set_ylim(np.min(y)-1,np.max(y)+1)
-    axs[0].set_xlabel(r'$\log(1/\epsilon)$', fontsize = 20)
-    axs[0].set_ylabel(r'$\log(N(\epsilon))$', fontsize = 20)
-    axs[0].set_title(fr'$y = mx$ $\rightarrow$ m = {D:.3f} $\pm$ {var:.3f}', fontsize = 20)
-    axs[1].scatter(den, dim, c='k')
-#    axs[1].plot(x_array, np.ones(len(x_array)), linestyle='--', c='r')
-#    axs[1].set_yscale('log')
-    axs[1].set_xlabel(r'$\log(1/\epsilon)$', fontsize = 20)
-    axs[1].set_ylabel('bc-Dim', fontsize = 20)
-    axs[1].set_title('dimensione', fontsize = 20)
-    plt.show()
-    return dim, var
+    fig, ax = plt.subplots(1,1,figsize=(7,7))
+    ax.grid()
+    plt.setp(ax.get_xticklabels(), fontsize=13)
+    plt.setp(ax.get_yticklabels(), fontsize=13)
+    ax.plot(x_array, f(x_array, *popt))
+#    ax.scatter(all_den, all_num, c='r', alpha = 0.5)
+    ax.scatter(den, y, c='k')
+#    ax.set_xlim(np.min(den)-1,np.max(den)+1)
+#    ax.set_ylim(np.min(y)-1,np.max(y)+1)
+    ax.set_xlabel(r'$\log(1/\epsilon)$', fontsize = 20)
+    ax.set_ylabel(r'$\log(N(\epsilon))$', fontsize = 20)
+    ax.set_title(fr'$y = mx + q$ $\rightarrow$ m = {D:.3f} $\pm$ {var:.3f}', fontsize = 20)
+    return dim, var, fig, ax
+
 def dimension_convergence(bc):
     return 
 

@@ -61,27 +61,28 @@ def get_nodes(data_file, max_level, min_level = 1, multi = False):
     list_big_x = []
     list_big_y = []
     list_big_r = []
-    max_level_list = [1, 2, 4, 6]
+    max_level_list = [1, 2, 3, 7]
+    bc = create_tree(data_file, max_level, min_level, size = 1.3)
+    nodes, levels, n = bc.nodes 
     for max_level in max_level_list:
         xx = []
         yy = []
         rr = []
-        bc = create_tree(data_file, max_level, min_level, size = 1.3)
-        nodes, levels, n = bc.nodes 
         big_r = 0
         x_r   = 0
         y_r   = 0
-        for data in nodes:
-            r = data[2]
-            x = data[0] 
-            y = data[1] 
-            if big_r < r: 
-                big_r = r 
-                x_r = x 
-                y_r = y
-            xx.append(x)
-            yy.append(y)
-            rr.append(r)
+        for data, lev in zip(nodes, levels):
+            if lev < max_level:
+                r = data[2]
+                x = data[0] 
+                y = data[1] 
+                if big_r < r: 
+                    big_r = r 
+                    x_r = x 
+                    y_r = y
+                xx.append(x)
+                yy.append(y)
+                rr.append(r)
         list_x.append(xx)
         list_y.append(yy)
         list_r.append(rr)
@@ -93,10 +94,16 @@ def get_nodes(data_file, max_level, min_level = 1, multi = False):
     i = 1
     plt.rc('font', **{'size':15})
     fig, axs = plt.subplots(nrows = 1, ncols = len(max_level_list), figsize=(12, 3), sharey=True )
+    n_files = len(os.listdir(data_file))
     for ax, xx, yy, rr, x_r, y_r, big_r in zip(axs, list_x, list_y, list_r, list_big_x, list_big_x, list_big_r):
+        i = 1
         for datai in os.listdir(data_file):
             datai = np.loadtxt(data_file + datai)
+            red_dot = datai[-1, :]
             ax.scatter(datai[:, 0], datai[:, 1], s = 1, alpha = 0.1, c = 'tab:blue')
+            if i == n_files:
+                ax.scatter(red_dot[0], red_dot[1], s = 40, alpha = 1, c = 'tab:red', edgecolor = 'k')
+            i += 1
 
         for x, y, r in zip(xx, yy, rr):
             ax.add_patch(patches.Rectangle((x-r, y-r), 2*r, 2*r, fill=False, lw = 1))
@@ -110,17 +117,24 @@ def get_nodes(data_file, max_level, min_level = 1, multi = False):
     plt.savefig(f"figures/henon_map_with_tree/Tree1.png", dpi = 200)
     plt.show()
     return 
+def compute_D(datafile, max_level, min_level=1, size = 1.3, num_tree = 1):
+    bc = create_tree(datafile, max_level, num_tree=num_tree, size = size)
+    _, _, fig, ax = fit_show(bc, min_index=min_level)
+    import matplotlib.pyplot as plt
+    plt.savefig("figures/henon_dim/bc_dim_henon.png", dpi = 200)
+    return
 
 
 if __name__ == "__main__":
     data_folder = "data/henon_debug/"
     data_file = "henon"
-    n = int(1e4)
-    max_level = 3
-    min_level = 1
+    n = int(1e7)
+    max_level = 10
+    min_level = 4
+    num_tree = 4
     num_files = 3
     write_data(n, data_folder, data_file, num_files, hot_start = 0)
 #    plot_map(data_folder, "henon_1.txt")
-#    compute_dimension(data_folder, max_level, min_level = min_level, multi = True)
-    get_nodes(data_folder, max_level, min_level = min_level, multi = True)
+    compute_D(data_folder, max_level, min_level=min_level, num_tree=num_tree)
+#    get_nodes(data_folder, max_level, min_level = min_level, multi = True)
  
