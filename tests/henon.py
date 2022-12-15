@@ -117,23 +117,25 @@ def get_nodes(data_file, max_level, min_level = 1, multi = False):
     plt.savefig(f"figures/henon_map_with_tree/Tree1.png", dpi = 200)
     plt.show()
     return 
-def compute_D(datafile, max_level, min_level=1, size = 1.3, num_tree = 1):
+def compute_D(datafile, max_level, min_level=1, size = 1.4, num_tree = 1):
+    start = time.time()
     bc = create_tree(datafile, max_level, num_tree=num_tree, size = size)
+    print("elapsed: ", time.time()-start, "s")
     _, _, fig, ax = fit_show(bc, min_index=min_level)
     import matplotlib.pyplot as plt
-    plt.savefig("figures/henon_dim/bc_dim_henon.png", dpi = 200)
+#    plt.savefig("figures/henon_dim/bc_dim_henon.png", dpi = 200)
     return
 
 
 if __name__ == "__main__":
     data_folder = "data/henon_debug/"
     data_file = "henon"
-    n = int(1e7)
-    max_level = 10
-    min_level = 4
-    num_tree = 4
+    n = int(1e6)
+    max_level = 12
+    min_level = 2
+    num_tree = 3
     num_files = 3
-    write_data(n, data_folder, data_file, num_files, hot_start = 0)
+#    write_data(n, data_folder, data_file, num_files, hot_start = 0)
 #    plot_map(data_folder, "henon_1.txt")
     compute_D(data_folder, max_level, min_level=min_level, num_tree=num_tree)
 #    get_nodes(data_folder, max_level, min_level = min_level, multi = True)

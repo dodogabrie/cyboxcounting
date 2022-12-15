@@ -47,8 +47,8 @@ def compute_dim(bc = None, file = None):
     elif bc != None and file != None:
         raise Exception("Please pass a tree or a data file (not both!)")
     else: raise Exception("Please pass a tree or a data file with occ and eps")
-    num = np.log(occ)
-    den = np.log(1/eps)#np.arange(bc.max_level) #- np.log2(bc.eps0)
+    num = np.log10(occ)
+    den = np.log10(1/eps)#np.arange(bc.max_level) #- np.log2(bc.eps0)
     sorter = np.argsort(den) 
     den = den[sorter]
     num = num[sorter]
@@ -105,8 +105,8 @@ def fit_show(bc, min_index = 1, max_index = 0):
     ax.scatter(den, y, c='k')
 #    ax.set_xlim(np.min(den)-1,np.max(den)+1)
 #    ax.set_ylim(np.min(y)-1,np.max(y)+1)
-    ax.set_xlabel(r'$\log(1/\epsilon)$', fontsize = 20)
-    ax.set_ylabel(r'$\log(N(\epsilon))$', fontsize = 20)
+    ax.set_xlabel(r'$\log_{10}(1/\epsilon)$', fontsize = 20)
+    ax.set_ylabel(r'$\log_{10}(N(\epsilon))$', fontsize = 20)
     ax.set_title(fr'$y = mx + q$ $\rightarrow$ m = {D:.3f} $\pm$ {var:.3f}', fontsize = 20)
     return dim, var, fig, ax
 
