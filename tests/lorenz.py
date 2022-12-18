@@ -66,6 +66,8 @@ def compute_dimension(data_file, max_level, min_level = 1, multi = False, size =
         bc.count_occupation()
     if output is not None: save_output(bc, output, data_file)
     fit_show(bc, min_index = min_level)
+    plt.savefig("figures/lorenz_dim/lorenz_long.png", dpi = 200)
+    plt.show()
 
 def plot3d(data_file):
     # Plot
@@ -92,8 +94,8 @@ if __name__ == "__main__":
     n = int(1e7)
     max_level = 10
     min_level = 2
-    num_files = 10
-#    write_data(T, n, data_folder, data_file, num_files, hot_start = 0)
+    num_files = 20
+#    write_data(T, n, data_folder, data_file, num_files, hot_start = 1)
 #    plot3d(data_folder)
-#    compute_dimension(data_folder, max_level, min_level = min_level, multi = True, num_tree=4, output=output)
-    dim_df(file = output, block_dim=5)    
+    compute_dimension(data_folder, max_level, min_level = min_level, multi = True, num_tree=4, output=output)
+    dim_df(file = output, block_dim=5, min_index = 10)    
